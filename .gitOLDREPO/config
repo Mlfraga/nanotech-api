@@ -1,0 +1,17 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/Mlfraga/total-clean-backend.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "heroku"]
+	url = https://git.heroku.com/cryptic-citadel-96400.git
+	fetch = +refs/heads/*:refs/remotes/heroku/*
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop

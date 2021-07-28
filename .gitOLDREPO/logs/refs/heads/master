@@ -1,0 +1,30 @@
+0000000000000000000000000000000000000000 063945392cde20768c4dfef6ed7a49124e039cfc Matheus Fraga <matheuslf44@gmail.com> 1604098447 -0300	commit (initial): project
+063945392cde20768c4dfef6ed7a49124e039cfc bc0e4a7d75f46763d8d3c173a5f16044b76fb211 Matheus Fraga <matheuslf44@gmail.com> 1604100402 -0300	commit: Change mail config file
+bc0e4a7d75f46763d8d3c173a5f16044b76fb211 805050e2fe1d1bfcaffe032cec7cd32e3da692ae Matheus Fraga <matheuslf44@gmail.com> 1604100696 -0300	commit: Add Procfile
+805050e2fe1d1bfcaffe032cec7cd32e3da692ae a55cc0812750c14512c6de8d17d54aa36ccd50e7 Matheus Fraga <matheuslf44@gmail.com> 1604101261 -0300	commit: Config heroku port
+a55cc0812750c14512c6de8d17d54aa36ccd50e7 954fa1c84401f7ff01924a31a76689fae6dfaf4a Matheus Fraga <matheuslf44@gmail.com> 1604110418 -0300	commit: Comment authenticate line port
+954fa1c84401f7ff01924a31a76689fae6dfaf4a 3590701c7102a68374123ed72ccd49d5aa3eaa3e Matheus Fraga <matheuslf44@gmail.com> 1604110646 -0300	commit: Add authenticate line port
+3590701c7102a68374123ed72ccd49d5aa3eaa3e dbca63ba927f002c17e2e1c3ba49ae16fed6f27e Matheus Fraga <matheuslf44@gmail.com> 1609552769 -0300	commit: Change update sale's status route :sparkles:
+dbca63ba927f002c17e2e1c3ba49ae16fed6f27e f9748ed3a574e5d55069844ac52f9c87799168bd Matheus Fraga <matheuslf44@gmail.com> 1610600298 -0300	commit: Refactor code and improve features :refactor:
+f9748ed3a574e5d55069844ac52f9c87799168bd 474a66db3569c7cf29a2e913b12b76eee098ea8e Matheus Fraga <matheuslf44@gmail.com> 1611415047 -0300	commit: Add filters to list sales route :sparkles:
+474a66db3569c7cf29a2e913b12b76eee098ea8e 7a63645e11594c9c20b0ada259ba3836fba9187d Matheus Fraga <matheuslf44@gmail.com> 1611611197 -0300	commit: Add 'comments' column to 'Sales' table
+7a63645e11594c9c20b0ada259ba3836fba9187d bcb0cbf59709d772eb0d90e8b18e73d8773c34c9 Matheus Fraga <matheuslf44@gmail.com> 1611624385 -0300	commit: Prepare project for deploy
+bcb0cbf59709d772eb0d90e8b18e73d8773c34c9 4d27b8d014b9941d36a7c0dbf3d1b5f54c56bf12 Matheus Fraga <matheuslf44@gmail.com> 1611971229 -0300	commit: Add main route
+4d27b8d014b9941d36a7c0dbf3d1b5f54c56bf12 a39f82689478086e07911f10c505d5a8dbb56699 Matheus Fraga <matheuslf44@gmail.com> 1611985804 -0300	Fast forward branch master to branch master
+a39f82689478086e07911f10c505d5a8dbb56699 c4b51a5e398e784a564f4cb0cd2007606a894242 Matheus Fraga <matheuslf44@gmail.com> 1611987064 -0300	Fast forward branch master to branch master
+c4b51a5e398e784a564f4cb0cd2007606a894242 5f71012f7b5f3cf549d9f500005653d28846614e Matheus Fraga <matheuslf44@gmail.com> 1612311459 -0300	commit: Fix list sales by seller route bug :bug:
+5f71012f7b5f3cf549d9f500005653d28846614e a1cc5e932f6b4453b2c2019886958ccd8f406d90 Matheus Fraga <matheuslf44@gmail.com> 1612311859 -0300	commit (merge): Merge branch 'develop'
+a1cc5e932f6b4453b2c2019886958ccd8f406d90 a9317658050c237217f02f541aa2bbcc3c98bc81 Matheus Fraga <matheuslf44@gmail.com> 1612314104 -0300	commit (merge): Merge branch 'develop'
+a9317658050c237217f02f541aa2bbcc3c98bc81 d438c02ce954e621899d4a21191a294074637c0a Matheus Fraga <matheuslf44@gmail.com> 1612325209 -0300	commit (merge): Merge branch 'develop'
+d438c02ce954e621899d4a21191a294074637c0a a6cd7aae470481eab8899eaf59a77eb8a6b1bc14 Matheus Fraga <matheuslf44@gmail.com> 1612397521 -0300	commit (merge): Merge branch 'develop'
+a6cd7aae470481eab8899eaf59a77eb8a6b1bc14 4e56c7b34bd9bd8f3296b5b2b7bc3aa672c2877e Matheus Fraga <matheuslf44@gmail.com> 1615431583 -0300	commit: chore: Create sales report pdf
+4e56c7b34bd9bd8f3296b5b2b7bc3aa672c2877e 17e0b1c6733fedd8cfd8ee46fd0e0112e64dcb80 Matheus Fraga <matheuslf44@gmail.com> 1615432407 -0300	commit: fix: Fix a bug
+17e0b1c6733fedd8cfd8ee46fd0e0112e64dcb80 3f029beb75683c1ab12207b6a5a66556ca479f9b Matheus Fraga <matheuslf44@gmail.com> 1615858038 -0300	commit: chore: Add 'profile' route
+3f029beb75683c1ab12207b6a5a66556ca479f9b b58a30de77485c5f9a42fbd354808da28a49099a Matheus Fraga <matheuslf44@gmail.com> 1617237290 -0300	commit: fix: Remove the required rule for companyId on request
+b58a30de77485c5f9a42fbd354808da28a49099a 5cd3af7c4f1df1b8e66ad7ebf5196909c48df361 Matheus Fraga <matheuslf44@gmail.com> 1617238636 -0300	commit: chore: Add translated status to report
+5cd3af7c4f1df1b8e66ad7ebf5196909c48df361 8e61fbb14a296d1e7c2c3348d3e9af903333bc35 Matheus Fraga <matheuslf44@gmail.com> 1617239028 -0300	commit: chore: Add space to report boxes
+8e61fbb14a296d1e7c2c3348d3e9af903333bc35 d2887f0cf0812b6ad647712f469a5c99401023d2 Matheus Fraga <matheuslf44@gmail.com> 1618281905 -0300	commit: chore: Add 'companyValue' and 'costValue'  to 'servicesSales' table
+d2887f0cf0812b6ad647712f469a5c99401023d2 8094e1c59ae189753fb9781cd18ed86e0296265b Matheus Fraga <matheuslf44@gmail.com> 1619578840 -0300	commit: fix: Fix bugs
+8094e1c59ae189753fb9781cd18ed86e0296265b dc23d2affed176f0beb240b432b5ae12425e95b0 Matheus Fraga <matheuslf44@gmail.com> 1619887737 -0300	commit: chore: Add filters to manager and seller user
+dc23d2affed176f0beb240b432b5ae12425e95b0 35cad2b72f569898aaba2ab1be333bc99980de86 Matheus Fraga <matheuslf44@gmail.com> 1620178614 -0300	commit: chore: Add filters and fix bugs
+35cad2b72f569898aaba2ab1be333bc99980de86 a1395de1265503cab4b44455aadcc6480ee0f738 Matheus Fraga <matheuslf44@gmail.com> 1620688343 -0300	commit: chore: Add SaleUnit relation

@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      height: 100vh;
+      font-size: 16px;
+    }
+
+    .Header {
+      width: 100%;
+      height: 80px;
+
+      display: -webkit-flex;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      background-color: #E6E6E6;
+
+      border-width: 1px;
+      border-color: #000;
+      border-style: solid;
+      border-radius: 8px;
+    }
+
+    .Bold-Text {
+      font-weight: medium;
+      margin-top: 4px;
+      margin-left: 4px;
+      font-size: 10px;
+    }
+
+    .box {
+      background-color: #dfdfdf;
+      margin-top: 12px;
+      border-width: 1px;
+      border-color: #000;
+      border-style: solid;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .total-box {
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+      background-color: #dfdfdf;
+      margin-top: 12px;
+      border-width: 1px;
+      border-color: #000;
+      border-style: solid;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="Header">
+    <div style="font-size: 16; height: 100%; width: 35%">
+      <div>
+        <span class="Bold-Text">
+          Status:
+        </span>
+
+        <span style="margin-left: 1px; margin-top: 4px; font-size: 10px">
+          {{STATUS_FILTER}}
+        </span>
+      </div>
+
+      <div style="display: -webkit-flex; flex-direction: row">
+        <span class="Bold-Text">
+          Concessionária:
+        </span>
+
+        <span style="margin-left: 1px; margin-top: 4px; font-size: 10px">
+          {{COMPANY_FILTER}}
+        </span>
+      </div>
+
+      <div style="display: -webkit-flex, flex-direction: row">
+        <span class="Bold-Text">
+          Período:
+        </span>
+
+        <span style="margin-left: 1px; margin-top: 4px; font-size: 10px">
+          {{PERIOD_FILTER}}
+        </span>
+      </div>
+
+      <div style="display: -webkit-flex; flex-direction: row">
+        <span class="Bold-Text">
+          Serviço:
+        </span>
+
+        <span style="margin-left: 1px; margin-top: 4px; font-size: 10px">
+          {{SERVICE_FILTER}}
+        </span>
+      </div>
+    </div>
+
+    <div
+      style="display: -webkit-flex; -webkit-flex-direction: column; -webkit-justify-content: center;  -webkit-align-items: center; height: 100%; width: 30%">
+      <span style="text-align: center, font-size: 18px;">
+        Nanotech
+      </span>
+      <span style="text-align: center, font-size: 18px;">
+        Relatório de Vendas
+      </span>
+    </div>
+
+    <div style="width: 20%;">
+
+      <div>
+        <span class="Bold-Text">
+          Emissão:
+        </span>
+
+        <span style="margin-left: 1px; margin-top: 4px; font-size: 10px">
+          {{TODAY}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  {{#each FORMATTED_SALES}}
+  <div class="box">
+    <div style="display: -webkit-flex; flex-direction: row; width: 100%; height: 16px; padding: 2px;
+      border-bottom: 1px solid #000;">
+      <div style="width: 3%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          N°
+        </span>
+      </div>
+
+      <div style="width: 14%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Concessionára
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Unidade
+        </span>
+      </div>
+
+      <div style="width: 11%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Vendedor
+        </span>
+      </div>
+
+      <div style="width: 8%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Carro
+        </span>
+      </div>
+
+      <div style="width: 8%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Placa
+        </span>
+      </div>
+
+      <div style="width: 13%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Data de entrega
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Valor de custo
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Valor de venda
+        </span>
+      </div>
+
+      <div style="width: 7%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px,">
+          Situação
+        </span>
+      </div>
+    </div>
+
+    <div
+      style="display: -webkit-flex; flex-direction: row; width: 100%; height: 18px; padding: 2px; border-bottom: 1px solid #000;">
+      <div style="width: 3%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8;">
+          {{number}}
+        </span>
+      </div>
+
+      <div style="width: 14%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8;">
+          {{company}}
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{unit}}
+        </span>
+      </div>
+
+      <div style="width: 11%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{seller}}
+        </span>
+      </div>
+
+      <div style="width: 8%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{car}}
+        </span>
+      </div>
+
+      <div style="width: 8%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{car_plate}}
+        </span>
+      </div>
+
+      <div style="width: 13%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{delivery_date}}
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{cost_value}}
+        </span>
+      </div>
+
+      <div style="width: 12%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{company_price}}
+        </span>
+      </div>
+
+      <div style="width: 7%">
+        <span class="Bold-Text" style="color: #000; font-weight: normal; font-size: 8px;">
+          {{status}}
+        </span>
+      </div>
+    </div>
+
+    <div style="background-color: #eeeeee; width: 100%; height: 100%; flex: 1px; padding-bottom: 4px">
+      <div style="width: 100%; height: 16px; display: -webkit-flex; padding: 2px;">
+        <div style="width: 40%">
+          <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 10px;">
+            Serviços
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 10px;">
+            Valor de custo
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 10px;">
+            Valor de venda
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 10px;">
+            Saldo
+          </span>
+        </div>
+      </div>
+
+      {{#each services}}
+      <div style="width: 100%; height: 16px; display: -webkit-flex; border-top: 1px solid #000; padding: 2px;">
+        <div style="width: 40%">
+          <span class="Bold-Text" style="color: #000; font-size: 10px;">
+            {{name}}
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-size: 10px;">
+            {{cost_value_service}}
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-size: 10px;">
+            {{company_price_service}}
+          </span>
+        </div>
+
+        <div style="width: 20%">
+          <span class="Bold-Text" style="color: #000; font-size: 10px;">
+            {{balance}}
+          </span>
+        </div>
+      </div>
+      {{/each}}
+
+    </div>
+
+  </div>
+  {{/each}}
+
+  <div class="total-box">
+    <div style="display: -webkit-flex; -webkit-flex-direction: row; width: 100%; height: 16; padding: 2; borderBottomWidth:
+      1; borderBottomColor: #000; borderBottomStyle: solid;">
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px;">
+          Total valores de custo
+        </span>
+      </div>
+
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px;">
+          Total valores de venda
+        </span>
+      </div>
+
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: #000; font-weight: bold; font-size: 8px">
+          Saldo total
+        </span>
+      </div>
+    </div>
+
+    <div
+      style="display: -webkit-flex; -webkit-flex-direction: row; width: 100%; height: 16px padding: 2px borderBottomWidth: 1px; borderBottomColor: #000; borderBottomStyle: solid;">
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: '#000' , font-size: 8, ">
+          {{AMOUNT.cost_values_amount}}
+        </span>
+      </div>
+
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: '#000' , font-size: 8, ">
+          {{AMOUNT.company_values_amount}}
+        </span>
+      </div>
+
+      <div style="width: 33.3%">
+        <span class="Bold-Text" style="color: '#000' , font-size: 8, ">
+          {{AMOUNT.balance_amount}}
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
