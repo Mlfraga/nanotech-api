@@ -1,3 +1,7 @@
+ormconfig.json
+
+tmp/uploads/*
+
 /.vscode/
 node_modules/
 dist/
