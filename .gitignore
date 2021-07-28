@@ -1,6 +1,7 @@
-.vscode/
+/.vscode/
 node_modules/
 dist/
 .env
 /prisma/.env
 ‘~
+/.git.old
