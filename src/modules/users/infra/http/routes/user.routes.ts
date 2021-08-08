@@ -3,6 +3,7 @@ import { Router } from 'express';
 
 import RoleMiddleware from '@shared/infra/http/middlewares/RoleMiddleware';
 
+import PasswordUserController from '@modules/users/infra/http/controllers/PasswordUserController';
 import UserController from '@modules/users/infra/http/controllers/UserController';
 
 import CompanyUsersController from '../controllers/CompanyUsersController';
@@ -12,6 +13,7 @@ const userRouter = Router();
 
 const userController = new UserController();
 const companyUsersController = new CompanyUsersController();
+const passwordUserController = new PasswordUserController();
 
 userRouter.get('/get-profile', ensureAuthenticated, userController.show);
 
@@ -38,6 +40,17 @@ userRouter.post(
     },
   }),
   userController.store,
+);
+
+userRouter.patch(
+  '/change-password',
+  celebrate({
+    [Segments.BODY]: {
+      newPassword: Joi.string().required().min(8),
+    },
+  }),
+  ensureAuthenticated,
+  passwordUserController.update,
 );
 
 userRouter.put(

@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { sign } from 'jsonwebtoken';
 import { injectable, inject } from 'tsyringe';
 
@@ -79,7 +80,11 @@ class AuthenticateUserService {
 
     await this.cacheProvider.save('refresh-tokens', refreshTokens);
 
-    return { user, access_token, refresh_token };
+    if (user.first_login) {
+      await this.usersRepository.save({ ...user, first_login: false });
+    }
+
+    return { user: classToClass(user), access_token, refresh_token };
   }
 }
 
