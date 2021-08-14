@@ -43,5 +43,5 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
 });
 
 app.listen(process.env.PORT || 3333, () => {
-  console.log('🚀 Backend started!');
+  console.log(`🚀 Backend started on ${process.env.PORT || 3333}!`);
 });
