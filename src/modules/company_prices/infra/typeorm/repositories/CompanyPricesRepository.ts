@@ -32,6 +32,7 @@ class CompanyPricesRepository implements ICompanyPricesRepository {
       where: {
         company_id,
       },
+      relations: ['company'],
     });
 
     return companyPrices;

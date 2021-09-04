@@ -31,4 +31,18 @@ export default class CompanyPricesByCompanyController {
 
     return response.json(companyServicesByCompany);
   }
+
+  async show(request: Request, response: Response) {
+    const { id: company_id } = request.params;
+    const companyPricesRepository = container.resolve(CompanyPricesRepository);
+
+    const companyServicesByCompany =
+      await companyPricesRepository.findByCompanyId(String(company_id));
+
+    if (!companyServicesByCompany) {
+      throw new AppError('No service from this company was found.');
+    }
+
+    return response.json(companyServicesByCompany);
+  }
 }

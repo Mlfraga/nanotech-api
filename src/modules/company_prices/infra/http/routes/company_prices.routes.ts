@@ -29,6 +29,13 @@ companyPricesRouter.get(
 );
 
 companyPricesRouter.get(
+  '/by-company/:id',
+  ensureAuthenticated,
+  RoleMiddleware.isAdmin,
+  companyPricesByCompanyController.show,
+);
+
+companyPricesRouter.get(
   '/sale',
   celebrate({
     [Segments.QUERY]: {
