@@ -1,5 +1,8 @@
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import client from 'twilio';
 
 import AppError from '@shared/errors/AppError';
 
@@ -13,6 +16,9 @@ import ServiceSaleRepository from '../../typeorm/repositories/ServiceSaleReposit
 interface ICreateServiceSale {
   saleId: number;
   serviceIds: number[];
+  service: {
+    name: string;
+  };
 }
 
 export default class ServicesSalesController {
@@ -73,6 +79,47 @@ export default class ServicesSalesController {
 
     const servicesSales = await Promise.all<ICreateServiceSale>(promises);
 
+    let servicesMessage = '';
+
+    servicesSales.forEach((serv, index) => {
+      if (index === 0) {
+        servicesMessage += `${serv.service.name}`;
+      } else {
+        servicesMessage += ` ${serv.service.name}`;
+      }
+    });
+
+    const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${`${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`}\n\n*Data de disponibilidade:* ${format(
+      new Date(String(saleById?.availability_date)),
+      "dd'/'MM'/'yyyy '-' HH:mm'h'",
+      { locale: ptBR },
+    )}\n\n*Data de entrega:* ${format(
+      new Date(String(saleById?.delivery_date)),
+      "dd'/'MM'/'yyyy '-' HH:mm'h'",
+      { locale: ptBR },
+    )}\n\n*Data do registro da venda:* ${format(
+      new Date(String(saleById?.request_date)),
+      "dd'/'MM'/'yyyy '-' HH:mm'h'",
+      { locale: ptBR },
+    )}\n\n*Vendedor(a):* ${saleById?.seller.name}\n\n*Concessionária:* ${
+      saleById?.seller.company.name
+    }\n\n*Unidade:* ${saleById?.unit?.name}\n\n*Carro:* ${
+      saleById?.car.brand
+    } ${saleById?.car.model} ${saleById?.car.color}, placa ${
+      saleById?.car.plate
+    }\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${
+      saleById?.comments ? saleById?.comments : ''
+    }`;
+
+    const recipients = ['whatsapp:+553192458098', 'whatsapp:+553188783666'];
+
+    for (const recipient of recipients) {
+      await client().messages.create({
+        from: 'whatsapp:+14155238886',
+        body: messageToSend,
+        to: recipient,
+      });
+    }
     return response.json(servicesSales);
   }
 
