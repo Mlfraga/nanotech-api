@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, addHours } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
@@ -89,16 +89,18 @@ export default class ServicesSalesController {
       }
     });
 
+    console.log(saleById, 'saleById');
+
     const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${`${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`}\n\n*Data de disponibilidade:* ${format(
-      new Date(String(saleById?.availability_date)),
+      addHours(new Date(String(saleById?.availability_date)), -3),
       "dd'/'MM'/'yyyy '-' HH:mm'h'",
       { locale: ptBR },
     )}\n\n*Data de entrega:* ${format(
-      new Date(String(saleById?.delivery_date)),
+      addHours(new Date(String(saleById?.delivery_date)), -3),
       "dd'/'MM'/'yyyy '-' HH:mm'h'",
       { locale: ptBR },
     )}\n\n*Data do registro da venda:* ${format(
-      new Date(String(saleById?.request_date)),
+      addHours(new Date(String(saleById?.request_date)), -3),
       "dd'/'MM'/'yyyy '-' HH:mm'h'",
       { locale: ptBR },
     )}\n\n*Vendedor(a):* ${saleById?.seller.name}\n\n*Concessionária:* ${
@@ -120,6 +122,7 @@ export default class ServicesSalesController {
         to: recipient,
       });
     }
+
     return response.json(servicesSales);
   }
 
