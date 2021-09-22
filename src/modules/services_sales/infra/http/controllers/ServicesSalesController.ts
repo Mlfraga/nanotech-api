@@ -89,8 +89,6 @@ export default class ServicesSalesController {
       }
     });
 
-    console.log(saleById, 'saleById');
-
     const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${`${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`}\n\n*Data de disponibilidade:* ${format(
       addHours(new Date(String(saleById?.availability_date)), -3),
       "dd'/'MM'/'yyyy '-' HH:mm'h'",
