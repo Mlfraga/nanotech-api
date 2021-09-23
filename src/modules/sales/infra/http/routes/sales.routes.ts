@@ -19,7 +19,8 @@ salesRouter.get(
   '/',
   celebrate({
     [Segments.QUERY]: {
-      date: Joi.date().allow(null),
+      deliveryDate: Joi.date().allow(null),
+      availabilityDate: Joi.date().allow(null),
       status: Joi.string().allow(null),
       page: Joi.number().required(),
     },

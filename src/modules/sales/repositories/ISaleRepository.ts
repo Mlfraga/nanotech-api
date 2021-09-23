@@ -10,8 +10,10 @@ interface IFiltersParams {
 }
 
 interface IFilters {
-  initialDay?: Date;
-  endDay?: Date;
+  initialDeliveryDate?: Date;
+  finalDeliveryDate?: Date;
+  initialAvailabilityDate?: Date;
+  finalAvailabilityDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
 }
 
@@ -29,7 +31,13 @@ export default interface ISaleRepository {
   findByCompanyAndFinishedStatus(
     companyId: string,
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -39,7 +47,13 @@ export default interface ISaleRepository {
   }>;
   findAllSales(
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -50,7 +64,13 @@ export default interface ISaleRepository {
   findBySeller(
     sellerId: string,
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -60,8 +80,10 @@ export default interface ISaleRepository {
   }>;
   findByDateAndStatus(
     page: number,
-    initialDate: Date,
-    finalDate: Date,
+    deliveryDateInitialDay: Date,
+    deliveryDateFinalDay: Date,
+    availabilityDateInitialDay: Date,
+    availabilityDateFinalDay: Date,
     status: string,
   ): Promise<{
     current_page: number;

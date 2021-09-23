@@ -216,8 +216,8 @@ export default class SalesReportController {
       }
 
       return response.download(`tmp/uploads/${fileName}`);
-    } catch (error) {
-      return response.status(400).json(error.message);
+    } catch (error: any) {
+      return response.status(400).json(error?.message || 'erro');
     }
   }
 }

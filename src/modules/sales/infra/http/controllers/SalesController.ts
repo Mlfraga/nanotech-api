@@ -22,7 +22,7 @@ export default class SalesController {
   async index(request: Request, response: Response) {
     const saleRepository = container.resolve(SaleRepository);
 
-    const { date, status, page } = request.query;
+    const { deliveryDate, availabilityDate, status, page } = request.query;
 
     const user_id = request.user.id;
 
@@ -51,66 +51,121 @@ export default class SalesController {
     let sales;
 
     if (user.role === 'ADMIN') {
-      if (date && status) {
-        const initialDay = startOfDay(new Date(date.toString()));
-        const finalDay = endOfDay(new Date(date.toString()));
-
-        if (
-          status !== 'PENDING' &&
-          status !== 'CONFIRMED' &&
-          status !== 'CANCELED' &&
-          status !== 'FINISHED'
-        ) {
-          return response.status(400).json({ error: 'Status not found.' });
-        }
-
-        sales = await saleRepository.findByDateAndStatus(
-          Number(page),
-          initialDay,
-          finalDay,
-          String(status),
-        );
-
-        return response.json(sales);
-      }
-
-      if (date) {
-        const initialDay = startOfDay(new Date(date.toString()));
-        const finalDay = endOfDay(new Date(date.toString()));
-
-        sales = await saleRepository.findAllSales(Number(page), {
-          initialDay,
-          endDay: finalDay,
-        });
-
-        return response.json(sales);
-      }
-
-      if (status) {
-        if (
-          status !== 'PENDING' &&
-          status !== 'CONFIRMED' &&
-          status !== 'CANCELED' &&
-          status !== 'FINISHED'
-        ) {
-          return response.status(400).json({ error: 'Status not found.' });
-        }
-
-        sales = await saleRepository.findAllSales(Number(page), { status });
-
-        return response.json(sales);
-      }
-
-      sales = await saleRepository.findAllSales(Number(page), {});
+      sales = await saleRepository.findAllSales(Number(page), {
+        ...(deliveryDate && {
+          initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(deliveryDate && {
+          finalDeliveryDate: endOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(availabilityDate && {
+          initialAvailabilityDate: startOfDay(
+            new Date(availabilityDate.toString()),
+          ),
+        }),
+        ...(availabilityDate && {
+          finalAvailabilityDate: endOfDay(
+            new Date(availabilityDate.toString()),
+          ),
+        }),
+        ...(status &&
+          (status === 'PENDING' ||
+            status === 'CONFIRMED' ||
+            status === 'CANCELED' ||
+            status === 'FINISHED') && { status }),
+      });
 
       return response.json(sales);
+      // if (deliveryDate && availabilityDate && status) {
+      //   const deliveryDateInitialDay = startOfDay(
+      //     new Date(deliveryDate.toString()),
+      //   );
+      //   const deliveryDateFinalDay = endOfDay(
+      //     new Date(deliveryDate.toString()),
+      //   );
+      //   const availabilityDateInitialDay = startOfDay(
+      //     new Date(availabilityDate.toString()),
+      //   );
+      //   const availabilityDateFinalDay = endOfDay(
+      //     new Date(availabilityDate.toString()),
+      //   );
+      //   if (
+      //     status !== 'PENDING' &&
+      //     status !== 'CONFIRMED' &&
+      //     status !== 'CANCELED' &&
+      //     status !== 'FINISHED'
+      //   ) {
+      //     return response.status(400).json({ error: 'Status not found.' });
+      //   }
+      //   sales = await saleRepository.findByDateAndStatus(
+      //     Number(page),
+      //     deliveryDateInitialDay,
+      //     deliveryDateFinalDay,
+      //     availabilityDateInitialDay,
+      //     availabilityDateFinalDay,
+      //     String(status),
+      //   );
+      //   return response.json(sales);
+      // }
+      // if (deliveryDate || availabilityDate) {
+      // sales = await saleRepository.findAllSales(Number(page), {
+      //   ...(deliveryDate && {
+      //     initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
+      //   }),
+      //   ...(deliveryDate && {
+      //     finalDeliveryDate: endOfDay(new Date(deliveryDate.toString())),
+      //   }),
+      //   ...(availabilityDate && {
+      //     initialAvailabilityDate: startOfDay(
+      //       new Date(availabilityDate.toString()),
+      //     ),
+      //   }),
+      //   ...(availabilityDate && {
+      //     finalAvailabilityDate: endOfDay(
+      //       new Date(availabilityDate.toString()),
+      //     ),
+      //   }),
+      //   ...(status &&
+      //     (status === 'PENDING' ||
+      //       status === 'CONFIRMED' ||
+      //       status === 'CANCELED' ||
+      //       status === 'FINISHED') && { status }),
+      // });
+      // return response.json(sales);
+      // }
+      // if (status) {
+      //   if (
+      //     status !== 'PENDING' &&
+      //     status !== 'CONFIRMED' &&
+      //     status !== 'CANCELED' &&
+      //     status !== 'FINISHED'
+      //   ) {
+      //     return response.status(400).json({ error: 'Status not found.' });
+      //   }
+      //   sales = await saleRepository.findAllSales(Number(page), { status });
+      //   return response.json(sales);
+      // }
+      // sales = await saleRepository.findAllSales(Number(page), {});
+      // return response.json(sales);
     }
 
     if (user.role === 'SELLER') {
       sales = await saleRepository.findBySeller(user.profile.id, Number(page), {
-        ...(date && {
-          initialDay: startOfDay(new Date(date.toString())),
-          endDay: endOfDay(new Date(date.toString())),
+        ...(deliveryDate && {
+          initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(deliveryDate && {
+          finalDeliveryDate: endOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(availabilityDate && {
+          initialAvailabilityDate: startOfDay(
+            new Date(availabilityDate.toString()),
+          ),
+        }),
+        ...(availabilityDate && {
+          finalAvailabilityDate: endOfDay(
+            new Date(availabilityDate.toString()),
+          ),
         }),
         ...(statusTyped && { status: statusTyped }),
       });
@@ -122,9 +177,21 @@ export default class SalesController {
       user.profile.company_id,
       Number(page),
       {
-        ...(date && {
-          initialDay: startOfDay(new Date(date.toString())),
-          endDay: endOfDay(new Date(date.toString())),
+        ...(deliveryDate && {
+          initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(deliveryDate && {
+          finalDeliveryDate: endOfDay(new Date(deliveryDate.toString())),
+        }),
+        ...(availabilityDate && {
+          initialAvailabilityDate: startOfDay(
+            new Date(availabilityDate.toString()),
+          ),
+        }),
+        ...(availabilityDate && {
+          finalAvailabilityDate: endOfDay(
+            new Date(availabilityDate.toString()),
+          ),
         }),
         ...(statusTyped && { status: statusTyped }),
       },

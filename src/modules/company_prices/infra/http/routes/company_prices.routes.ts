@@ -31,7 +31,6 @@ companyPricesRouter.get(
 companyPricesRouter.get(
   '/by-company/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
   companyPricesByCompanyController.show,
 );
 

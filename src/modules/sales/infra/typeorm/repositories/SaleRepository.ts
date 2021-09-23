@@ -18,8 +18,10 @@ interface IFiltersParams {
 }
 
 interface IFilters {
-  initialDay?: Date;
-  endDay?: Date;
+  initialDeliveryDate?: Date;
+  finalDeliveryDate?: Date;
+  initialAvailabilityDate?: Date;
+  finalAvailabilityDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
 }
 
@@ -82,8 +84,10 @@ class SaleRepository implements ISaleRepository {
 
   public async findByDateAndStatus(
     page: number,
-    initialDate: Date,
-    finalDate: Date,
+    deliveryDateInitialDay: Date,
+    deliveryDateFinalDay: Date,
+    availabilityDateInitialDay: Date,
+    availabilityDateFinalDay: Date,
     status: string,
   ): Promise<{
     current_page: number;
@@ -97,7 +101,11 @@ class SaleRepository implements ISaleRepository {
 
     const count = await this.ormRepository.count({
       where: {
-        availability_date: Between(initialDate, finalDate),
+        availability_date: Between(
+          availabilityDateInitialDay,
+          availabilityDateFinalDay,
+        ),
+        delivery_date: Between(deliveryDateInitialDay, deliveryDateFinalDay),
         status,
       },
     });
@@ -106,7 +114,11 @@ class SaleRepository implements ISaleRepository {
       skip: offset,
       take: limit_per_page,
       where: {
-        availability_date: Between(initialDate, finalDate),
+        availability_date: Between(
+          availabilityDateInitialDay,
+          availabilityDateFinalDay,
+        ),
+        delivery_date: Between(deliveryDateInitialDay, deliveryDateFinalDay),
         status,
       },
       relations: [
@@ -132,7 +144,13 @@ class SaleRepository implements ISaleRepository {
   public async findByCompanyAndFinishedStatus(
     companyId: string,
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -147,8 +165,17 @@ class SaleRepository implements ISaleRepository {
       join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
       where: (qb: SelectQueryBuilder<Sale>) => {
         qb.where({
-          ...(initialDay &&
-            endDay && { availability_date: Between(initialDay, endDay) }),
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
           ...(status && { status }),
         }).andWhere('seller.company_id = :companyId', { companyId });
       },
@@ -169,8 +196,17 @@ class SaleRepository implements ISaleRepository {
       ],
       where: (qb: SelectQueryBuilder<Sale>) => {
         qb.where({
-          ...(initialDay &&
-            endDay && { availability_date: Between(initialDay, endDay) }),
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
           ...(status && { status }),
         }).andWhere('seller.company_id = :companyId', { companyId });
       },
@@ -188,7 +224,13 @@ class SaleRepository implements ISaleRepository {
 
   public async findAllSales(
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -201,8 +243,17 @@ class SaleRepository implements ISaleRepository {
 
     const count = await this.ormRepository.count({
       where: {
-        ...(initialDay &&
-          endDay && { availability_date: Between(initialDay, endDay) }),
+        ...(initialDeliveryDate &&
+          finalDeliveryDate && {
+            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+          }),
+        ...(initialAvailabilityDate &&
+          finalAvailabilityDate && {
+            availability_date: Between(
+              initialAvailabilityDate,
+              finalAvailabilityDate,
+            ),
+          }),
         ...(status && { status }),
       },
     });
@@ -211,8 +262,17 @@ class SaleRepository implements ISaleRepository {
       skip: offset,
       take: limit_per_page,
       where: {
-        ...(initialDay &&
-          endDay && { availability_date: Between(initialDay, endDay) }),
+        ...(initialDeliveryDate &&
+          finalDeliveryDate && {
+            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+          }),
+        ...(initialAvailabilityDate &&
+          finalAvailabilityDate && {
+            availability_date: Between(
+              initialAvailabilityDate,
+              finalAvailabilityDate,
+            ),
+          }),
         ...(status && { status }),
       },
       order: { request_date: 'DESC' },
@@ -239,7 +299,13 @@ class SaleRepository implements ISaleRepository {
   public async findBySeller(
     sellerId: string,
     page: number,
-    { initialDay, endDay, status }: IFilters,
+    {
+      initialDeliveryDate,
+      finalDeliveryDate,
+      initialAvailabilityDate,
+      finalAvailabilityDate,
+      status,
+    }: IFilters,
   ): Promise<{
     current_page: number;
     total_pages: number;
@@ -253,8 +319,17 @@ class SaleRepository implements ISaleRepository {
     const count = await this.ormRepository.count({
       where: {
         seller_id: sellerId,
-        ...(initialDay &&
-          endDay && { availability_date: Between(initialDay, endDay) }),
+        ...(initialDeliveryDate &&
+          finalDeliveryDate && {
+            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+          }),
+        ...(initialAvailabilityDate &&
+          finalAvailabilityDate && {
+            availability_date: Between(
+              initialAvailabilityDate,
+              finalAvailabilityDate,
+            ),
+          }),
         ...(status && { status }),
       },
     });
@@ -264,8 +339,17 @@ class SaleRepository implements ISaleRepository {
       take: limit_per_page,
       where: {
         seller_id: sellerId,
-        ...(initialDay &&
-          endDay && { availability_date: Between(initialDay, endDay) }),
+        ...(initialDeliveryDate &&
+          finalDeliveryDate && {
+            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+          }),
+        ...(initialAvailabilityDate &&
+          finalAvailabilityDate && {
+            availability_date: Between(
+              initialAvailabilityDate,
+              finalAvailabilityDate,
+            ),
+          }),
         ...(status && { status }),
       },
       order: { request_date: 'DESC' },
