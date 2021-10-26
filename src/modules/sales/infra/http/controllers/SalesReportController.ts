@@ -105,7 +105,7 @@ export default class SalesReportController {
         company: sale.seller.company?.name,
         unit: sale?.unit?.name || sale.seller.unit?.name,
         seller: sale.seller.name,
-        car: sale.car.model,
+        car: `${sale.car.brand} ${sale.car.model}`,
         car_plate: sale.car.plate,
         delivery_date: format(sale.delivery_date, "dd'/'MM'/'yyyy", {
           locale: ptBR,

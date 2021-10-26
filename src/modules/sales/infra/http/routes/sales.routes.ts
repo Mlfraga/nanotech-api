@@ -8,9 +8,11 @@ import CompaniesSalesBudgetController from '../controllers/CompaniesSalesBudgetC
 import SalesBudgetController from '../controllers/SalesBudgetController';
 import SalesController from '../controllers/SalesController';
 import SalesReportController from '../controllers/SalesReportController';
+import UpdateStatusSaleController from '../controllers/UpdateStatusSaleController';
 
 const salesRouter = Router();
 const salesController = new SalesController();
+const updateStatusSaleController = new UpdateStatusSaleController();
 const salesReportController = new SalesReportController();
 const salesBudgetController = new SalesBudgetController();
 const companiesSalesBudgetController = new CompaniesSalesBudgetController();
@@ -73,7 +75,11 @@ salesRouter.post(
   companiesSalesBudgetController.create,
 );
 
-salesRouter.patch('/status', RoleMiddleware.isAdmin, salesController.update);
+salesRouter.patch(
+  '/status',
+  RoleMiddleware.isAdmin,
+  updateStatusSaleController.update,
+);
 
 salesRouter.get(
   '/sales-report',
@@ -107,4 +113,23 @@ salesRouter.delete(
   RoleMiddleware.isAdmin,
   salesController.delete,
 );
+
+salesRouter.put(
+  '/:id',
+  celebrate({
+    [Segments.BODY]: {
+      car: Joi.string().required(),
+      carPlate: Joi.string().required().min(7).max(8),
+      carModel: Joi.string().required(),
+      carColor: Joi.string().required(),
+      comments: Joi.string().allow(null),
+      source: Joi.string().required(),
+      deliveryDate: Joi.date().required(),
+      availabilityDate: Joi.date().required(),
+    },
+  }),
+  ensureAuthenticated,
+  salesController.update,
+);
+
 export default salesRouter;

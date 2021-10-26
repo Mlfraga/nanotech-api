@@ -7,16 +7,12 @@ import AppError from '@shared/errors/AppError';
 
 import CarRepository from '@modules/cars/infra/typeorm/repositories/CarRepository';
 import PersonRepository from '@modules/persons/infra/typeorm/repositories/PersonRepository';
+import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ServiceSaleRepository from '@modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
 import UnitRepository from '@modules/unities/infra/typeorm/repositories/UnitRepository';
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
-
-interface IUpdatedSalesErrors {
-  sale: string;
-  message: string;
-}
 
 export default class SalesController {
   async index(request: Request, response: Response) {
@@ -382,36 +378,32 @@ export default class SalesController {
   }
 
   async update(request: Request, response: Response) {
-    const { status, sales } = request.body;
+    const { id: saleId } = request.params;
+    const {
+      car,
+      carPlate,
+      carModel,
+      carColor,
+      comments,
+      source,
+      deliveryDate,
+      availabilityDate,
+    } = request.body;
 
-    if (
-      status !== 'PENDING' &&
-      status !== 'CONFIRMED' &&
-      status !== 'CANCELED' &&
-      status !== 'FINISHED'
-    ) {
-      throw new AppError('Status not found.', 404);
-    }
+    const updateSaleService = container.resolve(UpdateSaleService);
 
-    const saleRepository = container.resolve(SaleRepository);
+    const updatedSale = await updateSaleService.execute({
+      saleId,
+      car,
+      carPlate,
+      carModel,
+      carColor,
+      comments,
+      source,
+      deliveryDate,
+      availabilityDate,
+    });
 
-    const errors: IUpdatedSalesErrors[] = [];
-    const updated_sales: string[] = [];
-
-    for (const sale of sales) {
-      const foundSale = await saleRepository.findById(String(sale));
-
-      if (!foundSale) {
-        errors.push({ sale, message: 'Sale not found' });
-
-        continue;
-      }
-
-      const updatedSale = await saleRepository.save({ ...foundSale, status });
-
-      updated_sales.push(updatedSale.id);
-    }
-
-    return response.status(200).json({ updated_sales, errors });
+    return response.status(200).json(updatedSale);
   }
 }
