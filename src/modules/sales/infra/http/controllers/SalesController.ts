@@ -18,7 +18,8 @@ export default class SalesController {
   async index(request: Request, response: Response) {
     const saleRepository = container.resolve(SaleRepository);
 
-    const { deliveryDate, availabilityDate, status, page } = request.query;
+    const { deliveryDate, availabilityDate, sellerId, status, page } =
+      request.query;
 
     const user_id = request.user.id;
 
@@ -48,6 +49,7 @@ export default class SalesController {
 
     if (user.role === 'ADMIN') {
       sales = await saleRepository.findAllSales(Number(page), {
+        ...(sellerId && { sellerId: String(sellerId) }),
         ...(deliveryDate && {
           initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
         }),
@@ -173,6 +175,7 @@ export default class SalesController {
       user.profile.company_id,
       Number(page),
       {
+        ...(sellerId && { sellerId: String(sellerId) }),
         ...(deliveryDate && {
           initialDeliveryDate: startOfDay(new Date(deliveryDate.toString())),
         }),

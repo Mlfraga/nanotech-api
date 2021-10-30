@@ -19,6 +19,7 @@ interface IFiltersParams {
 
 interface IFilters {
   initialDeliveryDate?: Date;
+  sellerId?: string;
   finalDeliveryDate?: Date;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
@@ -150,6 +151,7 @@ class SaleRepository implements ISaleRepository {
       initialAvailabilityDate,
       finalAvailabilityDate,
       status,
+      sellerId,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -177,6 +179,7 @@ class SaleRepository implements ISaleRepository {
               ),
             }),
           ...(status && { status }),
+          ...(sellerId && { seller_id: sellerId }),
         }).andWhere('seller.company_id = :companyId', { companyId });
       },
     });
@@ -208,6 +211,7 @@ class SaleRepository implements ISaleRepository {
               ),
             }),
           ...(status && { status }),
+          ...(sellerId && { seller_id: sellerId }),
         }).andWhere('seller.company_id = :companyId', { companyId });
       },
       order: { request_date: 'DESC' },
@@ -230,6 +234,7 @@ class SaleRepository implements ISaleRepository {
       initialAvailabilityDate,
       finalAvailabilityDate,
       status,
+      sellerId,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -254,6 +259,7 @@ class SaleRepository implements ISaleRepository {
               finalAvailabilityDate,
             ),
           }),
+        ...(sellerId && { seller_id: sellerId }),
         ...(status && { status }),
       },
     });
@@ -273,6 +279,7 @@ class SaleRepository implements ISaleRepository {
               finalAvailabilityDate,
             ),
           }),
+        ...(sellerId && { seller_id: sellerId }),
         ...(status && { status }),
       },
       order: { request_date: 'DESC' },

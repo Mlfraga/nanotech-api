@@ -24,6 +24,7 @@ salesRouter.get(
       deliveryDate: Joi.date().allow(null),
       availabilityDate: Joi.date().allow(null),
       status: Joi.string().allow(null),
+      sellerId: Joi.string().uuid().allow(null),
       page: Joi.number().required(),
     },
   }),
