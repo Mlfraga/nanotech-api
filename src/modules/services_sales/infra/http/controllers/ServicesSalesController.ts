@@ -89,27 +89,31 @@ export default class ServicesSalesController {
       }
     });
 
-    const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${`${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`}\n\n*Data de disponibilidade:* ${format(
-      addHours(new Date(String(saleById?.availability_date)), -3),
-      "dd'/'MM'/'yyyy '-' HH:mm'h'",
-      { locale: ptBR },
-    )}\n\n*Data de entrega:* ${format(
-      addHours(new Date(String(saleById?.delivery_date)), -3),
-      "dd'/'MM'/'yyyy '-' HH:mm'h'",
-      { locale: ptBR },
-    )}\n\n*Data do registro da venda:* ${format(
-      addHours(new Date(String(saleById?.request_date)), -3),
-      "dd'/'MM'/'yyyy '-' HH:mm'h'",
-      { locale: ptBR },
-    )}\n\n*Vendedor(a):* ${saleById?.seller.name}\n\n*Concessionária:* ${
-      saleById?.seller.company.name
-    }\n\n*Unidade:* ${saleById?.unit?.name}\n\n*Carro:* ${
-      saleById?.car.brand
-    } ${saleById?.car.model} ${saleById?.car.color}, placa ${
-      saleById?.car.plate
-    }\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${
-      saleById?.comments ? saleById?.comments : ''
-    }`;
+    const messageData = {
+      saleNumber: `${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
+      availabilityDate: format(
+        addHours(new Date(String(saleById?.availability_date)), -3),
+        "dd'/'MM'/'yyyy '-' HH:mm'h'",
+        { locale: ptBR },
+      ),
+      deliveryDate: format(
+        addHours(new Date(String(saleById?.delivery_date)), -3),
+        "dd'/'MM'/'yyyy '-' HH:mm'h'",
+        { locale: ptBR },
+      ),
+      requestDate: format(
+        addHours(new Date(String(saleById?.request_date)), -3),
+        "dd'/'MM'/'yyyy '-' HH:mm'h'",
+        { locale: ptBR },
+      ),
+      seller: saleById?.seller.name,
+      company: saleById?.seller.company.name,
+      unit: saleById?.unit?.name,
+      car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate}`,
+      comments: saleById?.comments ? saleById?.comments : '',
+    };
+
+    const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments}`;
 
     const recipients = ['whatsapp:+553192458098', 'whatsapp:+553188783666'];
 
