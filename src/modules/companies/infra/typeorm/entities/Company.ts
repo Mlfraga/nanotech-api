@@ -9,6 +9,7 @@ import {
 
 import CompanyPrices from '@modules/company_prices/infra/typeorm/entities/CompanyPrices';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import Service from '@modules/services/infra/typeorm/entities/Service';
 import Unit from '@modules/unities/infra/typeorm/entities/Unit';
 
 @Entity('companies')
@@ -37,6 +38,11 @@ export default class Company {
     cascade: true,
   })
   company_prices: CompanyPrices[];
+
+  @OneToMany(() => Service, service => service.company_id, {
+    cascade: true,
+  })
+  company_services: Service[];
 
   @Column()
   client_identifier: string;

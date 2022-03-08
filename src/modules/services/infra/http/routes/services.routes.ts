@@ -9,12 +9,17 @@ import ServicesController from '../controllers/ServicesController';
 const servicesRouter = Router();
 const servicesController = new ServicesController();
 
-servicesRouter.get('/', ensureAuthenticated, servicesController.index);
+servicesRouter.get(
+  '/:companyId',
+  ensureAuthenticated,
+  servicesController.index,
+);
 
 servicesRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
+      company_id: Joi.string().uuid().required(),
       name: Joi.string().required(),
       price: Joi.number().required(),
     },

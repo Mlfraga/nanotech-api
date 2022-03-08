@@ -25,6 +25,17 @@ class ServiceRepository implements IServiceRepository {
     return service;
   }
 
+  public async findByCompanyId(
+    companyId: string,
+  ): Promise<Service[] | undefined> {
+    const service = await this.ormRepository.find({
+      where: { company_id: companyId },
+      relations: ['company', 'company.company_prices'],
+    });
+
+    return service;
+  }
+
   public async findByName(name: string): Promise<Service | undefined> {
     const service = await this.ormRepository.findOne({ where: { name } });
 

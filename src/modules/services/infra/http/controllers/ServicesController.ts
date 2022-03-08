@@ -7,15 +7,17 @@ import ServiceRepository from '../../typeorm/repositories/ServiceRepository';
 
 export default class ServicesController {
   async index(request: Request, response: Response) {
+    const { companyId } = request.params;
+
     const serviceRepository = container.resolve(ServiceRepository);
 
-    const services = await serviceRepository.find();
+    const services = await serviceRepository.findByCompanyId(companyId);
 
     return response.json(services);
   }
 
   async store(request: Request, response: Response) {
-    const { name, price } = request.body;
+    const { name, price, company_id } = request.body;
 
     const serviceRepository = container.resolve(ServiceRepository);
 
@@ -28,6 +30,7 @@ export default class ServicesController {
     const service = await serviceRepository.create({
       name,
       price,
+      company_id,
     });
 
     return response.json(service);

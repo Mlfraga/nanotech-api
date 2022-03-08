@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import CompanyRepository from '@modules/companies/infra/typeorm/repositories/CompanyRepository';
-import CompanyPricesRepository from '@modules/company_prices/infra/typeorm/repositories/CompanyPricesRepository';
+import ServiceRepository from '@modules/services/infra/typeorm/repositories/ServiceRepository';
 
 export default class CompaniesSalesBudgetController {
   async create(request: Request, response: Response) {
@@ -12,7 +12,7 @@ export default class CompaniesSalesBudgetController {
 
     let companyPrice = 0;
 
-    const companyPricesRepository = container.resolve(CompanyPricesRepository);
+    const serviceRepository = container.resolve(ServiceRepository);
     const companyRepository = container.resolve(CompanyRepository);
 
     const company = companyRepository.findById(companyId);
@@ -21,24 +21,16 @@ export default class CompaniesSalesBudgetController {
       throw new AppError('Company not found.', 404);
     }
 
-    services.filter(async (serviceId: string) => {
-      const serviceByIdAndServiceId =
-        await companyPricesRepository.findByCompanyIdAndServiceId(
-          String(companyId),
-          String(serviceId),
-        );
+    for (const serviceId of services) {
+      const serviceById = await serviceRepository.findById(String(serviceId));
 
-      if (!serviceByIdAndServiceId) {
+      if (!serviceById) {
         throw new AppError('No service found with this ID.');
       }
 
-      companyPrice =
-        Number(serviceByIdAndServiceId.price) + Number(companyPrice);
-    });
+      companyPrice = Number(serviceById.company_price) + Number(companyPrice);
+    }
 
-    setTimeout(
-      () => response.json({ companyPrice: Number(companyPrice) }),
-      100,
-    );
+    return response.json({ companyPrice: Number(companyPrice) });
   }
 }
