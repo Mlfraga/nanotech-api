@@ -113,13 +113,13 @@ export default class ServicesSalesController {
       comments: saleById?.comments ? saleById?.comments : '',
     };
 
-    const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments}`;
+    const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments} `;
 
     const recipients = ['whatsapp:+553192458098', 'whatsapp:+553188783666'];
 
     for (const recipient of recipients) {
       await client().messages.create({
-        from: 'whatsapp:+14155238886',
+        from: 'whatsapp:+14129618290',
         body: messageToSend,
         to: recipient,
       });
