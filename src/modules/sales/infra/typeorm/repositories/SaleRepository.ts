@@ -1,5 +1,6 @@
 import {
   Between,
+  FindOperator,
   getRepository,
   Repository,
   SelectQueryBuilder,
@@ -56,18 +57,27 @@ class SaleRepository implements ISaleRepository {
     initialDate,
     finalDate,
   }: IFiltersParams): Promise<Sale[] | undefined> {
-    let dueDateCriteria;
+    let dueDateCriteria: FindOperator<Date> | undefined;
 
     if (initialDate && finalDate) {
       dueDateCriteria = Between(initialDate, finalDate);
     }
 
     const sale = await this.ormRepository.find({
+      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
       order: { created_at: 'ASC' },
-      where: {
-        ...(status && { status }),
-        ...(dueDateCriteria && { delivery_date: dueDateCriteria }),
-        ...(company && { seller: { company_id: company } }),
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        if (company) {
+          qb.where({
+            ...(status && { status }),
+            ...(dueDateCriteria && { delivery_date: dueDateCriteria }),
+          }).andWhere('seller.company_id = :company', { company });
+        } else {
+          qb.where({
+            ...(status && { status }),
+            ...(dueDateCriteria && { delivery_date: dueDateCriteria }),
+          });
+        }
       },
       relations: [
         'seller',

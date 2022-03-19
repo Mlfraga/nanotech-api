@@ -1,11 +1,12 @@
 import ICreateServiceDTO from '../dtos/ICreateServiceDTO';
-import User from '../infra/typeorm/entities/Service';
+import Service from '../infra/typeorm/entities/Service';
 
 export default interface IServiceRepository {
-  find(): Promise<User[] | undefined>;
-  findById(id: string): Promise<User | undefined>;
-  findByName(name: string): Promise<User | undefined>;
-  create(data: ICreateServiceDTO): Promise<User>;
-  save(user: User): Promise<User>;
+  find(): Promise<Service[] | undefined>;
+  findById(id: string): Promise<Service | undefined>;
+  findByCompanyId(companyId: string): Promise<Service[] | undefined>;
+  findByName(name: string): Promise<Service | undefined>;
+  create(data: ICreateServiceDTO): Promise<Service>;
+  save(service: Service): Promise<Service>;
   delete(id: string): Promise<void>;
 }

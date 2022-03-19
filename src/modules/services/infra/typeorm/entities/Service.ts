@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
-import CompanyPrices from '@modules/company_prices/infra/typeorm/entities/CompanyPrices';
+import Company from '@modules/companies/infra/typeorm/entities/Company';
 import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
 
 @Entity('services')
@@ -24,15 +26,20 @@ export default class Service {
   @Column()
   enabled: boolean;
 
+  @Column()
+  company_price: number;
+
   @OneToMany(() => ServiceSale, serviceSale => serviceSale.id, {
     cascade: true,
   })
   services_sales: ServiceSale[];
 
-  @OneToMany(() => CompanyPrices, companyPrices => companyPrices.id, {
-    cascade: true,
-  })
-  company_prices: CompanyPrices[];
+  @Column()
+  company_id: string;
+
+  @ManyToOne(() => Company, company => company.company_services)
+  @JoinColumn({ name: 'company_id' })
+  company: Company;
 
   @CreateDateColumn()
   created_at: Date;

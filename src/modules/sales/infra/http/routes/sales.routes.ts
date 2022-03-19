@@ -88,7 +88,7 @@ salesRouter.get(
     [Segments.QUERY]: {
       initialDate: Joi.date().allow(null),
       finalDate: Joi.date().allow(null),
-      company: Joi.number().allow(null),
+      company: Joi.string().uuid().allow(null),
       service: Joi.number().allow(null),
       status: Joi.string().allow(null),
     },

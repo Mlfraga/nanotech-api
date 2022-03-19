@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 
 import Company from '@modules/companies/infra/typeorm/entities/Company';
-import Service from '@modules/services/infra/typeorm/entities/Service';
 
 @Entity('company_prices')
 export default class CompanyPrices {
@@ -25,13 +24,6 @@ export default class CompanyPrices {
   @ManyToOne(() => Company, company => company.company_prices)
   @JoinColumn({ name: 'company_id' })
   company: Company;
-
-  @Column()
-  service_id: string;
-
-  @ManyToOne(() => Service, service => service.company_prices, { eager: true })
-  @JoinColumn({ name: 'service_id' })
-  service: Service;
 
   @CreateDateColumn()
   created_at: Date;

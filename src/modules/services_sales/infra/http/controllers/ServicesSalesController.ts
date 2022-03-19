@@ -8,7 +8,6 @@ import AppError from '@shared/errors/AppError';
 
 import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
 
-import CompanyPricesRepository from '../../../../company_prices/infra/typeorm/repositories/CompanyPricesRepository';
 import SaleRepository from '../../../../sales/infra/typeorm/repositories/SaleRepository';
 import ServiceRepository from '../../../../services/infra/typeorm/repositories/ServiceRepository';
 import ServiceSaleRepository from '../../typeorm/repositories/ServiceSaleRepository';
@@ -26,7 +25,6 @@ export default class ServicesSalesController {
     const serviceSaleRepository = container.resolve(ServiceSaleRepository);
     const serviceRepository = container.resolve(ServiceRepository);
     const saleRepository = container.resolve(SaleRepository);
-    const companyPricesRepository = container.resolve(CompanyPricesRepository);
 
     const { saleId, serviceIds } = request.body;
 
@@ -50,18 +48,12 @@ export default class ServicesSalesController {
           throw new AppError('Service not found.', 404);
         }
 
-        const companyService =
-          await companyPricesRepository.findByCompanyIdAndServiceId(
-            saleById.seller.company_id,
-            serviceById.id,
-          );
-
         servicesNames.push(serviceById?.name);
 
         const data = await serviceSaleRepository.create({
           sale_id: saleId,
           service_id: id,
-          company_value: companyService?.price ? companyService?.price : 0,
+          company_value: serviceById.company_price,
           cost_value: serviceById.price,
         });
 
@@ -85,7 +77,7 @@ export default class ServicesSalesController {
       if (index === 0) {
         servicesMessage += `${serv.service.name}`;
       } else {
-        servicesMessage += ` ${serv.service.name}`;
+        servicesMessage += ` | ${serv.service.name}`;
       }
     });
 

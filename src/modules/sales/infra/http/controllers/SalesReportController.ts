@@ -11,8 +11,6 @@ import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
 import { template } from '@shared/utils/Template';
 
 import CompanyRepository from '@modules/companies/infra/typeorm/repositories/CompanyRepository';
-import CompanyPricesRepository from '@modules/company_prices/infra/typeorm/repositories/CompanyPricesRepository';
-import ServiceRepository from '@modules/services/infra/typeorm/repositories/ServiceRepository';
 
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
@@ -24,23 +22,13 @@ interface IPDFError {
 
 export default class SalesReportController {
   async store(request: Request, response: Response) {
-    const { company, service, initialDate, finalDate, status } = request.query;
-
-    let serviceById;
-
+    const { company, initialDate, finalDate, status } = request.query;
     const saleRepository = container.resolve(SaleRepository);
-    const serviceRepository = container.resolve(ServiceRepository);
-    const companyPricesRepository = container.resolve(CompanyPricesRepository);
     const companyRepository = container.resolve(CompanyRepository);
-
-    if (service) {
-      serviceById = await serviceRepository.findById(String(service));
-    }
 
     const sales = await saleRepository.filter({
       status: status && String(status),
       company: company && String(company),
-      service: service && String(service),
       initialDate: initialDate
         ? startOfDay(new Date(String(initialDate)))
         : undefined,
@@ -65,18 +53,12 @@ export default class SalesReportController {
         balance: string;
       }[] = [];
       for (const serv of sale.services_sales) {
-        const servicePriceOnCompany =
-          await companyPricesRepository.findByCompanyIdAndServiceId(
-            sale.seller.company?.id,
-            serv.service.id,
-          );
-
         const balance = serv.company_value - serv.cost_value;
 
         total.balance_amount += Number(balance);
         total.cost_values_amount += Number(serv.service.price);
-        total.company_values_amount += servicePriceOnCompany
-          ? Number(servicePriceOnCompany?.price)
+        total.company_values_amount += serv.service.company_price
+          ? Number(serv.service.company_price)
           : 0;
 
         formatedServicesSales.push({
@@ -151,7 +133,7 @@ export default class SalesReportController {
             )}`
           : '',
       TODAY: format(new Date(), "dd'/'MM'/'yyyy", { locale: ptBR }),
-      SERVICE_FILTER: serviceById ? serviceById.name : '',
+      SERVICE_FILTER: '',
       STATUS_FILTER: status ? getTranslatedSalesStatus(String(status)) : '',
       AMOUNT: {
         balance_amount: Number(total.balance_amount).toLocaleString('pt-br', {

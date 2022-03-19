@@ -7,19 +7,6 @@ import ServiceRepository from '../../../../services/infra/typeorm/repositories/S
 import CompanyPrices from '../../typeorm/entities/CompanyPrices';
 import CompanyPricesRepository from '../../typeorm/repositories/CompanyPricesRepository';
 
-interface IServices {
-  serviceId: string;
-  price: number;
-}
-
-interface ICreateCompanyServices {
-  companyId: string;
-  services: Array<{
-    serviceId: string;
-    price: number;
-  }>;
-}
-
 export default class CompanyPricesController {
   async index(request: Request, response: Response) {
     const companyPricesRepository = container.resolve(CompanyPricesRepository);
@@ -75,42 +62,25 @@ export default class CompanyPricesController {
       throw new AppError('No company found with this ID.');
     }
 
-    const promises: Promise<ICreateCompanyServices>[] = services.map(
-      async (service: IServices) => {
-        const serviceById = serviceRepository.findById(service.serviceId);
+    const companiesUpdated = [];
 
-        if (!serviceById) {
-          throw new AppError('No service found with this ID.');
-        }
+    for (const service of services) {
+      const serviceById = await serviceRepository.findById(service.serviceId);
 
-        const serviceByCompany =
-          await companyPricesRepository.findByCompanyIdAndServiceId(
-            companyId,
-            service.serviceId,
-          );
+      if (!serviceById) {
+        throw new AppError('No service found with this ID.');
+      }
 
-        if (serviceByCompany) {
-          throw new AppError(
-            'This service was already created by this company.',
-          );
-        }
+      const serviceUpdated = await serviceRepository.save({
+        ...serviceById,
+        company_price: service.price,
+      });
 
-        const data = await companyPricesRepository.create({
-          price: service.price,
-          company_id: companyId,
-          service_id: service.serviceId,
-        });
+      if (serviceUpdated) {
+        companiesUpdated.push(serviceUpdated);
+      }
+    }
 
-        if (!data) {
-          return null;
-        }
-
-        return data;
-      },
-    );
-
-    const companyService = await Promise.all<ICreateCompanyServices>(promises);
-
-    return response.json(companyService);
+    return response.json(companiesUpdated);
   }
 }
