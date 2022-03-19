@@ -77,7 +77,7 @@ export default class ServicesSalesController {
       if (index === 0) {
         servicesMessage += `${serv.service.name}`;
       } else {
-        servicesMessage += ` ${serv.service.name}`;
+        servicesMessage += ` | ${serv.service.name}`;
       }
     });
 
@@ -102,7 +102,7 @@ export default class ServicesSalesController {
       company: saleById?.seller.company.name,
       unit: saleById?.unit?.name,
       car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate}`,
-      comments: saleById?.comments ? saleById?.comments : '',
+      comments: saleById?.comments ? saleById?.comments : ' ',
     };
 
     const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments} `;

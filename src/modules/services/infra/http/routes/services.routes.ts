@@ -35,10 +35,11 @@ servicesRouter.put(
     [Segments.BODY]: {
       name: Joi.string().allow(null),
       price: Joi.number().allow(null),
+      company_price: Joi.number().allow(null),
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isManagerOrAdmin,
   servicesController.update,
 );
 

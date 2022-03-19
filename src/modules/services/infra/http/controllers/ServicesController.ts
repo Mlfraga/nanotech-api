@@ -21,12 +21,6 @@ export default class ServicesController {
 
     const serviceRepository = container.resolve(ServiceRepository);
 
-    const serviceByName = await serviceRepository.findByName(name);
-
-    if (serviceByName) {
-      throw new AppError('Already has a service with this name.');
-    }
-
     const service = await serviceRepository.create({
       name,
       price,
@@ -38,17 +32,9 @@ export default class ServicesController {
 
   async update(request: Request, response: Response) {
     const { id } = request.params;
-    const { name, price } = request.body;
+    const { name, price, company_price } = request.body;
 
     const serviceRepository = container.resolve(ServiceRepository);
-
-    if (name) {
-      const serviceByName = await serviceRepository.findByName(name);
-
-      if (serviceByName) {
-        throw new AppError('Already has a service with this name.', 409);
-      }
-    }
 
     const serviceById = await serviceRepository.findById(String(id));
 
@@ -60,6 +46,7 @@ export default class ServicesController {
       ...serviceById,
       ...(name && { name }),
       ...(price && { price }),
+      ...(company_price && { company_price }),
     });
 
     return response.json(service);
