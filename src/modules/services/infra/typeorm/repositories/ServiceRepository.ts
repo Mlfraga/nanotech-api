@@ -31,6 +31,9 @@ class ServiceRepository implements IServiceRepository {
     const service = await this.ormRepository.find({
       where: { company_id: companyId },
       relations: ['company', 'company.company_prices'],
+      order: {
+        name: 'ASC',
+      },
     });
 
     return service;
