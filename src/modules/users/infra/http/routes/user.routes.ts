@@ -43,6 +43,13 @@ userRouter.post(
 );
 
 userRouter.patch(
+  '/reset-password/:id',
+  ensureAuthenticated,
+  RoleMiddleware.isAdmin,
+  passwordUserController.delete,
+);
+
+userRouter.patch(
   '/change-password',
   celebrate({
     [Segments.BODY]: {
