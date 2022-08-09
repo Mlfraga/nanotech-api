@@ -107,7 +107,11 @@ export default class ServicesSalesController {
 
     const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments} `;
 
-    const recipients = ['whatsapp:+553192458098', 'whatsapp:+553188783666'];
+    const recipients = [
+      'whatsapp:+553192458098',
+      'whatsapp:+553188783666',
+      'whatsapp:+553196811409',
+    ];
 
     for (const recipient of recipients) {
       await client().messages.create({
