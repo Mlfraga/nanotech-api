@@ -29,12 +29,6 @@ companyPricesRouter.get(
 );
 
 companyPricesRouter.get(
-  '/by-company/:id',
-  ensureAuthenticated,
-  companyPricesByCompanyController.show,
-);
-
-companyPricesRouter.get(
   '/sale',
   celebrate({
     [Segments.QUERY]: {

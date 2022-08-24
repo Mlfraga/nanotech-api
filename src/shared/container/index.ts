@@ -17,6 +17,8 @@ import SaleRepository from '../../modules/sales/infra/typeorm/repositories/SaleR
 import ISaleRepository from '../../modules/sales/repositories/ISaleRepository';
 import ServiceSaleRepository from '../../modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
 import IServiceSaleRepository from '../../modules/services_sales/repositories/IServiceSaleRepository';
+import ServiceRepository from '../../modules/services/infra/typeorm/repositories/ServiceRepository';
+import IServiceRepository from '../../modules/services/repositories/IServiceRepository';
 import UnitRepository from '../../modules/unities/infra/typeorm/repositories/UnitRepository';
 import IUnitRepository from '../../modules/unities/repositories/IUnitRepository';
 import UserRepository from '../../modules/users/infra/typeorm/repositories/UserRepository';
@@ -57,3 +59,8 @@ container.registerSingleton<IProfileRepository>(
 container.registerSingleton<ICarRepository>('CarRepository', CarRepository);
 
 container.registerSingleton<IUnitRepository>('UnitRepository', UnitRepository);
+
+container.registerSingleton<IServiceRepository>(
+  'ServiceRepository',
+  ServiceRepository,
+);

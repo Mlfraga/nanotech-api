@@ -3,15 +3,21 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import ToggleServiceEnabledService from '@modules/services/services/ToggleServiceEnabledService';
+
 import ServiceRepository from '../../typeorm/repositories/ServiceRepository';
 
 export default class ServicesController {
   async index(request: Request, response: Response) {
     const { companyId } = request.params;
+    const { showDisabled } = request.query;
 
     const serviceRepository = container.resolve(ServiceRepository);
 
-    const services = await serviceRepository.findByCompanyId(companyId);
+    const services = await serviceRepository.findByCompanyId(
+      companyId,
+      Boolean(showDisabled),
+    );
 
     return response.json(services);
   }
@@ -50,5 +56,35 @@ export default class ServicesController {
     });
 
     return response.json(service);
+  }
+
+  async enable(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const toggleServiceEnabledService = container.resolve(
+      ToggleServiceEnabledService,
+    );
+
+    await toggleServiceEnabledService.execute({
+      id,
+      enabled: true,
+    });
+
+    return response.sendStatus(202);
+  }
+
+  async disable(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const toggleServiceEnabledService = container.resolve(
+      ToggleServiceEnabledService,
+    );
+
+    await toggleServiceEnabledService.execute({
+      id,
+      enabled: false,
+    });
+
+    return response.sendStatus(202);
   }
 }

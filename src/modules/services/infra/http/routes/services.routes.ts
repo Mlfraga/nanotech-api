@@ -11,6 +11,14 @@ const servicesController = new ServicesController();
 
 servicesRouter.get(
   '/:companyId',
+  celebrate({
+    [Segments.PARAMS]: {
+      companyId: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      showDisabled: Joi.boolean().required(),
+    },
+  }),
   ensureAuthenticated,
   servicesController.index,
 );
@@ -41,6 +49,28 @@ servicesRouter.put(
   ensureAuthenticated,
   RoleMiddleware.isManagerOrAdmin,
   servicesController.update,
+);
+
+servicesRouter.patch(
+  '/disable/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  ensureAuthenticated,
+  servicesController.disable,
+);
+
+servicesRouter.patch(
+  '/enable/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  ensureAuthenticated,
+  servicesController.enable,
 );
 
 export default servicesRouter;

@@ -5,7 +5,6 @@ import AppError from '@shared/errors/AppError';
 
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
-import ServiceRepository from '../../../../services/infra/typeorm/repositories/ServiceRepository';
 import CompanyPricesRepository from '../../typeorm/repositories/CompanyPricesRepository';
 
 export default class CompanyPricesByCompanyController {
@@ -25,21 +24,6 @@ export default class CompanyPricesByCompanyController {
       await companyPricesRepository.findByCompanyId(
         String(user?.profile.company_id),
       );
-
-    if (!companyServicesByCompany) {
-      throw new AppError('No service from this company was found.');
-    }
-
-    return response.json(companyServicesByCompany);
-  }
-
-  async show(request: Request, response: Response) {
-    const { id: company_id } = request.params;
-    const serviceRepository = container.resolve(ServiceRepository);
-
-    const companyServicesByCompany = await serviceRepository.findByCompanyId(
-      String(company_id),
-    );
 
     if (!companyServicesByCompany) {
       throw new AppError('No service from this company was found.');

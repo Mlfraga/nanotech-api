@@ -27,9 +27,10 @@ class ServiceRepository implements IServiceRepository {
 
   public async findByCompanyId(
     companyId: string,
+    showDisabled: boolean,
   ): Promise<Service[] | undefined> {
     const service = await this.ormRepository.find({
-      where: { company_id: companyId },
+      where: { company_id: companyId, ...(!showDisabled && { enabled: true }) },
       relations: ['company', 'company.company_prices'],
       order: {
         name: 'ASC',
