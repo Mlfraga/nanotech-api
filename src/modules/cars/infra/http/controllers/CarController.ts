@@ -6,7 +6,7 @@ import AppError from '@shared/errors/AppError';
 import PersonRepository from '../../../../persons/infra/typeorm/repositories/PersonRepository';
 import CarRepository from '../../typeorm/repositories/CarRepository';
 
-export default class UserController {
+export default class CarController {
   async store(request: Request, response: Response) {
     const { personId, car, carPlate, carColor, carModel } = request.body;
 

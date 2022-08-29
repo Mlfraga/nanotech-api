@@ -3,6 +3,9 @@ import { container } from 'tsyringe';
 import './providers';
 import '@modules/users/providers';
 
+import WhatsappNumberRepository from '@modules/whatsapp_numbers/infra/typeorm/repositories/WhatsappNumberRepository';
+import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
+
 import CarRepository from '../../modules/cars/infra/typeorm/repositories/CarRepository';
 import ICarRepository from '../../modules/cars/repositories/ICarRepository';
 import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
@@ -63,4 +66,9 @@ container.registerSingleton<IUnitRepository>('UnitRepository', UnitRepository);
 container.registerSingleton<IServiceRepository>(
   'ServiceRepository',
   ServiceRepository,
+);
+
+container.registerSingleton<IWhatsappNumberRepository>(
+  'WhatsappNumberRepository',
+  WhatsappNumberRepository,
 );

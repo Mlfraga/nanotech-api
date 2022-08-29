@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import ResetUserPasswordService from '@modules/users/services/ResetUserPasswordService';
 import UpdateUserPasswordService from '@modules/users/services/UpdateUserPasswordService';
 
-export default class UserController {
+export default class PasswordUserController {
   async update(request: Request, response: Response) {
     const { newPassword } = request.body;
     const { id: user_id } = request.user;

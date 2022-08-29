@@ -11,6 +11,7 @@ import servicesRouter from '@modules/services/infra/http/routes/services.routes'
 import unitiesRouter from '@modules/unities/infra/http/routes/unities.routes';
 import sessionRouter from '@modules/users/infra/http/routes/session.routes';
 import userRouter from '@modules/users/infra/http/routes/user.routes';
+import whatsappNumbersRouter from '@modules/whatsapp_numbers/infra/http/routes/whatsapp_numbers.routes';
 
 const routes = express.Router();
 
@@ -27,6 +28,7 @@ routes.use('/auth', sessionRouter);
 routes.use('/companies', companiesRouter);
 routes.use('/units', unitiesRouter);
 routes.use('/users', userRouter);
+routes.use('/whatsapp-numbers', whatsappNumbersRouter);
 routes.use('/profiles', profileRouter);
 routes.use('/services', servicesRouter);
 routes.use('/company-services', companyPricesRouter);

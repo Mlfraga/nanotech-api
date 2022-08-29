@@ -7,6 +7,7 @@ import client from 'twilio';
 import AppError from '@shared/errors/AppError';
 
 import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
+import WhatsappNumberRepository from '@modules/whatsapp_numbers/infra/typeorm/repositories/WhatsappNumberRepository';
 
 import SaleRepository from '../../../../sales/infra/typeorm/repositories/SaleRepository';
 import ServiceRepository from '../../../../services/infra/typeorm/repositories/ServiceRepository';
@@ -25,6 +26,9 @@ export default class ServicesSalesController {
     const serviceSaleRepository = container.resolve(ServiceSaleRepository);
     const serviceRepository = container.resolve(ServiceRepository);
     const saleRepository = container.resolve(SaleRepository);
+    const whatsappNumberRepository = container.resolve(
+      WhatsappNumberRepository,
+    );
 
     const { saleId, serviceIds } = request.body;
 
@@ -107,11 +111,17 @@ export default class ServicesSalesController {
 
     const messageToSend = `*Novo pedido realizado:*\n\n*n°:* ${messageData.saleNumber}\n\n*Data de disponibilidade:* ${messageData.availabilityDate}\n\n*Data de entrega:* ${messageData.deliveryDate}\n\n*Data do registro da venda:* ${messageData.requestDate}\n\n*Vendedor(a):* ${messageData.seller}\n\n*Concessionária:* ${messageData.company}\n\n*Unidade:* ${messageData.unit}\n\n*Carro:* ${messageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${messageData.comments} `;
 
-    const recipients = [
-      'whatsapp:+553192458098',
-      'whatsapp:+553188783666',
-      'whatsapp:+553196811409',
-    ];
+    const recipients: string[] = [];
+
+    const companyWhatsapNumbers = await whatsappNumberRepository.findByCompany(
+      saleById.seller.company_id,
+    );
+    const globalWhatsappRecipients =
+      await whatsappNumberRepository.findAllGlobalNumbers();
+
+    [...companyWhatsapNumbers, ...globalWhatsappRecipients].forEach(recipient =>
+      recipients.push(recipient.number),
+    );
 
     for (const recipient of recipients) {
       await client().messages.create({
