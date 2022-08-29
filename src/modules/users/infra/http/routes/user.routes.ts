@@ -72,4 +72,18 @@ userRouter.put(
   userController.update,
 );
 
+userRouter.patch(
+  '/disable/:id',
+  ensureAuthenticated,
+  RoleMiddleware.isAdmin,
+  userController.disable,
+);
+
+userRouter.patch(
+  '/enable/:id',
+  ensureAuthenticated,
+  RoleMiddleware.isAdmin,
+  userController.enable,
+);
+
 export default userRouter;

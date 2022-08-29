@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ShowUserService from '@modules/users/services/ShowUserService';
+import ToggleUserEnabledService from '@modules/users/services/ToggleUserEnabledService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 
 export default class UserController {
@@ -56,5 +57,25 @@ export default class UserController {
     const user = await showUserService.execute({ id: String(request.user.id) });
 
     return response.json(user);
+  }
+
+  async disable(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const toggleUserEnabled = container.resolve(ToggleUserEnabledService);
+
+    await toggleUserEnabled.execute({ id, enabled: false });
+
+    return response.sendStatus(202);
+  }
+
+  async enable(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const toggleUserEnabled = container.resolve(ToggleUserEnabledService);
+
+    await toggleUserEnabled.execute({ id, enabled: true });
+
+    return response.sendStatus(202);
   }
 }

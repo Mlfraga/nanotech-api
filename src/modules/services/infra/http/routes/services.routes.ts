@@ -59,6 +59,7 @@ servicesRouter.patch(
     },
   }),
   ensureAuthenticated,
+  RoleMiddleware.isAdmin,
   servicesController.disable,
 );
 
@@ -70,6 +71,7 @@ servicesRouter.patch(
     },
   }),
   ensureAuthenticated,
+  RoleMiddleware.isAdmin,
   servicesController.enable,
 );
 
