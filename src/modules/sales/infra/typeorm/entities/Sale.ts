@@ -85,4 +85,7 @@ export default class Sale {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Column()
+  finished_at?: Date;
 }

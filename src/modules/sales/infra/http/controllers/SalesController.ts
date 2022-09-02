@@ -23,6 +23,8 @@ export default class SalesController {
       endDeliveryDate,
       startAvailabilityDate,
       endAvailabilityDate,
+      startFinishedDate,
+      endFinishedDate,
       sellerId,
       companyId,
       status,
@@ -72,6 +74,12 @@ export default class SalesController {
             new Date(startAvailabilityDate.toString()),
           ),
         }),
+        ...(startFinishedDate && {
+          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
+        }),
+        ...(endFinishedDate && {
+          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
+        }),
         ...(endAvailabilityDate && {
           finalAvailabilityDate: endOfDay(
             new Date(endAvailabilityDate.toString()),
@@ -102,6 +110,12 @@ export default class SalesController {
             new Date(startAvailabilityDate.toString()),
           ),
         }),
+        ...(startFinishedDate && {
+          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
+        }),
+        ...(endFinishedDate && {
+          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
+        }),
         ...(endAvailabilityDate && {
           finalAvailabilityDate: endOfDay(
             new Date(endAvailabilityDate.toString()),
@@ -130,6 +144,12 @@ export default class SalesController {
           initialAvailabilityDate: startOfDay(
             new Date(startAvailabilityDate.toString()),
           ),
+        }),
+        ...(startFinishedDate && {
+          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
+        }),
+        ...(endFinishedDate && {
+          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
         }),
         ...(endAvailabilityDate && {
           finalAvailabilityDate: endOfDay(

@@ -38,7 +38,11 @@ export default class UpdateStatusSaleController {
         continue;
       }
 
-      const updatedSale = await saleRepository.save({ ...foundSale, status });
+      const updatedSale = await saleRepository.save({
+        ...foundSale,
+        ...(status === 'FINISHED' && { finished_at: new Date() }),
+        status,
+      });
 
       updated_sales.push(updatedSale.id);
     }

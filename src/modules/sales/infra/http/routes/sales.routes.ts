@@ -25,6 +25,8 @@ salesRouter.get(
       endDeliveryDate: Joi.date().allow(null),
       startAvailabilityDate: Joi.date().allow(null),
       endAvailabilityDate: Joi.date().allow(null),
+      startFinishedDate: Joi.date().allow(null),
+      endFinishedDate: Joi.date().allow(null),
       companyId: Joi.string().uuid().allow(null),
       status: Joi.string().allow(null),
       sellerId: Joi.string().uuid().allow(null),

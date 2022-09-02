@@ -25,6 +25,8 @@ interface IFilters {
   companyId?: string;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
+  startFinishedDate?: Date;
+  endFinishedDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
 }
 
@@ -163,6 +165,8 @@ class SaleRepository implements ISaleRepository {
       finalAvailabilityDate,
       status,
       sellerId,
+      startFinishedDate,
+      endFinishedDate,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -188,6 +192,10 @@ class SaleRepository implements ISaleRepository {
                 initialAvailabilityDate,
                 finalAvailabilityDate,
               ),
+            }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
             }),
           ...(status && { status }),
           ...(sellerId && { seller_id: sellerId }),
@@ -221,6 +229,10 @@ class SaleRepository implements ISaleRepository {
                 finalAvailabilityDate,
               ),
             }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
+            }),
           ...(status && { status }),
           ...(sellerId && { seller_id: sellerId }),
         }).andWhere('seller.company_id = :companyId', { companyId });
@@ -244,6 +256,8 @@ class SaleRepository implements ISaleRepository {
       finalDeliveryDate,
       initialAvailabilityDate,
       finalAvailabilityDate,
+      startFinishedDate,
+      endFinishedDate,
       companyId,
       status,
       sellerId,
@@ -274,6 +288,10 @@ class SaleRepository implements ISaleRepository {
                   finalAvailabilityDate,
                 ),
               }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
+              }),
             ...(sellerId && { seller_id: sellerId }),
             ...(status && { status }),
           }).andWhere('seller.company_id = :companyId', { companyId });
@@ -289,6 +307,10 @@ class SaleRepository implements ISaleRepository {
                   initialAvailabilityDate,
                   finalAvailabilityDate,
                 ),
+              }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
               }),
             ...(sellerId && { seller_id: sellerId }),
             ...(status && { status }),
@@ -315,6 +337,10 @@ class SaleRepository implements ISaleRepository {
                   finalAvailabilityDate,
                 ),
               }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
+              }),
             ...(sellerId && { seller_id: sellerId }),
             ...(status && { status }),
           }).andWhere('seller.company_id = :companyId', { companyId });
@@ -330,6 +356,10 @@ class SaleRepository implements ISaleRepository {
                   initialAvailabilityDate,
                   finalAvailabilityDate,
                 ),
+              }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
               }),
             ...(sellerId && { seller_id: sellerId }),
             ...(status && { status }),
@@ -366,6 +396,8 @@ class SaleRepository implements ISaleRepository {
       initialAvailabilityDate,
       finalAvailabilityDate,
       status,
+      startFinishedDate,
+      endFinishedDate,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -391,6 +423,10 @@ class SaleRepository implements ISaleRepository {
               finalAvailabilityDate,
             ),
           }),
+        ...(startFinishedDate &&
+          endFinishedDate && {
+            finished_at: Between(startFinishedDate, endFinishedDate),
+          }),
         ...(status && { status }),
       },
     });
@@ -403,6 +439,10 @@ class SaleRepository implements ISaleRepository {
         ...(initialDeliveryDate &&
           finalDeliveryDate && {
             delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+          }),
+        ...(startFinishedDate &&
+          endFinishedDate && {
+            finished_at: Between(startFinishedDate, endFinishedDate),
           }),
         ...(initialAvailabilityDate &&
           finalAvailabilityDate && {
