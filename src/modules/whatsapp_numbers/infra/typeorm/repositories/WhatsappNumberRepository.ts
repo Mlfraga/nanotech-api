@@ -34,14 +34,17 @@ class WhatsappNumberRepository implements IWhatsappNumberRepository {
   }
 
   public async findByCompany(company_id: string): Promise<WhatsappNumber[]> {
-    const whatsappNumbers = await this.ormRepository.find({ company_id });
+    const whatsappNumbers = await this.ormRepository.find({
+      company_id,
+      restricted_to_especific_company: true,
+    });
 
     return whatsappNumbers;
   }
 
   public async findAllGlobalNumbers(): Promise<WhatsappNumber[]> {
     const whatsappNumbers = await this.ormRepository.find({
-      restricted_to_especific_company: true,
+      restricted_to_especific_company: false,
     });
 
     return whatsappNumbers;

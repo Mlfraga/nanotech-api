@@ -127,7 +127,7 @@ export default class ServicesSalesController {
       await client().messages.create({
         from: 'whatsapp:+14129618290',
         body: messageToSend,
-        to: recipient,
+        to: `whatsapp:${recipient}`,
       });
     }
 

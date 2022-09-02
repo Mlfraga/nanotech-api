@@ -13,6 +13,7 @@ interface IFilters {
   initialDeliveryDate?: Date;
   finalDeliveryDate?: Date;
   sellerId?: string;
+  companyId?: string;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';

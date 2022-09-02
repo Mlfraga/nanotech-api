@@ -22,6 +22,7 @@ interface IFilters {
   initialDeliveryDate?: Date;
   sellerId?: string;
   finalDeliveryDate?: Date;
+  companyId?: string;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
@@ -243,6 +244,7 @@ class SaleRepository implements ISaleRepository {
       finalDeliveryDate,
       initialAvailabilityDate,
       finalAvailabilityDate,
+      companyId,
       status,
       sellerId,
     }: IFilters,
@@ -257,40 +259,82 @@ class SaleRepository implements ISaleRepository {
     const offset = page * limit_per_page;
 
     const count = await this.ormRepository.count({
-      where: {
-        ...(initialDeliveryDate &&
-          finalDeliveryDate && {
-            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-          }),
-        ...(initialAvailabilityDate &&
-          finalAvailabilityDate && {
-            availability_date: Between(
-              initialAvailabilityDate,
-              finalAvailabilityDate,
-            ),
-          }),
-        ...(sellerId && { seller_id: sellerId }),
-        ...(status && { status }),
+      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        if (companyId) {
+          qb.where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(sellerId && { seller_id: sellerId }),
+            ...(status && { status }),
+          }).andWhere('seller.company_id = :companyId', { companyId });
+        } else {
+          qb.where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(sellerId && { seller_id: sellerId }),
+            ...(status && { status }),
+          });
+        }
       },
     });
 
     const sales = await this.ormRepository.find({
       skip: offset,
       take: limit_per_page,
-      where: {
-        ...(initialDeliveryDate &&
-          finalDeliveryDate && {
-            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-          }),
-        ...(initialAvailabilityDate &&
-          finalAvailabilityDate && {
-            availability_date: Between(
-              initialAvailabilityDate,
-              finalAvailabilityDate,
-            ),
-          }),
-        ...(sellerId && { seller_id: sellerId }),
-        ...(status && { status }),
+      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        if (companyId) {
+          qb.where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(sellerId && { seller_id: sellerId }),
+            ...(status && { status }),
+          }).andWhere('seller.company_id = :companyId', { companyId });
+        } else {
+          qb.where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(sellerId && { seller_id: sellerId }),
+            ...(status && { status }),
+          });
+        }
       },
       order: { request_date: 'DESC' },
       relations: [
