@@ -14,6 +14,7 @@ class WhatsappNumberRepository implements IWhatsappNumberRepository {
   public async find(): Promise<WhatsappNumber[] | undefined> {
     const whatsappNumber = await this.ormRepository.find({
       order: { created_at: 'ASC' },
+      relations: ['company'],
     });
 
     return whatsappNumber;
