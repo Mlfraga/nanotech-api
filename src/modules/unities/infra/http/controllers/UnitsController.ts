@@ -18,7 +18,7 @@ export default class UnitController {
       throw new AppError('User not found', 404);
     }
 
-    if (user.role === 'ADMIN') {
+    if (user.role === 'ADMIN' || user.role === 'NANOTECH_REPRESENTATIVE') {
       const units = await unitRepository.find();
 
       return response.json(units);

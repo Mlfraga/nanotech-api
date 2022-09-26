@@ -57,7 +57,7 @@ export default class SalesController {
 
     let sales;
 
-    if (user.role === 'ADMIN') {
+    if (user.role === 'ADMIN' || user.role === 'NANOTECH_REPRESENTATIVE') {
       sales = await saleRepository.findAllSales(Number(page), {
         ...(sellerId && { sellerId: String(sellerId) }),
         ...(companyId && { companyId: String(companyId) }),

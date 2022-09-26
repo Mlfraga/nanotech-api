@@ -13,7 +13,7 @@ const whatsappNumberController = new WhatsappNumberController();
 whatsappNumbersRouter.get(
   '/',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   whatsappNumberController.index,
 );
 
@@ -27,7 +27,7 @@ whatsappNumbersRouter.post(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   whatsappNumberController.store,
 );
 

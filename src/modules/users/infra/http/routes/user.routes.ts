@@ -15,6 +15,13 @@ const userController = new UserController();
 const companyUsersController = new CompanyUsersController();
 const passwordUserController = new PasswordUserController();
 
+userRouter.get(
+  '/',
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  userController.index,
+);
+
 userRouter.get('/get-profile', ensureAuthenticated, userController.show);
 
 userRouter.get(
@@ -25,18 +32,15 @@ userRouter.get(
 );
 
 userRouter.post(
-  '/signup',
+  '/',
   celebrate({
     [Segments.BODY]: {
       username: Joi.string().required(),
       email: Joi.string().required(),
-      password: Joi.string().min(6).required(),
       role: Joi.string(),
       name: Joi.string().required(),
       telephone: Joi.string().required(),
-      enabled: Joi.boolean().required(),
-      companyId: Joi.string().uuid().required(),
-      unitId: Joi.string().uuid(),
+      company: Joi.string().uuid(),
     },
   }),
   userController.store,
@@ -45,7 +49,7 @@ userRouter.post(
 userRouter.patch(
   '/reset-password/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   passwordUserController.delete,
 );
 
@@ -75,14 +79,14 @@ userRouter.put(
 userRouter.patch(
   '/disable/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   userController.disable,
 );
 
 userRouter.patch(
   '/enable/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   userController.enable,
 );
 

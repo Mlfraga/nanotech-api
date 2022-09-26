@@ -17,7 +17,7 @@ const companyPricesByCompanyAndServiceController =
 companyPricesRouter.get(
   '/',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   companyPricesController.index,
 );
 

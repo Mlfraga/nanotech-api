@@ -33,7 +33,7 @@ servicesRouter.post(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   servicesController.store,
 );
 
@@ -59,7 +59,7 @@ servicesRouter.patch(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   servicesController.disable,
 );
 
@@ -71,7 +71,7 @@ servicesRouter.patch(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   servicesController.enable,
 );
 

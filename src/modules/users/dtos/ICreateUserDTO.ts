@@ -3,5 +3,5 @@ export default interface ICreateUserDTO {
   username: string;
   telephone: string;
   password: string;
-  role: 'SELLER' | 'MANAGER' | 'ADMIN';
+  role: 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE';
 }
