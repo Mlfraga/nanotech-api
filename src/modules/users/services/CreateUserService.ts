@@ -19,7 +19,6 @@ interface IRequest {
   name: string;
   telephone: string;
   companyId: string;
-  unitId: string;
 }
 
 interface IResponse {
@@ -54,7 +53,6 @@ class ShowUserService {
     name,
     telephone,
     companyId,
-    unitId,
   }: IRequest): Promise<IResponse> {
     const userByUsername = await this.usersRepository.findByUsername(username);
 
@@ -73,20 +71,10 @@ class ShowUserService {
         throw new AppError('Invalid companyId.', 404);
       }
 
-      if (!unitId) {
-        throw new AppError('Invalid unitId.', 404);
-      }
-
       const companyById = await this.companyRepository.findById(companyId);
 
       if (!companyById) {
         throw new AppError('Invalid companyId.', 404);
-      }
-
-      const unitById = await this.unitRepository.findById(unitId);
-
-      if (!unitById) {
-        throw new AppError('Invalid unitId.', 404);
       }
 
       const passwordCrypt = await this.hashProvider.generateHash(password);
@@ -102,7 +90,6 @@ class ShowUserService {
       const profile = await this.profileRepository.create({
         name,
         company_id: companyId,
-        unit_id: unitId,
         user_id: user.id,
       });
 
@@ -139,7 +126,7 @@ class ShowUserService {
       return { user, profile };
     }
 
-    if (role === 'ADMIN') {
+    if (role === 'ADMIN' || role === 'NANOTECH_REPRESENTATIVE') {
       const passwordCrypt = await this.hashProvider.generateHash(password);
 
       const user = await this.usersRepository.create({

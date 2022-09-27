@@ -2,34 +2,35 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
+import ListUsersService from '@modules/users/services/ListUsersService';
 import ShowUserService from '@modules/users/services/ShowUserService';
 import ToggleUserEnabledService from '@modules/users/services/ToggleUserEnabledService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 
 export default class UserController {
+  async index(request: Request, response: Response) {
+    const { id: user_id } = request.user;
+
+    const listUsersService = container.resolve(ListUsersService);
+
+    const users = await listUsersService.execute(user_id);
+
+    return response.json(users);
+  }
+
   async store(request: Request, response: Response) {
-    const {
-      username,
-      email,
-      password,
-      role,
-      name,
-      telephone,
-      companyId,
-      unitId,
-    } = request.body;
+    const { username, email, role, name, telephone, company } = request.body;
 
     const createUserService = container.resolve(CreateUserService);
 
     const createdUser = await createUserService.execute({
       username,
       email,
-      password,
+      password: '12345678',
       role,
       name,
       telephone,
-      companyId,
-      unitId,
+      companyId: company,
     });
 
     return response.json(createdUser);

@@ -83,7 +83,7 @@ salesRouter.post(
 
 salesRouter.patch(
   '/status',
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   updateStatusSaleController.update,
 );
 
@@ -116,7 +116,7 @@ salesRouter.delete(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   salesController.delete,
 );
 

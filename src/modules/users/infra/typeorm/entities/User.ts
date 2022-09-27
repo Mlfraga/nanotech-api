@@ -29,7 +29,7 @@ export default class User {
   password: string;
 
   @Column()
-  role: 'SELLER' | 'MANAGER' | 'ADMIN';
+  role: 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE';
 
   @Column()
   first_login: boolean;

@@ -19,7 +19,7 @@ profileRouter.get(
 profileRouter.put(
   '/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   userController.update,
 );
 

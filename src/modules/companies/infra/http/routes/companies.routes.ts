@@ -20,7 +20,7 @@ companiesRouter.post(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   companiesController.store,
 );
 
@@ -38,21 +38,21 @@ companiesRouter.put(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   companiesController.update,
 );
 
 companiesRouter.get(
   '/',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   companiesController.index,
 );
 
 companiesRouter.get(
   '/:id',
   ensureAuthenticated,
-  RoleMiddleware.isAdmin,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
   companiesController.index,
 );
 

@@ -40,7 +40,7 @@ export default class Profile {
 
   @ManyToOne(() => Unit, unit => unit.profiles)
   @JoinColumn({ name: 'unit_id' })
-  unit: Company;
+  unit: Unit;
 
   @OneToOne(() => User, user => user.profile)
   @JoinColumn({ name: 'user_id' })
