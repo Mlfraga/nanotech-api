@@ -36,6 +36,25 @@ export default class UserController {
     return response.json(createdUser);
   }
 
+  async signup(request: Request, response: Response) {
+    const { username, email, password, role, name, telephone, companyId } =
+      request.body;
+
+    const createUserService = container.resolve(CreateUserService);
+
+    const createdUser = await createUserService.execute({
+      username,
+      email,
+      password,
+      role,
+      name,
+      telephone,
+      companyId,
+    });
+
+    return response.json(createdUser);
+  }
+
   async update(request: Request, response: Response) {
     const { id } = request.params;
     const { name, telephone, role } = request.body;
