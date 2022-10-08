@@ -1,3 +1,5 @@
+import { ProductionStatusEnum } from '../infra/typeorm/entities/Sale';
+
 export default interface ICreateSaleDTO {
   availability_date: Date;
   delivery_date: Date;
@@ -11,4 +13,5 @@ export default interface ICreateSaleDTO {
   person_id: string;
   car_id: string;
   status?: string;
+  production_status?: ProductionStatusEnum;
 }

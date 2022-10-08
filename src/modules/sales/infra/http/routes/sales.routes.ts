@@ -68,6 +68,16 @@ salesRouter.post(
   salesBudgetController.create,
 );
 
+salesRouter.get(
+  '/provider-teste',
+  celebrate({
+    [Segments.QUERY]: {
+      providerId: Joi.string().uuid().required(),
+    },
+  }),
+  salesController.teste,
+);
+
 salesRouter.post(
   '/getcompanysalebudget',
   celebrate({

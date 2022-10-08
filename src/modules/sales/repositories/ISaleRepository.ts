@@ -30,6 +30,7 @@ export default interface ISaleRepository {
     initialDate,
     finalDate,
   }: IFiltersParams): Promise<Sale[] | undefined>;
+  findByServiceProvider(providerId: string): Promise<Sale[]>;
   findByCompanyAndFinishedStatus(
     companyId: string,
     page: number,

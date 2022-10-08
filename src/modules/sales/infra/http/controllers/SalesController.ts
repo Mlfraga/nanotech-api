@@ -12,9 +12,22 @@ import ServiceSaleRepository from '@modules/services_sales/infra/typeorm/reposit
 import UnitRepository from '@modules/unities/infra/typeorm/repositories/UnitRepository';
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
+import { ProductionStatusEnum } from '../../typeorm/entities/Sale';
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
 export default class SalesController {
+  async teste(request: Request, response: Response) {
+    const { providerId } = request.query;
+
+    const saleRepository = container.resolve(SaleRepository);
+
+    const sales = await saleRepository.findByServiceProvider(
+      String(providerId),
+    );
+
+    return response.json(sales);
+  }
+
   async index(request: Request, response: Response) {
     const saleRepository = container.resolve(SaleRepository);
 
@@ -287,6 +300,7 @@ export default class SalesController {
         comments,
         seller_id: sellerId,
         person_id: personByCpf?.id,
+        production_status: ProductionStatusEnum.TO_DO,
         car_id: createdCar.id,
       });
 

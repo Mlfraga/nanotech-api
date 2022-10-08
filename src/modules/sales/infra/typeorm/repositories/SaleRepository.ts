@@ -474,6 +474,42 @@ class SaleRepository implements ISaleRepository {
     };
   }
 
+  // join: {
+  //   alias: 'sales',
+  //   innerJoin: { providers: 'sales.service_providers' },
+  // },
+  // where: (qb: SelectQueryBuilder<Sale>) => {
+  //   qb.where('providers.service_provider_profile_id = :providerId', {
+  //     providerId,
+  //   });
+
+  public async findByServiceProvider(providerId: string): Promise<Sale[]> {
+    const sales = await this.ormRepository.find({
+      join: {
+        alias: 'sales',
+        innerJoin: { providers: 'sales.service_providers' },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where('providers.service_provider_profile_id = :providerId', {
+          providerId,
+        });
+      },
+      order: { request_date: 'DESC' },
+      relations: [
+        'seller',
+        'seller.company',
+        'unit',
+        'person',
+        'car',
+        'service_providers',
+        'services_sales.service',
+        'services_sales',
+      ],
+    });
+
+    return sales;
+  }
+
   public async findById(id: string): Promise<Sale | undefined> {
     const sale = await this.ormRepository.findOne(id, {
       relations: [

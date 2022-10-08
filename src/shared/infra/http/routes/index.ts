@@ -6,6 +6,7 @@ import companyPricesRouter from '@modules/company_prices/infra/http/routes/compa
 import personRouter from '@modules/persons/infra/http/routes/persons.routes';
 import profileRouter from '@modules/profiles/infra/http/routes/profile.routes';
 import salesRouter from '@modules/sales/infra/http/routes/sales.routes';
+import saleServiceProviderRouter from '@modules/service_providers/infra/http/routes/sale_service_providers.routes';
 import servicesSalesRouter from '@modules/services_sales/infra/http/routes/services_sales.routes';
 import servicesRouter from '@modules/services/infra/http/routes/services.routes';
 import unitiesRouter from '@modules/unities/infra/http/routes/unities.routes';
@@ -29,6 +30,7 @@ routes.use('/companies', companiesRouter);
 routes.use('/units', unitiesRouter);
 routes.use('/users', userRouter);
 routes.use('/whatsapp-numbers', whatsappNumbersRouter);
+routes.use('/service-sale-providers', saleServiceProviderRouter);
 routes.use('/profiles', profileRouter);
 routes.use('/services', servicesRouter);
 routes.use('/company-services', companyPricesRouter);

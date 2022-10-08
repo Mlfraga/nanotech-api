@@ -3,6 +3,8 @@ import { container } from 'tsyringe';
 import './providers';
 import '@modules/users/providers';
 
+import ServiceProviderRepository from '@modules/service_providers/infra/typeorm/repositories/ServiceProviderRepository';
+import IServiceProviderRepository from '@modules/service_providers/repositories/IServiceProviderRepository';
 import WhatsappNumberRepository from '@modules/whatsapp_numbers/infra/typeorm/repositories/WhatsappNumberRepository';
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
@@ -71,4 +73,9 @@ container.registerSingleton<IServiceRepository>(
 container.registerSingleton<IWhatsappNumberRepository>(
   'WhatsappNumberRepository',
   WhatsappNumberRepository,
+);
+
+container.registerSingleton<IServiceProviderRepository>(
+  'ServiceProviderRepository',
+  ServiceProviderRepository,
 );

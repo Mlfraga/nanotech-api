@@ -12,9 +12,17 @@ import {
 import Car from '@modules/cars/infra/typeorm/entities/Car';
 import Person from '@modules/persons/infra/typeorm/entities/Person';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import SalesServiceProviders from '@modules/service_providers/infra/typeorm/entities/SaleServiceProvider';
 import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
 import Unit from '@modules/unities/infra/typeorm/entities/Unit';
 
+// eslint-disable-next-line no-shadow
+export enum ProductionStatusEnum {
+  TO_DO,
+  IN_PROGRESS,
+  DONE,
+  PENDING,
+}
 @Entity('sales')
 export default class Sale {
   @PrimaryGeneratedColumn('uuid')
@@ -34,6 +42,9 @@ export default class Sale {
 
   @Column()
   status: string;
+
+  @Column()
+  production_status: ProductionStatusEnum;
 
   @Column()
   company_value: number;
@@ -79,6 +90,15 @@ export default class Sale {
     cascade: true,
   })
   services_sales: ServiceSale[];
+
+  @OneToMany(
+    () => SalesServiceProviders,
+    salesServiceProviders => salesServiceProviders.sale,
+    {
+      cascade: true,
+    },
+  )
+  service_providers: SalesServiceProviders[];
 
   @CreateDateColumn()
   created_at: Date;
