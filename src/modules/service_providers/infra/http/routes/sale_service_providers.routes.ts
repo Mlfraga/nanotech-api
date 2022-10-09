@@ -25,4 +25,11 @@ saleServiceProviderRouter.post(
   serviceSaleProviderController.store,
 );
 
+saleServiceProviderRouter.get(
+  '/sales/provider/',
+  ensureAuthenticated,
+  RoleMiddleware.isSaleProvider,
+  serviceSaleProviderController.show,
+);
+
 export default saleServiceProviderRouter;

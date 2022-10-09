@@ -23,6 +23,24 @@ class ServiceProviderRepository implements IServiceProviderRepository {
     return saleServiceProvider;
   }
 
+  public async findByProviderId(
+    provider_id: string,
+  ): Promise<SaleServiceProvider[]> {
+    const saleServiceProviders = await this.ormRepository.find({
+      where: { service_provider_profile_id: provider_id },
+      relations: [
+        'sale',
+        'sale.seller',
+        'sale.car',
+        'sale.unit',
+        'sale.unit.company',
+        'sale.services_sales',
+      ],
+    });
+
+    return saleServiceProviders;
+  }
+
   public async create(
     data: ICreateServiceProviderDTO,
   ): Promise<SaleServiceProvider> {
