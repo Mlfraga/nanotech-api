@@ -14,7 +14,7 @@ class UserRepository implements IUsersRepository {
 
   public async find(): Promise<User[] | undefined> {
     const user = await this.ormRepository.find({
-      order: { created_at: 'ASC' },
+      order: { username: 'ASC' },
       relations: ['profile', 'profile.company'],
     });
 

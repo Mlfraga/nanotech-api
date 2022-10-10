@@ -1,3 +1,4 @@
+import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
@@ -11,6 +12,17 @@ const userController = new ProfileController();
 
 profileRouter.get(
   '/',
+  celebrate({
+    [Segments.QUERY]: {
+      role: Joi.string().valid(
+        'ADMIN',
+        'SELLER',
+        'MANAGER',
+        'NANOTECH_REPRESENTATIVE',
+        'SERVICE_PROVIDER',
+      ),
+    },
+  }),
   ensureAuthenticated,
   RoleMiddleware.isManagerOrAdmin,
   userController.index,

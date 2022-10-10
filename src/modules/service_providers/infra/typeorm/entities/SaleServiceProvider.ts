@@ -20,6 +20,9 @@ export default class SalesServiceProviders {
   @Column()
   service_provider_profile_id: string;
 
+  @Column()
+  date_to_be_done: Date;
+
   @ManyToOne(() => Sale, sale => sale.service_providers)
   @JoinColumn({ name: 'sale_id' })
   sale: Sale;

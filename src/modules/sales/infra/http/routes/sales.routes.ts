@@ -97,6 +97,20 @@ salesRouter.patch(
   updateStatusSaleController.update,
 );
 
+salesRouter.patch(
+  '/production-status',
+  celebrate({
+    [Segments.BODY]: {
+      status: Joi.string()
+        .valid('TO_DO', 'IN_PROGRESS', 'DONE', 'PENDING')
+        .required(),
+      sale_ids: Joi.array().items(Joi.string().uuid()).required(),
+    },
+  }),
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  updateStatusSaleController.updateProductionStatus,
+);
+
 salesRouter.get(
   '/sales-report',
   celebrate({

@@ -1,8 +1,6 @@
 import { classToClass } from 'class-transformer';
 import { injectable, inject } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 
@@ -11,7 +9,8 @@ import IServiceProviderRepository from '../repositories/IServiceProviderReposito
 
 interface ICreateProvidersParams {
   profile_ids: string[];
-  sale_id: string;
+  sale_ids: string[];
+  date_to_be_done: Date;
 }
 
 interface ICreateProvidersResponse {
@@ -33,32 +32,36 @@ class CreateSaleServiceProvidersService {
 
   public async execute({
     profile_ids,
-    sale_id,
+    sale_ids,
+    date_to_be_done,
   }: ICreateProvidersParams): Promise<ICreateProvidersResponse> {
-    const saleById = await this.saleRepository.findById(sale_id);
-
-    if (!saleById) {
-      throw new AppError('This sale was not found.', 404);
-    }
-
     const created_providers: SaleServiceProvider[] = [];
 
-    for (const profile_id of profile_ids) {
-      const userById = await this.profileRepository.findById(profile_id);
+    for (const sale_id of sale_ids) {
+      const saleById = await this.saleRepository.findById(sale_id);
 
-      if (!userById) {
-        throw new AppError('This profile was not found.', 404);
+      if (saleById) {
+        for (const profile_id of profile_ids) {
+          const thisSaleAlreadyLinkedToProvider =
+            await this.serviceProviderRepository.findByProviderAndSaleId(
+              profile_id,
+              sale_id,
+            );
+          const profileById = await this.profileRepository.findById(profile_id);
+
+          if (profileById && !thisSaleAlreadyLinkedToProvider) {
+            const createdSaleServiceProvider =
+              await this.serviceProviderRepository.create({
+                sale_id,
+                service_provider_profile_id: profile_id,
+                date_to_be_done,
+              });
+
+            created_providers.push(createdSaleServiceProvider);
+          }
+        }
       }
-
-      const createdSaleServiceProvider =
-        await this.serviceProviderRepository.create({
-          sale_id,
-          service_provider_profile_id: profile_id,
-        });
-
-      created_providers.push(createdSaleServiceProvider);
     }
-
     return classToClass({ created_providers });
   }
 }

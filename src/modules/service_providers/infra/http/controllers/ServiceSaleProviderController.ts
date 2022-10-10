@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateSaleServiceProvidersService from '@modules/service_providers/services/CreateSaleServiceProvidersService';
-import ListSalesByServiceProvider from '@modules/service_providers/services/ListSalesByServiceProvider';
+import ListSalesByProviderService from '@modules/service_providers/services/ListSalesByProviderService';
 
 export default class ServiceSaleProviderController {
   async store(request: Request, response: Response) {
-    const { saleId, saleServiceProviderProfileIds } = request.body;
+    const { date_to_be_done, sale_ids, sale_service_provider_profile_ids } =
+      request.body;
 
     const createSaleServiceProviderService = container.resolve(
       CreateSaleServiceProvidersService,
@@ -14,19 +15,23 @@ export default class ServiceSaleProviderController {
 
     const createSaleServiceProviders =
       await createSaleServiceProviderService.execute({
-        sale_id: saleId,
-        profile_ids: saleServiceProviderProfileIds,
+        sale_ids,
+        date_to_be_done,
+        profile_ids: sale_service_provider_profile_ids,
       });
 
     return response.json(createSaleServiceProviders);
   }
 
-  async show(request: Request, response: Response) {
-    const listSalesByServiceProvider = container.resolve(
-      ListSalesByServiceProvider,
+  async showSales(request: Request, response: Response) {
+    const { listFrom } = request.query;
+
+    const listSalesByProviderService = container.resolve(
+      ListSalesByProviderService,
     );
 
-    const salesByProvider = await listSalesByServiceProvider.execute({
+    const salesByProvider = await listSalesByProviderService.execute({
+      listFrom: listFrom as 'yesterday' | 'today' | 'tomorrow',
       profile_id: request.user.profile_id,
     });
 

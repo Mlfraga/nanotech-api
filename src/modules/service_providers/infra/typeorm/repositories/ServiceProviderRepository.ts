@@ -1,4 +1,5 @@
-import { getRepository, Repository } from 'typeorm';
+import { addDays, startOfDay, endOfDay } from 'date-fns';
+import { Between, getRepository, Repository } from 'typeorm';
 
 import ICreateServiceProviderDTO from '../../../dtos/ICreateServiceProviderDTO';
 import IServiceProviderRepository from '../../../repositories/IServiceProviderRepository';
@@ -12,7 +13,9 @@ class ServiceProviderRepository implements IServiceProviderRepository {
   }
 
   public async find(): Promise<SaleServiceProvider[] | undefined> {
-    const saleServiceProvider = await this.ormRepository.find({});
+    const saleServiceProvider = await this.ormRepository.find({
+      relations: ['provider'],
+    });
 
     return saleServiceProvider;
   }
@@ -23,11 +26,51 @@ class ServiceProviderRepository implements IServiceProviderRepository {
     return saleServiceProvider;
   }
 
+  public async findByProviderAndSaleId(
+    provider_id: string,
+    sale_id: string,
+  ): Promise<SaleServiceProvider | undefined> {
+    const saleServiceProvider = await this.ormRepository.findOne({
+      where: {
+        service_provider_profile_id: provider_id,
+        sale_id,
+      },
+    });
+
+    return saleServiceProvider;
+  }
+
   public async findByProviderId(
     provider_id: string,
+    listFrom?: 'yesterday' | 'today' | 'tomorrow',
   ): Promise<SaleServiceProvider[]> {
+    let dateFilterCriteria = Between(
+      new Date(startOfDay(new Date())),
+      new Date(endOfDay(new Date())),
+    );
+
+    if (listFrom === 'yesterday') {
+      dateFilterCriteria = Between(
+        addDays(startOfDay(new Date()), -1),
+        addDays(endOfDay(new Date()), -1),
+      );
+    }
+
+    if (listFrom === 'tomorrow') {
+      dateFilterCriteria = Between(
+        addDays(startOfDay(new Date()), 2),
+        addDays(endOfDay(new Date()), 2),
+      );
+    }
+
     const saleServiceProviders = await this.ormRepository.find({
-      where: { service_provider_profile_id: provider_id },
+      where: {
+        service_provider_profile_id: provider_id,
+        date_to_be_done: dateFilterCriteria,
+      },
+      order: {
+        date_to_be_done: 'ASC',
+      },
       relations: [
         'sale',
         'sale.seller',

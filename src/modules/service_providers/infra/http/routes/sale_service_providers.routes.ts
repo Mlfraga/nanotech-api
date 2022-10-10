@@ -14,8 +14,9 @@ saleServiceProviderRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
-      saleId: Joi.string().uuid().required(),
-      saleServiceProviderProfileIds: Joi.array()
+      date_to_be_done: Joi.date().required(),
+      sale_ids: Joi.array().items(Joi.string().uuid()).required(),
+      sale_service_provider_profile_ids: Joi.array()
         .items(Joi.string().uuid())
         .required(),
     },
@@ -27,9 +28,14 @@ saleServiceProviderRouter.post(
 
 saleServiceProviderRouter.get(
   '/sales/provider/',
+  celebrate({
+    [Segments.QUERY]: {
+      listFrom: Joi.string().valid('yesterday', 'today', 'tomorrow').required(),
+    },
+  }),
   ensureAuthenticated,
   RoleMiddleware.isSaleProvider,
-  serviceSaleProviderController.show,
+  serviceSaleProviderController.showSales,
 );
 
 export default saleServiceProviderRouter;

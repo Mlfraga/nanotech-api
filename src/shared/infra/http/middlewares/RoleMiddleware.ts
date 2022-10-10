@@ -186,7 +186,7 @@ class RoleMiddleware {
     };
 
     if (user.role !== 'SERVICE_PROVIDER') {
-      throw new AppError('User does not have manager or seller permission.');
+      throw new AppError('User does not have sale provider permission.');
     }
 
     next();
