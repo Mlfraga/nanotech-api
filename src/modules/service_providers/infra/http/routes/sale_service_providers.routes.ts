@@ -38,4 +38,16 @@ saleServiceProviderRouter.get(
   serviceSaleProviderController.showSales,
 );
 
+saleServiceProviderRouter.get(
+  '/sale/:sale_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      sale_id: Joi.string().uuid().required(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  serviceSaleProviderController.showSales,
+);
+
 export default saleServiceProviderRouter;

@@ -20,6 +20,19 @@ class ServiceProviderRepository implements IServiceProviderRepository {
     return saleServiceProvider;
   }
 
+  public async findBySale(
+    sale_id: string,
+  ): Promise<SaleServiceProvider[] | undefined> {
+    const saleServiceProviders = await this.ormRepository.find({
+      where: {
+        sale_id,
+      },
+      relations: ['provider'],
+    });
+
+    return saleServiceProviders;
+  }
+
   public async findById(id: string): Promise<SaleServiceProvider | undefined> {
     const saleServiceProvider = await this.ormRepository.findOne(id);
 

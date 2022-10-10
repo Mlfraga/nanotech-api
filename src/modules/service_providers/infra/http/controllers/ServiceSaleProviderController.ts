@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateSaleServiceProvidersService from '@modules/service_providers/services/CreateSaleServiceProvidersService';
+import ListProvidersBySaleService from '@modules/service_providers/services/ListProvidersBySaleService';
 import ListSalesByProviderService from '@modules/service_providers/services/ListSalesByProviderService';
 
 export default class ServiceSaleProviderController {
@@ -21,6 +22,16 @@ export default class ServiceSaleProviderController {
       });
 
     return response.json(createSaleServiceProviders);
+  }
+
+  async listBySaleId(request: Request, response: Response) {
+    const { sale_id } = request.params;
+
+    const listBySaleService = container.resolve(ListProvidersBySaleService);
+
+    const serviceSalesProviders = await listBySaleService.execute(sale_id);
+
+    return response.json(serviceSalesProviders);
   }
 
   async showSales(request: Request, response: Response) {
