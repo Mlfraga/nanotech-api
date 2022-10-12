@@ -4,7 +4,7 @@ import SaleServiceProvider from '../infra/typeorm/entities/SaleServiceProvider';
 export default interface ICarRepository {
   find(): Promise<SaleServiceProvider[] | undefined>;
   findById(id: string): Promise<SaleServiceProvider | undefined>;
-  findBySale(sale_id: string): Promise<SaleServiceProvider[] | undefined>;
+  findBySale(sale_id: string): Promise<SaleServiceProvider[]>;
   findByProviderId(
     provider_id: string,
     listFrom?: 'yesterday' | 'today' | 'tomorrow',

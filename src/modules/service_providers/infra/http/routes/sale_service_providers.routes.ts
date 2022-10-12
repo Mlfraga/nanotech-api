@@ -47,7 +47,7 @@ saleServiceProviderRouter.get(
   }),
   ensureAuthenticated,
   RoleMiddleware.isAdminOrNanotechRepresentative,
-  serviceSaleProviderController.showSales,
+  serviceSaleProviderController.showProvidersBySale,
 );
 
 export default saleServiceProviderRouter;

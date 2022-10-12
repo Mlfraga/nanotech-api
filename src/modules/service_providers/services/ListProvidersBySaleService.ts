@@ -1,8 +1,15 @@
 import { classToClass } from 'class-transformer';
 import { injectable, inject } from 'tsyringe';
 
-import SalesServiceProviders from '../infra/typeorm/entities/SaleServiceProvider';
 import IServiceProviderRepository from '../repositories/IServiceProviderRepository';
+
+interface IListProvidersBySaleServiceResponse {
+  date_to_be_done: Date | undefined;
+  providers: {
+    id: string;
+    name: string;
+  }[];
+}
 
 @injectable()
 class ListProvidersBySaleService {
@@ -13,11 +20,22 @@ class ListProvidersBySaleService {
 
   public async execute(
     sale_id: string,
-  ): Promise<SalesServiceProviders[] | undefined> {
+  ): Promise<IListProvidersBySaleServiceResponse> {
     const serviceSalesProviders =
       await this.serviceProviderRepository.findBySale(sale_id);
 
-    return classToClass(serviceSalesProviders);
+    const formattedResponse = {
+      date_to_be_done:
+        serviceSalesProviders?.length > 0
+          ? serviceSalesProviders[0].date_to_be_done
+          : undefined,
+      providers: serviceSalesProviders?.map(provider => ({
+        id: provider.provider.id,
+        name: provider.provider.name,
+      })),
+    };
+
+    return classToClass(formattedResponse);
   }
 }
 

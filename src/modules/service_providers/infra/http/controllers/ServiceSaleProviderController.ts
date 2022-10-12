@@ -48,4 +48,16 @@ export default class ServiceSaleProviderController {
 
     return response.json(salesByProvider);
   }
+
+  async showProvidersBySale(request: Request, response: Response) {
+    const { sale_id } = request.params;
+
+    const listProvidersBySaleService = container.resolve(
+      ListProvidersBySaleService,
+    );
+
+    const providersBySale = await listProvidersBySaleService.execute(sale_id);
+
+    return response.json(providersBySale);
+  }
 }
