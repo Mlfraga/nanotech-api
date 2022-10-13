@@ -69,8 +69,8 @@ class ServiceProviderRepository implements IServiceProviderRepository {
 
     if (listFrom === 'tomorrow') {
       dateFilterCriteria = Between(
-        addDays(startOfDay(new Date()), 2),
-        addDays(endOfDay(new Date()), 2),
+        addDays(startOfDay(new Date()), 1),
+        addDays(endOfDay(new Date()), 1),
       );
     }
 
@@ -78,9 +78,6 @@ class ServiceProviderRepository implements IServiceProviderRepository {
       where: {
         service_provider_profile_id: provider_id,
         date_to_be_done: dateFilterCriteria,
-      },
-      order: {
-        date_to_be_done: 'ASC',
       },
       relations: [
         'sale',
@@ -92,7 +89,9 @@ class ServiceProviderRepository implements IServiceProviderRepository {
       ],
     });
 
-    return saleServiceProviders;
+    return saleServiceProviders.sort((a, b) =>
+      a.sale.delivery_date > b.sale.delivery_date ? 1 : -1,
+    );
   }
 
   public async create(

@@ -107,7 +107,7 @@ salesRouter.patch(
       sale_ids: Joi.array().items(Joi.string().uuid()).required(),
     },
   }),
-  RoleMiddleware.isAdminOrNanotechRepresentative,
+  RoleMiddleware.isSaleProvider,
   updateStatusSaleController.updateProductionStatus,
 );
 

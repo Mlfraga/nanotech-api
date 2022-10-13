@@ -10,11 +10,12 @@ interface IListSalesByProvidersParams {
   listFrom: 'yesterday' | 'today' | 'tomorrow';
 }
 
-interface ICreateProvidersResponse {
+interface IListeSalesByProviderResponse {
   availability_date: Date;
   date_to_be_done: Date;
   delivery_date: Date;
   id: string;
+  client_identifier: string;
   status: string;
   production_status: ProductionStatusEnum;
   comments: string;
@@ -43,17 +44,18 @@ class ListSalesByServiceProvider {
   public async execute({
     profile_id,
     listFrom,
-  }: IListSalesByProvidersParams): Promise<ICreateProvidersResponse[]> {
+  }: IListSalesByProvidersParams): Promise<IListeSalesByProviderResponse[]> {
     const sales = await this.serviceProviderRepository.findByProviderId(
       profile_id,
       listFrom,
     );
 
-    const formattedSales: ICreateProvidersResponse[] = sales.map(sale => ({
+    const formattedSales: IListeSalesByProviderResponse[] = sales.map(sale => ({
       id: sale.sale.id,
       availability_date: sale.sale.availability_date,
       date_to_be_done: sale.date_to_be_done,
       delivery_date: sale.sale.delivery_date,
+      client_identifier: String(sale.sale.client_identifier),
       status: sale.sale.status,
       production_status: sale.sale.production_status,
       comments: sale.sale.comments,
