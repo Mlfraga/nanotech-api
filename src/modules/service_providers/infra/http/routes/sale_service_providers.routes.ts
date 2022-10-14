@@ -14,6 +14,7 @@ saleServiceProviderRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
+      techinical_comments: Joi.string(),
       date_to_be_done: Joi.date().required(),
       sale_ids: Joi.array().items(Joi.string().uuid()).required(),
       sale_service_provider_profile_ids: Joi.array()

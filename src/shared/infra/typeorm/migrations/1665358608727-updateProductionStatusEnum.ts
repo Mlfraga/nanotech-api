@@ -1,7 +1,7 @@
 /* eslint-disable brace-style */
 import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
-export class updateProductionStatusEnum1665358608727
+export class UpdateProductionStatusEnum1665358608727
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {

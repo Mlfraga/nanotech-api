@@ -269,14 +269,6 @@ class SaleRepository implements ISaleRepository {
     total_items_page: number;
     items: Sale[];
   }> {
-    console.log('ksffsja: ', {
-      initialDeliveryDate,
-      finalDeliveryDate,
-      initialAvailabilityDate,
-      finalAvailabilityDate,
-      status,
-      sellerId,
-    });
     const limit_per_page = 10;
     const offset = page * limit_per_page;
 
@@ -385,8 +377,6 @@ class SaleRepository implements ISaleRepository {
         'services_sales.service',
       ],
     });
-
-    console.log('sales: ', sales);
 
     return {
       current_page: Number(page),

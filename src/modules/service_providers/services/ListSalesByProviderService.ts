@@ -1,8 +1,6 @@
 import { classToClass } from 'class-transformer';
 import { injectable, inject } from 'tsyringe';
 
-import { ProductionStatusEnum } from '@modules/sales/infra/typeorm/entities/Sale';
-
 import IServiceProviderRepository from '../repositories/IServiceProviderRepository';
 
 interface IListSalesByProvidersParams {
@@ -17,7 +15,8 @@ interface IListeSalesByProviderResponse {
   id: string;
   client_identifier: string;
   status: string;
-  production_status: ProductionStatusEnum;
+  production_status: string;
+  techinical_comments: string;
   comments: string;
   sellerName: string;
   car: {
@@ -59,6 +58,7 @@ class ListSalesByServiceProvider {
       status: sale.sale.status,
       production_status: sale.sale.production_status,
       comments: sale.sale.comments,
+      techinical_comments: sale.sale.techinical_comments,
       sellerName: sale.sale.seller.name,
       car: {
         name: sale.sale.car.brand,

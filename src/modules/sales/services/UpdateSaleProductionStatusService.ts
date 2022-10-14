@@ -2,12 +2,12 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import Sale, { ProductionStatusEnum } from '../infra/typeorm/entities/Sale';
+import Sale from '../infra/typeorm/entities/Sale';
 import ISaleRepository from '../repositories/ISaleRepository';
 
 interface IRequest {
   sale_ids: string[];
-  status: ProductionStatusEnum;
+  status: string;
 }
 
 @injectable()

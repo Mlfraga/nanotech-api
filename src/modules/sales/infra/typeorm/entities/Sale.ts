@@ -44,7 +44,7 @@ export default class Sale {
   status: string;
 
   @Column()
-  production_status: ProductionStatusEnum;
+  production_status: string;
 
   @Column()
   company_value: number;
@@ -57,6 +57,9 @@ export default class Sale {
 
   @Column()
   comments: string;
+
+  @Column()
+  techinical_comments: string;
 
   @Column()
   seller_id: string;

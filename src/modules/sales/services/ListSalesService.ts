@@ -226,6 +226,7 @@ class UpdateSaleStatusService {
         },
       );
     }
+
     const formattedSales = sales.items.map(sale => ({
       id: sale.id,
       seller: {

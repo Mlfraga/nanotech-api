@@ -12,7 +12,6 @@ import ServiceSaleRepository from '@modules/services_sales/infra/typeorm/reposit
 import UnitRepository from '@modules/unities/infra/typeorm/repositories/UnitRepository';
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
-import { ProductionStatusEnum } from '../../typeorm/entities/Sale';
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
 export default class SalesController {
@@ -163,6 +162,7 @@ export default class SalesController {
         source,
         comments,
         seller_id: sellerId,
+        production_status: 'TO_DO',
         person_id: person?.id,
         car_id: createdCar.id,
       });
@@ -203,7 +203,7 @@ export default class SalesController {
         comments,
         seller_id: sellerId,
         person_id: personByCpf?.id,
-        production_status: ProductionStatusEnum.TO_DO,
+        production_status: 'TO_DO',
         car_id: createdCar.id,
       });
 

@@ -16,4 +16,5 @@ export default interface ICarRepository {
   create(data: ICreateServiceProviderDTO): Promise<SaleServiceProvider>;
   save(saleServiceProvider: SaleServiceProvider): Promise<SaleServiceProvider>;
   delete(id: string): Promise<void>;
+  deleteBySale(sale_id: string): Promise<void>;
 }

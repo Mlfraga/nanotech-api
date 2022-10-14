@@ -25,7 +25,7 @@ class ServiceProviderRepository implements IServiceProviderRepository {
       where: {
         sale_id,
       },
-      relations: ['provider'],
+      relations: ['provider', 'sale'],
     });
 
     return saleServiceProviders;
@@ -110,6 +110,10 @@ class ServiceProviderRepository implements IServiceProviderRepository {
 
   public async delete(id: string): Promise<void> {
     this.ormRepository.delete(id);
+  }
+
+  public async deleteBySale(sale_id: string): Promise<void> {
+    this.ormRepository.delete({ sale_id });
   }
 }
 

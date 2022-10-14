@@ -7,8 +7,12 @@ import ListSalesByProviderService from '@modules/service_providers/services/List
 
 export default class ServiceSaleProviderController {
   async store(request: Request, response: Response) {
-    const { date_to_be_done, sale_ids, sale_service_provider_profile_ids } =
-      request.body;
+    const {
+      date_to_be_done,
+      sale_ids,
+      sale_service_provider_profile_ids,
+      techinical_comments,
+    } = request.body;
 
     const createSaleServiceProviderService = container.resolve(
       CreateSaleServiceProvidersService,
@@ -19,6 +23,7 @@ export default class ServiceSaleProviderController {
         sale_ids,
         date_to_be_done,
         profile_ids: sale_service_provider_profile_ids,
+        techinical_comments,
       });
 
     return response.json(createSaleServiceProviders);

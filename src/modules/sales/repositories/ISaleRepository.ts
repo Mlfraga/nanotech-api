@@ -23,7 +23,7 @@ export default interface ISaleRepository {
   find(): Promise<Sale[] | undefined>;
   findById(id: string): Promise<Sale | undefined>;
   create(data: ICreateSaleDTO): Promise<Sale>;
-  save(unit: Sale): Promise<Sale>;
+  save(sale: Sale): Promise<Sale>;
   filter({
     status,
     company,

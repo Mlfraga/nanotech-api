@@ -10,6 +10,7 @@ import IServiceProviderRepository from '../repositories/IServiceProviderReposito
 interface ICreateProvidersParams {
   profile_ids: string[];
   sale_ids: string[];
+  techinical_comments?: string;
   date_to_be_done: Date;
 }
 
@@ -34,19 +35,26 @@ class CreateSaleServiceProvidersService {
     profile_ids,
     sale_ids,
     date_to_be_done,
+    techinical_comments,
   }: ICreateProvidersParams): Promise<ICreateProvidersResponse> {
     const created_providers: SaleServiceProvider[] = [];
 
     for (const sale_id of sale_ids) {
       const saleById = await this.saleRepository.findById(sale_id);
+      await this.serviceProviderRepository.deleteBySale(sale_id);
 
       if (saleById) {
+        if (techinical_comments) {
+          await this.saleRepository.save({ ...saleById, techinical_comments });
+        }
+
         for (const profile_id of profile_ids) {
           const thisSaleAlreadyLinkedToProvider =
             await this.serviceProviderRepository.findByProviderAndSaleId(
               profile_id,
               sale_id,
             );
+
           const profileById = await this.profileRepository.findById(profile_id);
 
           if (profileById && !thisSaleAlreadyLinkedToProvider) {
