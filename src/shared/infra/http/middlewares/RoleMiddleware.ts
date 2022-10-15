@@ -29,6 +29,11 @@ class RoleMiddleware {
       throw new AppError('User not found.', 404);
     }
 
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
     if (user.role !== 'ADMIN' && user.role !== 'NANOTECH_REPRESENTATIVE') {
       throw new AppError('User does not have admin permission.');
     }
@@ -51,6 +56,11 @@ class RoleMiddleware {
       throw new AppError('User not found.', 404);
     }
 
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
     if (user.role !== 'ADMIN') {
       throw new AppError('User does not have admin permission.');
     }
@@ -71,6 +81,11 @@ class RoleMiddleware {
     if (!user) {
       throw new AppError('User not found.', 404);
     }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
 
     if (user.role !== 'MANAGER') {
       throw new AppError('User does not have manager permission.');
@@ -96,6 +111,11 @@ class RoleMiddleware {
     if (!user) {
       throw new AppError('User not found.', 404);
     }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
 
     if (
       user.role !== 'MANAGER' &&
@@ -129,8 +149,44 @@ class RoleMiddleware {
       throw new AppError('User not found.', 404);
     }
 
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
     if (user.role !== 'MANAGER' && user.role !== 'SELLER') {
       throw new AppError('User does not have manager or seller permission.');
+    }
+
+    next();
+  }
+
+  async isSaleProvider(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader?.split(' ')[1];
+    const decoded: any = JWT.decode(String(token), { complete: true });
+
+    const userRepository = container.resolve(UserRepository);
+
+    const user_id = decoded.payload.sub;
+
+    const user = await userRepository.findById(user_id);
+
+    if (!user) {
+      throw new AppError('User not found.', 404);
+    }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
+    if (user.role !== 'SERVICE_PROVIDER') {
+      throw new AppError('User does not have sale provider permission.');
     }
 
     next();

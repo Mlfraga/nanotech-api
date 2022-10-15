@@ -23,13 +23,14 @@ export default interface ISaleRepository {
   find(): Promise<Sale[] | undefined>;
   findById(id: string): Promise<Sale | undefined>;
   create(data: ICreateSaleDTO): Promise<Sale>;
-  save(unit: Sale): Promise<Sale>;
+  save(sale: Sale): Promise<Sale>;
   filter({
     status,
     company,
     initialDate,
     finalDate,
   }: IFiltersParams): Promise<Sale[] | undefined>;
+  findByServiceProvider(providerId: string): Promise<Sale[]>;
   findByCompanyAndFinishedStatus(
     companyId: string,
     page: number,

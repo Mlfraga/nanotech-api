@@ -68,6 +68,16 @@ salesRouter.post(
   salesBudgetController.create,
 );
 
+salesRouter.get(
+  '/provider-teste',
+  celebrate({
+    [Segments.QUERY]: {
+      providerId: Joi.string().uuid().required(),
+    },
+  }),
+  salesController.teste,
+);
+
 salesRouter.post(
   '/getcompanysalebudget',
   celebrate({
@@ -85,6 +95,20 @@ salesRouter.patch(
   '/status',
   RoleMiddleware.isAdminOrNanotechRepresentative,
   updateStatusSaleController.update,
+);
+
+salesRouter.patch(
+  '/production-status',
+  celebrate({
+    [Segments.BODY]: {
+      status: Joi.string()
+        .valid('TO_DO', 'IN_PROGRESS', 'DONE', 'PENDING')
+        .required(),
+      sale_ids: Joi.array().items(Joi.string().uuid()).required(),
+    },
+  }),
+  RoleMiddleware.isSaleProvider,
+  updateStatusSaleController.updateProductionStatus,
 );
 
 salesRouter.get(

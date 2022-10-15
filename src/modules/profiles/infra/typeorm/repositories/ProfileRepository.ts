@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, SelectQueryBuilder, Repository } from 'typeorm';
 
 import ICreateProfileDTO from '../../../dtos/ICreateProfileDTO';
 import IProfileRepository from '../../../repositories/IProfileRepository';
@@ -14,7 +14,31 @@ class ProfileRepository implements IProfileRepository {
   public async find(): Promise<Profile[] | undefined> {
     const profiles = await this.ormRepository.find({
       order: { created_at: 'ASC' },
-      relations: ['company', 'unit', 'user', 'sales'],
+      relations: ['company', 'unit', 'user'],
+    });
+
+    return profiles;
+  }
+
+  public async findByRole(
+    role?:
+      | 'SELLER'
+      | 'MANAGER'
+      | 'ADMIN'
+      | 'NANOTECH_REPRESENTATIVE'
+      | 'SERVICE_PROVIDER',
+  ): Promise<Profile[] | undefined> {
+    const profiles = await this.ormRepository.find({
+      join: { alias: 'profile', innerJoin: { user: 'profile.user' } },
+      ...(role && {
+        where: (qb: SelectQueryBuilder<Profile>) => {
+          qb.where('user.role = :role', {
+            role,
+          });
+        },
+      }),
+      order: { created_at: 'ASC' },
+      relations: ['company', 'unit', 'user'],
     });
 
     return profiles;
@@ -49,7 +73,7 @@ class ProfileRepository implements IProfileRepository {
   ): Promise<Profile[] | undefined> {
     const profiles = await this.ormRepository.find({
       order: { created_at: 'ASC' },
-      relations: ['company', 'unit', 'user', 'sales'],
+      relations: ['company', 'unit', 'user'],
       where: {
         company_id: companyId,
       },

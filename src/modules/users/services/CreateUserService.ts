@@ -126,7 +126,11 @@ class ShowUserService {
       return { user, profile };
     }
 
-    if (role === 'ADMIN' || role === 'NANOTECH_REPRESENTATIVE') {
+    if (
+      role === 'ADMIN' ||
+      role === 'NANOTECH_REPRESENTATIVE' ||
+      role === 'SERVICE_PROVIDER'
+    ) {
       const passwordCrypt = await this.hashProvider.generateHash(password);
 
       const user = await this.usersRepository.create({

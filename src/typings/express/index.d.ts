@@ -1,9 +1,9 @@
-import User from '@modules/users/infra/typeorm/entities/User';
-
-declare global {
-  namespace Express {
-    interface Request {
-      user: { id: string };
-    }
+/* eslint-disable @typescript-eslint/naming-convention */
+declare namespace Express {
+  export interface Request {
+    user: {
+      id: string;
+      profile_id: string;
+    };
   }
 }

@@ -1,5 +1,4 @@
 /* eslint-disable no-continue */
-import { endOfDay, startOfDay } from 'date-fns';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -7,6 +6,7 @@ import AppError from '@shared/errors/AppError';
 
 import CarRepository from '@modules/cars/infra/typeorm/repositories/CarRepository';
 import PersonRepository from '@modules/persons/infra/typeorm/repositories/PersonRepository';
+import ListSalesService from '@modules/sales/services/ListSalesService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ServiceSaleRepository from '@modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
 import UnitRepository from '@modules/unities/infra/typeorm/repositories/UnitRepository';
@@ -15,9 +15,19 @@ import UserRepository from '@modules/users/infra/typeorm/repositories/UserReposi
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
 export default class SalesController {
-  async index(request: Request, response: Response) {
+  async teste(request: Request, response: Response) {
+    const { providerId } = request.query;
+
     const saleRepository = container.resolve(SaleRepository);
 
+    const sales = await saleRepository.findByServiceProvider(
+      String(providerId),
+    );
+
+    return response.json(sales);
+  }
+
+  async index(request: Request, response: Response) {
     const {
       startDeliveryDate,
       endDeliveryDate,
@@ -33,132 +43,37 @@ export default class SalesController {
 
     const user_id = request.user.id;
 
-    const userRepository = container.resolve(UserRepository);
+    const listSalesService = container.resolve(ListSalesService);
 
-    const user = await userRepository.findById(user_id);
-
-    if (!user) {
-      throw new AppError('User not found.', 404);
-    }
-
-    let statusTyped: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED' | null =
-      null;
-
-    if (status) {
-      if (
-        status === 'PENDING' ||
-        status === 'CONFIRMED' ||
-        status === 'CANCELED' ||
-        status === 'FINISHED'
-      ) {
-        statusTyped = status;
-      }
-    }
-
-    let sales;
-
-    if (user.role === 'ADMIN' || user.role === 'NANOTECH_REPRESENTATIVE') {
-      sales = await saleRepository.findAllSales(Number(page), {
+    const sales = await listSalesService.execute({
+      user_id,
+      filters: {
+        ...(startDeliveryDate && {
+          startDeliveryDate: new Date(String(startDeliveryDate)),
+        }),
+        ...(endDeliveryDate && {
+          endDeliveryDate: new Date(String(endDeliveryDate)),
+        }),
+        ...(startAvailabilityDate && {
+          startAvailabilityDate: new Date(String(startAvailabilityDate)),
+        }),
+        ...(endAvailabilityDate && {
+          endAvailabilityDate: new Date(String(endAvailabilityDate)),
+        }),
+        ...(startFinishedDate && {
+          startFinishedDate: new Date(String(startFinishedDate)),
+        }),
+        ...(endFinishedDate && {
+          endFinishedDate: new Date(String(endFinishedDate)),
+        }),
         ...(sellerId && { sellerId: String(sellerId) }),
         ...(companyId && { companyId: String(companyId) }),
-        ...(startDeliveryDate && {
-          initialDeliveryDate: startOfDay(
-            new Date(startDeliveryDate.toString()),
-          ),
+        ...(status && {
+          status: status as 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED',
         }),
-        ...(endDeliveryDate && {
-          finalDeliveryDate: endOfDay(new Date(endDeliveryDate.toString())),
-        }),
-        ...(startAvailabilityDate && {
-          initialAvailabilityDate: startOfDay(
-            new Date(startAvailabilityDate.toString()),
-          ),
-        }),
-        ...(startFinishedDate && {
-          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
-        }),
-        ...(endFinishedDate && {
-          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
-        }),
-        ...(endAvailabilityDate && {
-          finalAvailabilityDate: endOfDay(
-            new Date(endAvailabilityDate.toString()),
-          ),
-        }),
-        ...(status &&
-          (status === 'PENDING' ||
-            status === 'CONFIRMED' ||
-            status === 'CANCELED' ||
-            status === 'FINISHED') && { status }),
-      });
-
-      return response.json(sales);
-    }
-
-    if (user.role === 'SELLER') {
-      sales = await saleRepository.findBySeller(user.profile.id, Number(page), {
-        ...(startDeliveryDate && {
-          initialDeliveryDate: startOfDay(
-            new Date(startDeliveryDate.toString()),
-          ),
-        }),
-        ...(endDeliveryDate && {
-          finalDeliveryDate: endOfDay(new Date(endDeliveryDate.toString())),
-        }),
-        ...(startAvailabilityDate && {
-          initialAvailabilityDate: startOfDay(
-            new Date(startAvailabilityDate.toString()),
-          ),
-        }),
-        ...(startFinishedDate && {
-          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
-        }),
-        ...(endFinishedDate && {
-          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
-        }),
-        ...(endAvailabilityDate && {
-          finalAvailabilityDate: endOfDay(
-            new Date(endAvailabilityDate.toString()),
-          ),
-        }),
-        ...(statusTyped && { status: statusTyped }),
-      });
-
-      return response.json(sales);
-    }
-
-    sales = await saleRepository.findByCompanyAndFinishedStatus(
-      user.profile.company_id,
-      Number(page),
-      {
-        ...(sellerId && { sellerId: String(sellerId) }),
-        ...(startDeliveryDate && {
-          initialDeliveryDate: startOfDay(
-            new Date(startDeliveryDate.toString()),
-          ),
-        }),
-        ...(endDeliveryDate && {
-          finalDeliveryDate: endOfDay(new Date(endDeliveryDate.toString())),
-        }),
-        ...(startAvailabilityDate && {
-          initialAvailabilityDate: startOfDay(
-            new Date(startAvailabilityDate.toString()),
-          ),
-        }),
-        ...(startFinishedDate && {
-          startFinishedDate: startOfDay(new Date(startFinishedDate.toString())),
-        }),
-        ...(endFinishedDate && {
-          endFinishedDate: endOfDay(new Date(endFinishedDate.toString())),
-        }),
-        ...(endAvailabilityDate && {
-          finalAvailabilityDate: endOfDay(
-            new Date(endAvailabilityDate.toString()),
-          ),
-        }),
-        ...(statusTyped && { status: statusTyped }),
       },
-    );
+      page: Number(page),
+    });
 
     return response.json(sales);
   }
@@ -247,6 +162,7 @@ export default class SalesController {
         source,
         comments,
         seller_id: sellerId,
+        production_status: 'TO_DO',
         person_id: person?.id,
         car_id: createdCar.id,
       });
@@ -287,6 +203,7 @@ export default class SalesController {
         comments,
         seller_id: sellerId,
         person_id: personByCpf?.id,
+        production_status: 'TO_DO',
         car_id: createdCar.id,
       });
 

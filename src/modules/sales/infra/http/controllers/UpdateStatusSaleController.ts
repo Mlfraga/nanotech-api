@@ -4,6 +4,8 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import UpdateSaleProductionStatusService from '@modules/sales/services/UpdateSaleProductionStatusService';
+
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
 interface IUpdatedSalesErrors {
@@ -48,5 +50,20 @@ export default class UpdateStatusSaleController {
     }
 
     return response.status(200).json({ updated_sales, errors });
+  }
+
+  async updateProductionStatus(request: Request, response: Response) {
+    const { status, sale_ids } = request.body;
+
+    const updateSaleProductionStatusService = container.resolve(
+      UpdateSaleProductionStatusService,
+    );
+
+    const updatedSales = await updateSaleProductionStatusService.execute({
+      sale_ids,
+      status,
+    });
+
+    return response.status(200).json(updatedSales);
   }
 }
