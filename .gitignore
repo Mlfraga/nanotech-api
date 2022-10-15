@@ -1,4 +1,4 @@
-ormconfig.json
+# ormconfig.json
 
 tmp/uploads/*
 
