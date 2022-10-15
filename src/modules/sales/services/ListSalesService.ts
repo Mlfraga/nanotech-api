@@ -256,6 +256,7 @@ class UpdateSaleStatusService {
       availability_date: sale.availability_date,
       delivery_date: sale.delivery_date,
       status: sale.status,
+      production_status: sale.production_status,
       services_sales: sale.services_sales.map(serviceSale => ({
         service: {
           id: serviceSale.service.id,

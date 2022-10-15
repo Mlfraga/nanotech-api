@@ -30,7 +30,7 @@ interface IListeSalesByProviderResponse {
       name: string;
     };
   };
-  services: { name: string }[];
+  services: { name: string; id: string }[];
 }
 
 @injectable()
@@ -73,6 +73,7 @@ class ListSalesByServiceProvider {
       },
       services: sale.sale.services_sales.map(serviceSale => ({
         name: serviceSale.service.name,
+        id: serviceSale.id,
       })),
     }));
 
