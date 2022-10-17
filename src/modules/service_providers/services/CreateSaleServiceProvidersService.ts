@@ -45,7 +45,11 @@ class CreateSaleServiceProvidersService {
 
       if (saleById) {
         if (techinical_comments) {
-          await this.saleRepository.save({ ...saleById, techinical_comments });
+          await this.saleRepository.save({
+            ...saleById,
+            techinical_comments,
+            production_status: 'TO_DO',
+          });
         }
 
         for (const profile_id of profile_ids) {
