@@ -516,6 +516,7 @@ class SaleRepository implements ISaleRepository {
         'seller',
         'seller.company',
         'unit',
+        'unit.company',
         'person',
         'car',
         'services_sales',

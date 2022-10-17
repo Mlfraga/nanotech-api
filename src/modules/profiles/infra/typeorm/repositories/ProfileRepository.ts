@@ -83,7 +83,9 @@ class ProfileRepository implements IProfileRepository {
   }
 
   public async findById(id: string): Promise<Profile | undefined> {
-    const profile = await this.ormRepository.findOne(id);
+    const profile = await this.ormRepository.findOne(id, {
+      relations: ['company', 'unit', 'user'],
+    });
 
     return profile;
   }
