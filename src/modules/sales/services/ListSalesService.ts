@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import IServiceProviderRepository from '@modules/service_providers/repositories/IServiceProviderRepository';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
 
 import ISaleRepository from '../repositories/ISaleRepository';
@@ -32,6 +33,7 @@ interface IFormattedSale {
     plate: string;
   };
   company_value: number;
+  hasAlreadyBeenDirected: boolean;
   cost_value: number;
   availability_date: Date;
   delivery_date: Date;
@@ -76,6 +78,9 @@ class UpdateSaleStatusService {
   constructor(
     @inject('SaleRepository')
     private saleRepository: ISaleRepository,
+
+    @inject('ServiceProviderRepository')
+    private serviceProviderRepository: IServiceProviderRepository,
 
     @inject('UsersRepository')
     private userRepository: IUserRepository,
@@ -227,46 +232,57 @@ class UpdateSaleStatusService {
       );
     }
 
-    const formattedSales = sales.items.map(sale => ({
-      id: sale.id,
-      seller: {
-        id: sale.seller.id,
-        name: sale.seller.name,
-        company: {
-          name: sale.seller.company.name,
-          client_identifier: sale.seller.company.client_identifier,
-        },
-      },
-      unit: {
-        client_identifier: sale.unit.client_identifier,
-        name: sale.unit.name,
-      },
-      client_identifier: sale.client_identifier,
-      person: {
-        name: sale.person.name,
-      },
-      comments: sale.comments,
-      car: {
-        brand: sale.car.brand,
-        model: sale.car.model,
-        plate: sale.car.plate,
-      },
-      company_value: sale.company_value,
-      cost_value: sale.cost_value,
-      availability_date: sale.availability_date,
-      delivery_date: sale.delivery_date,
-      status: sale.status,
-      production_status: sale.production_status,
-      services_sales: sale.services_sales.map(serviceSale => ({
-        service: {
-          id: serviceSale.service.id,
-          name: serviceSale.service.name,
-        },
-        cost_value: serviceSale.cost_value,
-        company_value: serviceSale.company_value,
-      })),
-      request_date: sale.request_date,
-    }));
+    const formattedSales = await Promise.all(
+      sales.items.map(async sale => {
+        const providersBySale = await this.serviceProviderRepository.findBySale(
+          sale.id,
+        );
+
+        const hasAlreadyBeenDirected = providersBySale.length > 0;
+
+        return {
+          id: sale.id,
+          seller: {
+            id: sale.seller.id,
+            name: sale.seller.name,
+            company: {
+              name: sale.seller.company.name,
+              client_identifier: sale.seller.company.client_identifier,
+            },
+          },
+          unit: {
+            client_identifier: sale.unit.client_identifier,
+            name: sale.unit.name,
+          },
+          client_identifier: sale.client_identifier,
+          person: {
+            name: sale.person.name,
+          },
+          comments: sale.comments,
+          car: {
+            brand: sale.car.brand,
+            model: sale.car.model,
+            plate: sale.car.plate,
+          },
+          hasAlreadyBeenDirected,
+          company_value: sale.company_value,
+          cost_value: sale.cost_value,
+          availability_date: sale.availability_date,
+          delivery_date: sale.delivery_date,
+          status: sale.status,
+          production_status: sale.production_status,
+          services_sales: sale.services_sales.map(serviceSale => ({
+            service: {
+              id: serviceSale.service.id,
+              name: serviceSale.service.name,
+            },
+            cost_value: serviceSale.cost_value,
+            company_value: serviceSale.company_value,
+          })),
+          request_date: sale.request_date,
+        };
+      }),
+    );
 
     return { ...sales, items: formattedSales };
   }
