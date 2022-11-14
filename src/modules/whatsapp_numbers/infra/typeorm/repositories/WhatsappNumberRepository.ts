@@ -66,6 +66,10 @@ class WhatsappNumberRepository implements IWhatsappNumberRepository {
   public async delete(id: string): Promise<void> {
     this.ormRepository.delete(id);
   }
+
+  public async deleteAll(): Promise<void> {
+    this.ormRepository.createQueryBuilder().delete().execute();
+  }
 }
 
 export default WhatsappNumberRepository;

@@ -10,4 +10,5 @@ export default interface IWhatsappNumberRepository {
   create(data: ICreateWhatsappNumberDTO): Promise<WhatsappNumber>;
   save(car: WhatsappNumber): Promise<WhatsappNumber>;
   delete(id: string): Promise<void>;
+  deleteAll(): Promise<void>;
 }

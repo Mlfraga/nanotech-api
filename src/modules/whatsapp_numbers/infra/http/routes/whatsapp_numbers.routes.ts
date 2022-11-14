@@ -21,9 +21,15 @@ whatsappNumbersRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
-      number: Joi.string().required(),
-      restrictedToEspecificCompany: Joi.boolean().required(),
-      companyId: Joi.string().uuid(),
+      numbers: Joi.array()
+        .items(
+          Joi.object().keys({
+            number: Joi.string().required(),
+            restricted_to_especific_company: Joi.boolean().required(),
+            company_id: Joi.string().uuid().allow(null),
+          }),
+        )
+        .required(),
     },
   }),
   ensureAuthenticated,

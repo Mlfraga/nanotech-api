@@ -6,17 +6,13 @@ import StoreWhatsappNumberService from '@modules/whatsapp_numbers/services/Store
 
 export default class WhatsappNumberController {
   async store(request: Request, response: Response) {
-    const { number, restrictedToEspecificCompany, companyId } = request.body;
+    const { numbers } = request.body;
 
     const storeWhatsappNumberService = container.resolve(
       StoreWhatsappNumberService,
     );
 
-    await storeWhatsappNumberService.execute({
-      ...(restrictedToEspecificCompany && { company_id: companyId }),
-      number,
-      restricted_to_especific_company: restrictedToEspecificCompany,
-    });
+    await storeWhatsappNumberService.execute(numbers);
 
     return response.sendStatus(202);
   }

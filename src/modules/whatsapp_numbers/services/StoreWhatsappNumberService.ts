@@ -1,7 +1,5 @@
 import { injectable, inject } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-
 import ICreateWhatsappNumberDTO from '../dtos/ICreateWhatsappNumberDTO';
 import WhatsappNumber from '../infra/typeorm/entities/WhatsappNumber';
 import IWhatsappNumberRepository from '../repositories/IWhatsappNumberRepository';
@@ -14,22 +12,27 @@ class StoreWhatsappNumberService {
   ) {}
 
   public async execute(
-    new_whatsapp_number: ICreateWhatsappNumberDTO,
-  ): Promise<WhatsappNumber> {
-    const isWhatsappNumberAlreadyExists =
-      await this.whatsappNumberRepository.findByNumber(
-        new_whatsapp_number.number,
-      );
+    numbers: ICreateWhatsappNumberDTO[],
+  ): Promise<WhatsappNumber[]> {
+    const createdNumbers = [];
 
-    if (isWhatsappNumberAlreadyExists) {
-      throw new AppError('This number already exists.', 402);
+    await this.whatsappNumberRepository.deleteAll();
+
+    for (const number of numbers) {
+      try {
+        const whatsappNumber = await this.whatsappNumberRepository.create({
+          ...number,
+          number: `+55${number.number}`,
+        });
+
+        console.log(whatsappNumber);
+        createdNumbers.push(whatsappNumber);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    const whatsappNumber = await this.whatsappNumberRepository.create(
-      new_whatsapp_number,
-    );
-
-    return whatsappNumber;
+    return createdNumbers;
   }
 }
 
