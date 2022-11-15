@@ -118,13 +118,27 @@ salesRouter.get(
       initialDate: Joi.date().allow(null),
       finalDate: Joi.date().allow(null),
       company: Joi.string().uuid().allow(null),
-      service: Joi.number().allow(null),
       status: Joi.string().allow(null),
     },
   }),
   ensureAuthenticated,
   RoleMiddleware.isManagerOrAdmin,
   salesReportController.store,
+);
+
+salesRouter.get(
+  '/excel-sales-report',
+  celebrate({
+    [Segments.QUERY]: {
+      startRangeFinishedDate: Joi.date().allow(null),
+      endRangeFinishedDate: Joi.date().allow(null),
+      company: Joi.string().uuid().allow(null),
+      status: Joi.string().allow(null),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isManagerOrAdmin,
+  salesReportController.excelFile,
 );
 
 salesRouter.get(

@@ -1,6 +1,5 @@
 import {
   Between,
-  FindOperator,
   getRepository,
   Repository,
   SelectQueryBuilder,
@@ -60,28 +59,29 @@ class SaleRepository implements ISaleRepository {
     initialDate,
     finalDate,
   }: IFiltersParams): Promise<Sale[] | undefined> {
-    let dueDateCriteria: FindOperator<Date> | undefined;
-
-    if (initialDate && finalDate) {
-      dueDateCriteria = Between(initialDate, finalDate);
-    }
+    const hasAnyFilter = status || company || (initialDate && finalDate);
 
     const sale = await this.ormRepository.find({
       join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
       order: { created_at: 'ASC' },
-      where: (qb: SelectQueryBuilder<Sale>) => {
-        if (company) {
-          qb.where({
-            ...(status && { status }),
-            ...(dueDateCriteria && { delivery_date: dueDateCriteria }),
-          }).andWhere('seller.company_id = :company', { company });
-        } else {
-          qb.where({
-            ...(status && { status }),
-            ...(dueDateCriteria && { delivery_date: dueDateCriteria }),
-          });
-        }
-      },
+      ...(hasAnyFilter && {
+        where: (qb: SelectQueryBuilder<Sale>) => {
+          const filtering = qb.where({ ...(status && { status }) });
+
+          if (company) {
+            filtering.andWhere('seller.company_id = :company', { company });
+          }
+
+          if (initialDate && finalDate) {
+            filtering.andWhere('finished_at > :startDate', {
+              startDate: initialDate,
+            });
+            filtering.andWhere('finished_at < :endDate', {
+              endDate: finalDate,
+            });
+          }
+        },
+      }),
       relations: [
         'seller',
         'seller.company',
@@ -515,6 +515,7 @@ class SaleRepository implements ISaleRepository {
       relations: [
         'seller',
         'seller.company',
+        'seller.user',
         'unit',
         'unit.company',
         'person',

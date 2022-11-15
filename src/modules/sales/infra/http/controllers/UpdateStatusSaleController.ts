@@ -62,6 +62,7 @@ export default class UpdateStatusSaleController {
     const updatedSales = await updateSaleProductionStatusService.execute({
       sale_ids,
       status,
+      profile_id: request.user.profile_id,
     });
 
     return response.status(200).json(updatedSales);

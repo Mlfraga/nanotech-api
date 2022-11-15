@@ -23,6 +23,7 @@ interface IPDFError {
 export default class SalesReportController {
   async store(request: Request, response: Response) {
     const { company, initialDate, finalDate, status } = request.query;
+
     const saleRepository = container.resolve(SaleRepository);
     const companyRepository = container.resolve(CompanyRepository);
 
@@ -52,6 +53,7 @@ export default class SalesReportController {
         company_price_service: string;
         balance: string;
       }[] = [];
+
       for (const serv of sale.services_sales) {
         const balance = serv.company_value - serv.cost_value;
 
@@ -82,16 +84,26 @@ export default class SalesReportController {
       }
 
       const translatedStatus = getTranslatedSalesStatus(sale.status);
+
+      const formattedCar = `${sale.car.brand} ${sale.car.model}`
+        .split(' ')
+        .filter((item, i, allItems) => i === allItems.indexOf(item));
+
       return {
         number: `${sale.seller.company.client_identifier}${sale.unit.client_identifier}${sale.client_identifier}`,
         company: sale.seller.company?.name,
         unit: sale?.unit?.name || sale.seller.unit?.name,
         seller: sale.seller.name,
-        car: `${sale.car.brand} ${sale.car.model}`,
+        car:
+          formattedCar.length > 2
+            ? `${formattedCar[0]} ${formattedCar[1]} ${formattedCar[2]}`
+            : formattedCar.join(' '),
         car_plate: sale.car.plate,
-        delivery_date: format(sale.delivery_date, "dd'/'MM'/'yyyy", {
-          locale: ptBR,
-        }),
+        finished_at: sale.finished_at
+          ? format(sale.finished_at, "dd'/'MM'/'yyyy", {
+              locale: ptBR,
+            })
+          : '-',
         cost_value: Number(sale.cost_value).toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL',
@@ -187,6 +199,12 @@ export default class SalesReportController {
       url_to_download: `${process.env.URL}/sales/download/sales-report/${fileName}.pdf`,
       destroysIn: TIME_TO_DESTROY,
     });
+  }
+
+  async excelFile(request: Request, response: Response) {
+    // const { company, initialDate, finalDate, status } = request.query;
+
+    return response.json({});
   }
 
   async index(request: Request, response: Response) {

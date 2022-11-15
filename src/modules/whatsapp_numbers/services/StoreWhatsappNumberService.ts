@@ -25,7 +25,6 @@ class StoreWhatsappNumberService {
           number: `+55${number.number}`,
         });
 
-        console.log(whatsappNumber);
         createdNumbers.push(whatsappNumber);
       } catch (error) {
         console.log(error);

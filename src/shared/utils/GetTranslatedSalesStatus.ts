@@ -1,5 +1,5 @@
 const getTranslatedSalesStatus = (status: string): string => {
-  switch(status){
+  switch (status) {
     case 'PENDING':
       return 'Pendente';
     case 'FINISHED':
@@ -9,8 +9,8 @@ const getTranslatedSalesStatus = (status: string): string => {
     case 'CANCELED':
       return 'Cancelado';
     default:
-      return ''
+      return '';
   }
-}
+};
 
 export default getTranslatedSalesStatus;
