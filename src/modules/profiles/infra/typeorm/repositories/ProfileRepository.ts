@@ -27,16 +27,27 @@ class ProfileRepository implements IProfileRepository {
       | 'ADMIN'
       | 'NANOTECH_REPRESENTATIVE'
       | 'SERVICE_PROVIDER',
+    showDisabled?: boolean,
   ): Promise<Profile[] | undefined> {
     const profiles = await this.ormRepository.find({
       join: { alias: 'profile', innerJoin: { user: 'profile.user' } },
-      ...(role && {
-        where: (qb: SelectQueryBuilder<Profile>) => {
-          qb.where('user.role = :role', {
+      where: (qb: SelectQueryBuilder<Profile>) => {
+        let conditional = qb;
+
+        if (role) {
+          console.log(role);
+          conditional = qb.where('user.role = :role', {
             role,
           });
-        },
-      }),
+        }
+
+        if (!showDisabled) {
+          console.log(showDisabled);
+          conditional.andWhere('user.enabled = :enabled', {
+            enabled: true,
+          });
+        }
+      },
       order: { created_at: 'ASC' },
       relations: ['company', 'unit', 'user'],
     });

@@ -21,6 +21,7 @@ profileRouter.get(
         'NANOTECH_REPRESENTATIVE',
         'SERVICE_PROVIDER',
       ),
+      showDisabled: Joi.boolean(),
     },
   }),
   ensureAuthenticated,

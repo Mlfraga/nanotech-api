@@ -9,7 +9,7 @@ import ProfileRepository from '../../typeorm/repositories/ProfileRepository';
 
 export default class ProfileController {
   async index(request: Request, response: Response) {
-    const { role } = request.query;
+    const { role, showDisabled } = request.query;
     const user_id = request.user.id;
 
     const profileRepository = container.resolve(ProfileRepository);
@@ -41,6 +41,7 @@ export default class ProfileController {
         | 'ADMIN'
         | 'NANOTECH_REPRESENTATIVE'
         | 'SERVICE_PROVIDER',
+      !!showDisabled,
     );
 
     return response.json(profiles);
