@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { endOfDay, startOfDay } from 'date-fns';
+import { endOfDay, startOfDay, isAfter } from 'date-fns';
 import ExcelJS from 'exceljs';
 import { injectable, inject } from 'tsyringe';
 
@@ -61,17 +61,31 @@ class GenerateExcelReportService {
       { header: 'Preço Concessionária', key: 'company_price', width: 15 },
       { header: 'Vendedor', key: 'seller', width: 15 },
       { header: 'Status', key: 'status', width: 15 },
+      { header: 'Data de faturamento', key: 'finished_date', width: 15 },
       { header: 'Data da venda', key: 'date', width: 15 },
       { header: 'Concesionária', key: 'company', width: 15 },
       { header: 'Serviços', key: 'services', width: 15 },
     ];
 
-    for (const sale of sales) {
+    const formattedSales = sales.sort((a, b) => {
+      if (!a.finished_at || !b.finished_at) {
+        return 1;
+      }
+
+      if (isAfter(b.finished_at, a.finished_at)) {
+        return -1;
+      }
+      if (isAfter(a.finished_at, b.finished_at)) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    for (const sale of formattedSales) {
       const formattedServices = sale.services_sales
         .map(service => service.service.name)
         .join(', ');
-
-      console.log('sale: ', sale);
 
       worksheet.addRow({
         id: String(sale.client_identifier),
@@ -81,6 +95,7 @@ class GenerateExcelReportService {
         seller: sale.seller.name,
         status: getTranslatedSalesStatus(sale.status),
         date: sale.created_at,
+        finished_date: sale.finished_at,
         company: `${sale.unit.company.name} ${sale.unit.name}`,
         services: formattedServices,
       });
