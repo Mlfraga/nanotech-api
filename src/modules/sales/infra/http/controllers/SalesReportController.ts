@@ -11,6 +11,7 @@ import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
 import { template } from '@shared/utils/Template';
 
 import CompanyRepository from '@modules/companies/infra/typeorm/repositories/CompanyRepository';
+import GenerateExcelReportService from '@modules/sales/services/GenerateExcelReportService';
 
 import SaleRepository from '../../typeorm/repositories/SaleRepository';
 
@@ -204,7 +205,13 @@ export default class SalesReportController {
   async excelFile(request: Request, response: Response) {
     // const { company, initialDate, finalDate, status } = request.query;
 
-    return response.json({});
+    const generateExcelReportService = container.resolve(
+      GenerateExcelReportService,
+    );
+
+    const excel = await generateExcelReportService.execute({});
+
+    return response.json(excel);
   }
 
   async index(request: Request, response: Response) {
