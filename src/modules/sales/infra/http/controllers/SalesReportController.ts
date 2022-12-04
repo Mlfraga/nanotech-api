@@ -203,13 +203,21 @@ export default class SalesReportController {
   }
 
   async excelFile(request: Request, response: Response) {
-    // const { company, initialDate, finalDate, status } = request.query;
+    const { startRangeFinishedDate, endRangeFinishedDate, company, status } =
+      request.query;
 
     const generateExcelReportService = container.resolve(
       GenerateExcelReportService,
     );
 
-    const excel = await generateExcelReportService.execute({});
+    const excel = await generateExcelReportService.execute({
+      startRangeFinishedDate:
+        new Date(startRangeFinishedDate as string) || undefined,
+      endRangeFinishedDate:
+        new Date(endRangeFinishedDate as string) || undefined,
+      company: (company as string) || undefined,
+      status: (status as string) || undefined,
+    });
 
     return response.json(excel);
   }

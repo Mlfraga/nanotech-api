@@ -6,15 +6,12 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
 
-import IServiceProviderRepository from '@modules/service_providers/repositories/IServiceProviderRepository';
-import IUserRepository from '@modules/users/repositories/IUsersRepository';
-
 import ISaleRepository from '../repositories/ISaleRepository';
 
 interface IGenerateExcelReportServiceParams {
+  startRangeFinishedDate?: Date;
+  endRangeFinishedDate?: Date;
   company?: string;
-  initialDate?: Date;
-  finalDate?: Date;
   status?: string;
 }
 
@@ -28,27 +25,23 @@ class GenerateExcelReportService {
   constructor(
     @inject('SaleRepository')
     private saleRepository: ISaleRepository,
-
-    @inject('ServiceProviderRepository')
-    private serviceProviderRepository: IServiceProviderRepository,
-
-    @inject('UsersRepository')
-    private userRepository: IUserRepository,
   ) {}
 
   public async execute({
     company,
-    initialDate,
-    finalDate,
+    startRangeFinishedDate,
+    endRangeFinishedDate,
     status,
   }: IGenerateExcelReportServiceParams): Promise<IGenerateExcelReportServiceResponse> {
     const sales = await this.saleRepository.filter({
       status: status && String(status),
       company: company && String(company),
-      initialDate: initialDate
-        ? startOfDay(new Date(String(initialDate)))
+      initialDate: startRangeFinishedDate
+        ? startOfDay(new Date(String(startRangeFinishedDate)))
         : undefined,
-      finalDate: finalDate ? endOfDay(new Date(String(finalDate))) : undefined,
+      finalDate: endRangeFinishedDate
+        ? endOfDay(new Date(String(endRangeFinishedDate)))
+        : undefined,
     });
 
     if (!sales) {
