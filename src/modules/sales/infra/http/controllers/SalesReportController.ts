@@ -211,10 +211,12 @@ export default class SalesReportController {
     );
 
     const excel = await generateExcelReportService.execute({
-      startRangeFinishedDate:
-        new Date(startRangeFinishedDate as string) || undefined,
-      endRangeFinishedDate:
-        new Date(endRangeFinishedDate as string) || undefined,
+      startRangeFinishedDate: startRangeFinishedDate
+        ? new Date(startRangeFinishedDate as string)
+        : undefined,
+      endRangeFinishedDate: endRangeFinishedDate
+        ? new Date(endRangeFinishedDate as string)
+        : undefined,
       company: (company as string) || undefined,
       status: (status as string) || undefined,
     });
