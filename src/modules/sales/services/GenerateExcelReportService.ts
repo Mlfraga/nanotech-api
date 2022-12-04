@@ -59,12 +59,12 @@ class GenerateExcelReportService {
       { header: 'Carro', key: 'car', width: 32 },
       { header: 'Preço Nanotech', key: 'cost_price', width: 15 },
       { header: 'Preço Concessionária', key: 'company_price', width: 15 },
-      { header: 'Vendedor', key: 'seller', width: 15 },
-      { header: 'Status', key: 'status', width: 15 },
-      { header: 'Data de faturamento', key: 'finished_date', width: 15 },
+      { header: 'Vendedor', key: 'seller', width: 40 },
+      { header: 'Status', key: 'status', width: 10 },
+      { header: 'Data de faturamento', key: 'finished_date', width: 20 },
       { header: 'Data da venda', key: 'date', width: 15 },
-      { header: 'Concesionária', key: 'company', width: 15 },
-      { header: 'Serviços', key: 'services', width: 15 },
+      { header: 'Concesionária', key: 'company', width: 50 },
+      { header: 'Serviços', key: 'services', width: 150 },
     ];
 
     console.log('worksheet.getColumn(3): ', worksheet.getColumn(3));
@@ -98,8 +98,8 @@ class GenerateExcelReportService {
       worksheet.addRow({
         id: String(sale.client_identifier),
         car: `${sale.car.brand} ${sale.car.model}`,
-        cost_price: sale.cost_value,
-        company_price: sale.company_value,
+        cost_price: +sale.cost_value,
+        company_price: +sale.company_value,
         seller: sale.seller.name,
         status: getTranslatedSalesStatus(sale.status),
         date: sale.created_at,
@@ -108,6 +108,16 @@ class GenerateExcelReportService {
         services: formattedServices,
       });
     }
+
+    // worksheet.columns.forEach(col => {
+    //   if (col === undefined) {
+    //     return;
+    //   }
+
+    //   col.eachCell(cell => {
+    //     cell.value = cell?.value ? +cell?.value : 0;
+    //   });
+    // });
 
     const fileHash = crypto.randomBytes(10).toString('hex');
 
