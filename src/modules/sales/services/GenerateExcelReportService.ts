@@ -4,6 +4,7 @@ import ExcelJS from 'exceljs';
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
+import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
 
 import IServiceProviderRepository from '@modules/service_providers/repositories/IServiceProviderRepository';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
@@ -67,7 +68,7 @@ class GenerateExcelReportService {
       { header: 'Preço Concessionária', key: 'company_price', width: 15 },
       { header: 'Vendedor', key: 'seller', width: 15 },
       { header: 'Status', key: 'status', width: 15 },
-      { header: 'Data de entrega', key: 'delibery_date', width: 15 },
+      { header: 'Data da venda', key: 'date', width: 15 },
       { header: 'Concesionária', key: 'company', width: 15 },
       { header: 'Serviços', key: 'services', width: 15 },
     ];
@@ -85,6 +86,8 @@ class GenerateExcelReportService {
         cost_price: sale.cost_value,
         company_price: sale.company_value,
         seller: sale.seller.name,
+        status: getTranslatedSalesStatus(sale.status),
+        date: sale.created_at,
         company: `${sale.unit.company.name} ${sale.unit.name}`,
         services: formattedServices,
       });
