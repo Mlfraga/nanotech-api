@@ -69,8 +69,8 @@ class GenerateExcelReportService {
 
     console.log('worksheet.getColumn(3): ', worksheet.getColumn(3));
 
-    worksheet.getColumn(3).numFmt = '$#,##0.00';
-    worksheet.getColumn(4).numFmt = '$#,##0.00';
+    worksheet.getColumn(3).numFmt = 'R$#,##0.00';
+    worksheet.getColumn(4).numFmt = 'R$#,##0.00';
 
     const formattedSales = sales.sort((a, b) => {
       if (!a.finished_at || !b.finished_at) {
