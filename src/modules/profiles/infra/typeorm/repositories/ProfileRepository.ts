@@ -35,14 +35,12 @@ class ProfileRepository implements IProfileRepository {
         let conditional = qb;
 
         if (role) {
-          console.log(role);
           conditional = qb.where('user.role = :role', {
             role,
           });
         }
 
         if (!showDisabled) {
-          console.log(showDisabled);
           conditional.andWhere('user.enabled = :enabled', {
             enabled: true,
           });

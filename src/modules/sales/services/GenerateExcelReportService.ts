@@ -67,8 +67,6 @@ class GenerateExcelReportService {
       { header: 'Serviços', key: 'services', width: 150 },
     ];
 
-    console.log('worksheet.getColumn(3): ', worksheet.getColumn(3));
-
     worksheet.getColumn(3).numFmt = 'R$#,##0.00';
     worksheet.getColumn(4).numFmt = 'R$#,##0.00';
 
@@ -91,9 +89,6 @@ class GenerateExcelReportService {
       const formattedServices = sale.services_sales
         .map(service => service.service.name)
         .join(', ');
-
-      console.log('company_price', sale.company_value);
-      console.log('cost_price', sale.cost_value);
 
       worksheet.addRow({
         id: String(sale.client_identifier),
