@@ -136,6 +136,8 @@ salesRouter.get(
       status: Joi.string().allow(null),
     },
   }),
+  ensureAuthenticated,
+  RoleMiddleware.isManagerOrAdmin,
   salesReportController.excelFile,
 );
 
