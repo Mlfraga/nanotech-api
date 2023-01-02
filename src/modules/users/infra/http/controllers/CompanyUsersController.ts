@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import GetUsersByCompanyService from '@modules/users/services/GetUsersByCompanyService';
+import GetUsersByCompanyService from '@modules/users/infra/http/services/GetUsersByCompanyService';
 
 export default class CompanyUsersController {
   async show(request: Request, response: Response) {

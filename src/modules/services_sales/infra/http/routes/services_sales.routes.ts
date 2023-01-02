@@ -22,8 +22,4 @@ servicesSalesRouter.post(
   servicesSalesController.store,
 );
 
-servicesSalesRouter.get('/', servicesSalesController.index);
-
-servicesSalesRouter.get('/filtered', servicesSalesController.filter);
-
 export default servicesSalesRouter;

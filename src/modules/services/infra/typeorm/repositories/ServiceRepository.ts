@@ -28,8 +28,8 @@ class ServiceRepository implements IServiceRepository {
   public async findByCompanyId(
     companyId: string,
     showDisabled: boolean,
-  ): Promise<Service[] | undefined> {
-    const service = await this.ormRepository.find({
+  ): Promise<Service[]> {
+    const services = await this.ormRepository.find({
       where: { company_id: companyId, ...(!showDisabled && { enabled: true }) },
       relations: ['company', 'company.company_prices'],
       order: {
@@ -37,7 +37,7 @@ class ServiceRepository implements IServiceRepository {
       },
     });
 
-    return service;
+    return services;
   }
 
   public async findByName(name: string): Promise<Service | undefined> {

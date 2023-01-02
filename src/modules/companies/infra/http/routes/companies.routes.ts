@@ -53,7 +53,7 @@ companiesRouter.get(
   '/:id',
   ensureAuthenticated,
   RoleMiddleware.isAdminOrNanotechRepresentative,
-  companiesController.index,
+  companiesController.show,
 );
 
 export default companiesRouter;

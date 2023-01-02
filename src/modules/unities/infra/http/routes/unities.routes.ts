@@ -11,8 +11,6 @@ const unitiesRouter = Router();
 const unitsController = new UnitsController();
 const unitsByCompanyController = new UnitsByCompanyController();
 
-unitiesRouter.get('/', ensureAuthenticated, unitsController.index);
-
 unitiesRouter.get(
   '/:company_id',
   ensureAuthenticated,

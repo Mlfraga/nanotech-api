@@ -1,23 +1,25 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
+import ToggleServiceEnabledService from '@modules/services/infra/http/services/ToggleServiceEnabledService';
 
-import ToggleServiceEnabledService from '@modules/services/services/ToggleServiceEnabledService';
-
-import ServiceRepository from '../../typeorm/repositories/ServiceRepository';
+import CreateServiceService from '../services/CreateServicesService';
+import ListServicesByCompanyService from '../services/ListServicesByCompanyService';
+import UpdateServiceService from '../services/UpdateServiceService';
 
 export default class ServicesController {
   async index(request: Request, response: Response) {
     const { companyId } = request.params;
     const { showDisabled } = request.query;
 
-    const serviceRepository = container.resolve(ServiceRepository);
-
-    const services = await serviceRepository.findByCompanyId(
-      companyId,
-      Boolean(showDisabled),
+    const listServicesByCompanyService = container.resolve(
+      ListServicesByCompanyService,
     );
+
+    const services = await listServicesByCompanyService.execute({
+      companyId,
+      showDisabled: Boolean(showDisabled),
+    });
 
     return response.json(services);
   }
@@ -25,37 +27,31 @@ export default class ServicesController {
   async store(request: Request, response: Response) {
     const { name, price, company_id } = request.body;
 
-    const serviceRepository = container.resolve(ServiceRepository);
+    const createServiceService = container.resolve(CreateServiceService);
 
-    const service = await serviceRepository.create({
+    const createdService = await createServiceService.execute({
       name,
       price,
       company_id,
     });
 
-    return response.json(service);
+    return response.json(createdService);
   }
 
   async update(request: Request, response: Response) {
     const { id } = request.params;
     const { name, price, company_price } = request.body;
 
-    const serviceRepository = container.resolve(ServiceRepository);
+    const updateServiceService = container.resolve(UpdateServiceService);
 
-    const serviceById = await serviceRepository.findById(String(id));
-
-    if (!serviceById) {
-      throw new AppError('Service does not exists.', 404);
-    }
-
-    const service = await serviceRepository.save({
-      ...serviceById,
-      ...(name && { name }),
-      ...(price && { price }),
-      ...(company_price && { company_price }),
+    const updatedService = await updateServiceService.execute({
+      id,
+      name,
+      price,
+      company_price,
     });
 
-    return response.json(service);
+    return response.json(updatedService);
   }
 
   async enable(request: Request, response: Response) {
