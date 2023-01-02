@@ -11,7 +11,7 @@ export default class SalesBudgetController {
       CreateSalesBudgetService,
     );
 
-    const costPrice = createSalesBudgetService.execute({
+    const costPrice = await createSalesBudgetService.execute({
       services,
     });
 

@@ -72,7 +72,6 @@ salesRouter.post(
   '/company-sale-budget',
   celebrate({
     [Segments.BODY]: {
-      companyId: Joi.string().uuid().required(),
       services: Joi.array().items(Joi.string().uuid()).required(),
     },
   }),

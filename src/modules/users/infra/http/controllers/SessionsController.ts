@@ -9,9 +9,6 @@ export default class SessionsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { username, password } = request.body;
 
-    console.log('username', username);
-    console.log('password', password);
-
     const authenticateUserService = container.resolve(AuthenticateUserService);
 
     const authenticatedUser = await authenticateUserService.execute({

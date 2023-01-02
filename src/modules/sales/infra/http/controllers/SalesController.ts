@@ -5,23 +5,10 @@ import { container } from 'tsyringe';
 import ListSalesService from '@modules/sales/infra/http/services/ListSalesService';
 import UpdateSaleService from '@modules/sales/infra/http/services/UpdateSaleService';
 
-import SaleRepository from '../../typeorm/repositories/SaleRepository';
 import CreateSaleService from '../services/CreateSaleService';
 import DeleteSalesService from '../services/DeleteSaleService';
 
 export default class SalesController {
-  async teste(request: Request, response: Response) {
-    const { providerId } = request.query;
-
-    const saleRepository = container.resolve(SaleRepository);
-
-    const sales = await saleRepository.findByServiceProvider(
-      String(providerId),
-    );
-
-    return response.json(sales);
-  }
-
   async index(request: Request, response: Response) {
     const {
       startDeliveryDate,
@@ -94,7 +81,7 @@ export default class SalesController {
 
     const createSaleService = container.resolve(CreateSaleService);
 
-    await createSaleService.execute({
+    const createdSale = await createSaleService.execute({
       user_id,
       deliveryDate,
       availabilityDate,
@@ -111,7 +98,7 @@ export default class SalesController {
       unitId,
     });
 
-    return response.sendStatus(202);
+    return response.json(createdSale);
   }
 
   async delete(request: Request, response: Response) {

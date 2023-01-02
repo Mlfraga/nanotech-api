@@ -8,6 +8,8 @@ import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import IUnitRepository from '@modules/unities/repositories/IUnitRepository';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
 
+import Sale from '../../typeorm/entities/Sale';
+
 interface ICreateSaleServiceParams {
   user_id: string;
   deliveryDate: Date;
@@ -40,7 +42,7 @@ class CreateSaleService {
     @inject('UnitRepository')
     private unitRepository: IUnitRepository,
 
-    @inject('UserRepository')
+    @inject('UsersRepository')
     private userRepository: IUserRepository,
   ) {}
 
@@ -59,7 +61,7 @@ class CreateSaleService {
     carColor,
     carModel,
     unitId,
-  }: ICreateSaleServiceParams): Promise<void> {
+  }: ICreateSaleServiceParams): Promise<Sale> {
     const user = await this.userRepository.findById(user_id);
 
     if (!user) {
@@ -102,7 +104,7 @@ class CreateSaleService {
         throw new AppError('Car cannot be registered.');
       }
 
-      await this.saleRepository.create({
+      const createdSale = await this.saleRepository.create({
         status: 'PENDING',
         unit_id: unitId,
         delivery_date: deliveryDate,
@@ -118,7 +120,7 @@ class CreateSaleService {
         car_id: createdCar.id,
       });
 
-      return;
+      return createdSale;
     }
 
     const carByPlateAndPersonId =
@@ -141,7 +143,7 @@ class CreateSaleService {
         throw new AppError('Car cannot be registered.');
       }
 
-      await this.saleRepository.create({
+      const createdSale = await this.saleRepository.create({
         status: 'PENDING',
         unit_id: unitId,
         delivery_date: deliveryDate,
@@ -157,10 +159,10 @@ class CreateSaleService {
         car_id: createdCar.id,
       });
 
-      return;
+      return createdSale;
     }
 
-    await this.saleRepository.create({
+    const createdSale = await this.saleRepository.create({
       status: 'PENDING',
       unit_id: unitId,
       delivery_date: deliveryDate,
@@ -174,6 +176,8 @@ class CreateSaleService {
       person_id: personByCpf?.id,
       car_id: carByPlateAndPersonId.id,
     });
+
+    return createdSale;
   }
 }
 

@@ -64,13 +64,15 @@ class CreateServicesSaleService {
           cost_value: serviceById.price,
         });
 
-        return createdServiceSale;
+        return { ...createdServiceSale, service: serviceById };
       },
     );
 
     const servicesSales = await Promise.all<ServiceSale>(promises);
 
     let servicesMessage = '';
+
+    console.log('servicesSales', servicesSales);
 
     servicesSales.forEach((serv, index) => {
       if (index === 0) {
