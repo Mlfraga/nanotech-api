@@ -2,31 +2,13 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
+import ListSalesService from '@modules/sales/infra/http/services/ListSalesService';
+import UpdateSaleService from '@modules/sales/infra/http/services/UpdateSaleService';
 
-import CarRepository from '@modules/cars/infra/typeorm/repositories/CarRepository';
-import PersonRepository from '@modules/persons/infra/typeorm/repositories/PersonRepository';
-import ListSalesService from '@modules/sales/services/ListSalesService';
-import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
-import ServiceSaleRepository from '@modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
-import UnitRepository from '@modules/unities/infra/typeorm/repositories/UnitRepository';
-import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
-
-import SaleRepository from '../../typeorm/repositories/SaleRepository';
+import CreateSaleService from '../services/CreateSaleService';
+import DeleteSalesService from '../services/DeleteSaleService';
 
 export default class SalesController {
-  async teste(request: Request, response: Response) {
-    const { providerId } = request.query;
-
-    const saleRepository = container.resolve(SaleRepository);
-
-    const sales = await saleRepository.findByServiceProvider(
-      String(providerId),
-    );
-
-    return response.json(sales);
-  }
-
   async index(request: Request, response: Response) {
     const {
       startDeliveryDate,
@@ -79,11 +61,6 @@ export default class SalesController {
   }
 
   async store(request: Request, response: Response) {
-    const saleRepository = container.resolve(SaleRepository);
-    const personRepository = container.resolve(PersonRepository);
-    const carRepository = container.resolve(CarRepository);
-    const unitRepository = container.resolve(UnitRepository);
-
     const {
       deliveryDate,
       availabilityDate,
@@ -102,163 +79,36 @@ export default class SalesController {
 
     const user_id = request.user.id;
 
-    const userRepository = container.resolve(UserRepository);
+    const createSaleService = container.resolve(CreateSaleService);
 
-    const user = await userRepository.findById(user_id);
-
-    if (!user) {
-      throw new AppError('User not found.', 404);
-    }
-
-    const sellerId = user.profile.id;
-    const { role } = user;
-
-    if (role !== 'MANAGER' && role !== 'SELLER') {
-      throw new AppError('User is not allowed to make sales.');
-    }
-
-    if (source !== 'NEW' && source !== 'USED' && source !== 'WORKSHOP') {
-      throw new AppError('The source is unavailable.');
-    }
-
-    const unitExists = await unitRepository.findById(unitId);
-
-    if (!unitExists) {
-      throw new AppError('This unit does not exist.');
-    }
-
-    if (unitExists.company_id !== user.profile.company_id) {
-      throw new AppError('This unit does not belong to the seller company.');
-    }
-
-    const personByCpf = await personRepository.findByCpf(cpf);
-
-    if (!personByCpf) {
-      const person = await personRepository.create({
-        name,
-        cpf,
-      });
-
-      const createdCar = await carRepository.create({
-        model: carModel,
-        brand: car,
-        plate: carPlate,
-        color: carColor,
-        person_id: person.id,
-      });
-
-      if (!createdCar) {
-        throw new AppError('Car cannot be registered.');
-      }
-
-      const sale = await saleRepository.create({
-        status: 'PENDING',
-        unit_id: unitId,
-        delivery_date: deliveryDate,
-        availability_date: availabilityDate,
-        request_date: new Date(),
-        company_value: companyPrice,
-        cost_value: costPrice,
-        source,
-        comments,
-        seller_id: sellerId,
-        production_status: 'TO_DO',
-        person_id: person?.id,
-        car_id: createdCar.id,
-      });
-
-      const saleById = await saleRepository.findById(sale.id);
-
-      return response.json(saleById);
-    }
-
-    const carByPlateAndPersonId = await carRepository.findByPlateAndPersonId(
+    const createdSale = await createSaleService.execute({
+      user_id,
+      deliveryDate,
+      availabilityDate,
+      comments,
+      companyPrice,
+      costPrice,
+      source,
+      name,
+      cpf,
       car,
       carPlate,
-      personByCpf.id,
-    );
-
-    if (!carByPlateAndPersonId) {
-      const createdCar = await carRepository.create({
-        brand: car,
-        color: carColor,
-        model: carModel,
-        plate: carPlate,
-        person_id: personByCpf.id,
-      });
-
-      if (!createdCar) {
-        throw new AppError('Car cannot be registered.');
-      }
-
-      const sale = await saleRepository.create({
-        status: 'PENDING',
-        unit_id: unitId,
-        delivery_date: deliveryDate,
-        availability_date: availabilityDate,
-        company_value: companyPrice,
-        cost_value: costPrice,
-        source,
-        request_date: new Date(),
-        comments,
-        seller_id: sellerId,
-        person_id: personByCpf?.id,
-        production_status: 'TO_DO',
-        car_id: createdCar.id,
-      });
-
-      const saleById = await saleRepository.findById(sale.id);
-
-      return response.json(saleById);
-    }
-
-    const sale = await saleRepository.create({
-      status: 'PENDING',
-      unit_id: unitId,
-      delivery_date: deliveryDate,
-      availability_date: availabilityDate,
-      company_value: companyPrice,
-      cost_value: costPrice,
-      source,
-      comments,
-      seller_id: sellerId,
-      request_date: new Date(),
-      person_id: personByCpf?.id,
-      car_id: carByPlateAndPersonId.id,
+      carColor,
+      carModel,
+      unitId,
     });
 
-    const saleById = await saleRepository.findById(sale.id);
-
-    return response.json(saleById);
+    return response.json(createdSale);
   }
 
   async delete(request: Request, response: Response) {
     const { ids } = request.body;
 
-    const errors: Array<{ id: string; message: string }> = [];
+    const deleteSalesService = container.resolve(DeleteSalesService);
 
-    const saleRepository = container.resolve(SaleRepository);
-    const serviceSaleRepository = container.resolve(ServiceSaleRepository);
+    const deletedSales = await deleteSalesService.execute({ saleIds: ids });
 
-    try {
-      for (const id of ids) {
-        const saleExists = await saleRepository.findById(String(id));
-
-        if (!saleExists) {
-          errors.push({ id, message: 'Sale not found.' });
-        } else {
-          for (const serviceSale of saleExists.services_sales) {
-            await serviceSaleRepository.delete(serviceSale.id);
-          }
-
-          await saleRepository.delete(String(id));
-        }
-      }
-
-      return response.status(200).json({ message: 'Success', errors });
-    } catch (err) {
-      throw new AppError('An error has occurred on sale deleting.');
-    }
+    return response.json(deletedSales);
   }
 
   async update(request: Request, response: Response) {

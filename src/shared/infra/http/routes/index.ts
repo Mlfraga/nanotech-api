@@ -1,9 +1,7 @@
 import express from 'express';
 
-import carRouter from '@modules/cars/infra/http/routes/car.routes';
 import companiesRouter from '@modules/companies/infra/http/routes/companies.routes';
 import companyPricesRouter from '@modules/company_prices/infra/http/routes/company_prices.routes';
-import personRouter from '@modules/persons/infra/http/routes/persons.routes';
 import profileRouter from '@modules/profiles/infra/http/routes/profile.routes';
 import salesRouter from '@modules/sales/infra/http/routes/sales.routes';
 import saleServiceProviderRouter from '@modules/service_providers/infra/http/routes/sale_service_providers.routes';
@@ -36,7 +34,5 @@ routes.use('/services', servicesRouter);
 routes.use('/company-services', companyPricesRouter);
 routes.use('/sales', salesRouter);
 routes.use('/service-sales', servicesSalesRouter);
-routes.use('/persons', personRouter);
-routes.use('/cars', carRouter);
 
 export default routes;

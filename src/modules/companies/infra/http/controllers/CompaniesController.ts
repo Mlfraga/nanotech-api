@@ -1,60 +1,40 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-import CpfCnpjUtils from '@shared/utils/CpfCnpjUtils';
-
-import CompanyRepository from '../../typeorm/repositories/CompanyRepository';
+import CreateCompanyService from '../services/CreateCompanyService';
+import ListCompaniesService from '../services/ListCompaniesService';
+import ShowCompanyService from '../services/ShowCompanyService';
+import UpdateCompanyService from '../services/UpdateCompanyService';
 
 export default class CompanyController {
   async index(request: Request, response: Response) {
-    const { id } = request.params;
+    const listCompaniesService = container.resolve(ListCompaniesService);
 
-    const companyRepository = container.resolve(CompanyRepository);
-
-    if (id) {
-      const company = await companyRepository.findById(String(id));
-
-      if (!company) {
-        return response.status(404).json({ error: 'Company not found.' });
-      }
-
-      return response.json(company);
-    }
-
-    const companies = await companyRepository.find();
+    const companies = await listCompaniesService.execute();
 
     return response.json(companies);
+  }
+
+  async show(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const showCompanyService = container.resolve(ShowCompanyService);
+
+    const company = await showCompanyService.execute({ id });
+
+    return response.json(company);
   }
 
   async store(request: Request, response: Response) {
     const { name, telephone, cnpj, client_identifier } = request.body;
 
-    const companyRepository = container.resolve(CompanyRepository);
+    const createCompanyService = container.resolve(CreateCompanyService);
 
-    const isCnpjValid = CpfCnpjUtils.isCnpjValid(cnpj);
-
-    if (!isCnpjValid) {
-      throw new AppError('Invalid CNPJ.', 409);
-    }
-
-    const companyByName = await companyRepository.findByName(name);
-
-    if (companyByName) {
-      throw new AppError('Already has a company with this name.', 409);
-    }
-
-    const companyByCnpj = await companyRepository.findByCnpj(cnpj);
-
-    if (companyByCnpj) {
-      throw new AppError('Already has a company with this CNPJ.', 409);
-    }
-
-    const company = await companyRepository.create({
+    const company = await createCompanyService.execute({
       name,
       telephone,
       cnpj,
-      client_identifier: String(client_identifier).toUpperCase(),
+      client_identifier,
     });
 
     return response.json(company);
@@ -64,20 +44,14 @@ export default class CompanyController {
     const { id } = request.params;
     const { name, telephone, cnpj, client_identifier } = request.body;
 
-    const companyRepository = container.resolve(CompanyRepository);
+    const updateCompanyService = container.resolve(UpdateCompanyService);
 
-    const companyExists = await companyRepository.findById(String(id));
-
-    if (!companyExists) {
-      throw new AppError('Does not exist a company with this id.');
-    }
-
-    const updatedCompany = await companyRepository.save({
-      ...companyExists,
-      ...(client_identifier && { client_identifier }),
-      ...(name && { name }),
-      ...(telephone && { telephone }),
-      ...(cnpj && { cnpj }),
+    const updatedCompany = await updateCompanyService.execute({
+      id,
+      name,
+      telephone,
+      cnpj,
+      client_identifier,
     });
 
     return response.json(updatedCompany);

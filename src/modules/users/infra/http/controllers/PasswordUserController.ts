@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import ResetUserPasswordService from '@modules/users/services/ResetUserPasswordService';
-import UpdateUserPasswordService from '@modules/users/services/UpdateUserPasswordService';
+import ResetUserPasswordService from '@modules/users/infra/http/services/ResetUserPasswordService';
+import UpdateUserPasswordService from '@modules/users/infra/http/services/UpdateUserPasswordService';
 
 export default class PasswordUserController {
   async update(request: Request, response: Response) {

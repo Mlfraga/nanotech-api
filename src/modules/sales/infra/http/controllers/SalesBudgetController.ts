@@ -1,28 +1,20 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-
-import ServiceRepository from '@modules/services/infra/typeorm/repositories/ServiceRepository';
+import CreateSalesBudgetService from '../services/CreateSalesBudgetService';
 
 export default class SalesBudgetController {
   async create(request: Request, response: Response) {
     const { services } = request.body;
 
-    const serviceRepository = container.resolve(ServiceRepository);
+    const createSalesBudgetService = container.resolve(
+      CreateSalesBudgetService,
+    );
 
-    let costPrice = 0;
-
-    services.forEach(async (id: string): Promise<void> => {
-      const serviceById = await serviceRepository.findById(id);
-
-      if (!serviceById) {
-        throw new AppError('No service found with this ID.');
-      }
-
-      costPrice = Number(serviceById.price) + Number(costPrice);
+    const costPrice = await createSalesBudgetService.execute({
+      service_ids: services,
     });
 
-    setTimeout(() => response.json({ costPrice: Number(costPrice) }), 100);
+    return response.json({ costPrice });
   }
 }

@@ -29,11 +29,4 @@ profileRouter.get(
   userController.index,
 );
 
-profileRouter.put(
-  '/:id',
-  ensureAuthenticated,
-  RoleMiddleware.isAdminOrNanotechRepresentative,
-  userController.update,
-);
-
 export default profileRouter;

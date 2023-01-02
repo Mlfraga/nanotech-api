@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import CreateSaleServiceProvidersService from '@modules/service_providers/services/CreateSaleServiceProvidersService';
-import ListProvidersBySaleService from '@modules/service_providers/services/ListProvidersBySaleService';
-import ListSalesByProviderService from '@modules/service_providers/services/ListSalesByProviderService';
+import CreateSaleServiceProvidersService from '@modules/service_providers/infra/http/services/CreateSaleServiceProvidersService';
+import ListProvidersBySaleService from '@modules/service_providers/infra/http/services/ListProvidersBySaleService';
+import ListSalesByProviderService from '@modules/service_providers/infra/http/services/ListSalesByProviderService';
 
 export default class ServiceSaleProviderController {
   async store(request: Request, response: Response) {

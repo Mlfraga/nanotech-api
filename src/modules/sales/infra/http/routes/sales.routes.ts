@@ -62,27 +62,16 @@ salesRouter.post(
 );
 
 salesRouter.post(
-  '/getsalebudget',
+  '/sale-budget',
   ensureAuthenticated,
   RoleMiddleware.isManagerOrSeller,
   salesBudgetController.create,
 );
 
-salesRouter.get(
-  '/provider-teste',
-  celebrate({
-    [Segments.QUERY]: {
-      providerId: Joi.string().uuid().required(),
-    },
-  }),
-  salesController.teste,
-);
-
 salesRouter.post(
-  '/getcompanysalebudget',
+  '/company-sale-budget',
   celebrate({
     [Segments.BODY]: {
-      companyId: Joi.string().uuid().required(),
       services: Joi.array().items(Joi.string().uuid()).required(),
     },
   }),
@@ -123,7 +112,7 @@ salesRouter.get(
   }),
   ensureAuthenticated,
   RoleMiddleware.isManagerOrAdmin,
-  salesReportController.store,
+  salesReportController.pdfFile,
 );
 
 salesRouter.get(
@@ -143,7 +132,7 @@ salesRouter.get(
 
 salesRouter.get(
   '/download/sales-report/:fileName',
-  salesReportController.index,
+  salesReportController.download,
 );
 
 salesRouter.delete(

@@ -11,13 +11,13 @@ class CompanyRepository implements ICompanyRepository {
     this.ormRepository = getRepository(Company);
   }
 
-  public async find(): Promise<Company[] | undefined> {
-    const company = await this.ormRepository.find({
+  public async find(): Promise<Company[]> {
+    const companies = await this.ormRepository.find({
       order: { created_at: 'ASC' },
       relations: ['profiles', 'unities', 'company_prices', 'profiles.user'],
     });
 
-    return company;
+    return companies;
   }
 
   public async findById(id: string): Promise<Company | undefined> {

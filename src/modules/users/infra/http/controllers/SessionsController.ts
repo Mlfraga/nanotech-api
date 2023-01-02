@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
-import LogOutUserService from '@modules/users/services/LogOutUserService';
-import RefreshAccessTokenService from '@modules/users/services/RefreshAccessTokenService';
+import AuthenticateUserService from '@modules/users/infra/http/services/AuthenticateUserService';
+import LogOutUserService from '@modules/users/infra/http/services/LogOutUserService';
+import RefreshAccessTokenService from '@modules/users/infra/http/services/RefreshAccessTokenService';
 
 export default class SessionsController {
   public async create(request: Request, response: Response): Promise<Response> {

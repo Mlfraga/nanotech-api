@@ -28,7 +28,7 @@ class ProfileRepository implements IProfileRepository {
       | 'NANOTECH_REPRESENTATIVE'
       | 'SERVICE_PROVIDER',
     showDisabled?: boolean,
-  ): Promise<Profile[] | undefined> {
+  ): Promise<Profile[]> {
     const profiles = await this.ormRepository.find({
       join: { alias: 'profile', innerJoin: { user: 'profile.user' } },
       where: (qb: SelectQueryBuilder<Profile>) => {
@@ -77,9 +77,7 @@ class ProfileRepository implements IProfileRepository {
     return profiles;
   }
 
-  public async findByCompanyId(
-    companyId: string,
-  ): Promise<Profile[] | undefined> {
+  public async findByCompanyId(companyId: string): Promise<Profile[]> {
     const profiles = await this.ormRepository.find({
       order: { created_at: 'ASC' },
       relations: ['company', 'unit', 'user'],

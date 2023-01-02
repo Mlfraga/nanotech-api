@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import CreateUserService from '@modules/users/services/CreateUserService';
-import ListUsersService from '@modules/users/services/ListUsersService';
-import ShowUserService from '@modules/users/services/ShowUserService';
-import ToggleUserEnabledService from '@modules/users/services/ToggleUserEnabledService';
-import UpdateUserService from '@modules/users/services/UpdateUserService';
+import CreateUserService from '@modules/users/infra/http/services/CreateUserService';
+import ListUsersService from '@modules/users/infra/http/services/ListUsersService';
+import ShowUserService from '@modules/users/infra/http/services/ShowUserService';
+import ToggleUserEnabledService from '@modules/users/infra/http/services/ToggleUserEnabledService';
+import UpdateUserService from '@modules/users/infra/http/services/UpdateUserService';
 
 export default class UserController {
   async index(request: Request, response: Response) {
@@ -61,14 +61,14 @@ export default class UserController {
 
     const updateUserService = container.resolve(UpdateUserService);
 
-    const user = await updateUserService.execute({
+    await updateUserService.execute({
       id,
       name,
       telephone,
       role,
     });
 
-    return response.json(user);
+    return response.sendStatus(202);
   }
 
   async show(request: Request, response: Response) {

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import ListWhatsappNumbersService from '@modules/whatsapp_numbers/services/ListWhatsappNumbersService';
-import StoreWhatsappNumberService from '@modules/whatsapp_numbers/services/StoreWhatsappNumberService';
+import ListWhatsappNumbersService from '@modules/whatsapp_numbers/infra/http/services/ListWhatsappNumbersService';
+import StoreWhatsappNumberService from '@modules/whatsapp_numbers/infra/http/services/StoreWhatsappNumberService';
 
 export default class WhatsappNumberController {
   async store(request: Request, response: Response) {
