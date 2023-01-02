@@ -2,10 +2,11 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import Service from '@modules/services/infra/typeorm/entities/Service';
 import IServiceRepository from '@modules/services/repositories/IServiceRepository';
 
 interface ICreateSalesBudgetServiceParams {
-  services: string[];
+  service_ids: string[];
 }
 
 @injectable()
@@ -16,19 +17,24 @@ class CreateSalesBudgetService {
   ) {}
 
   public async execute({
-    services,
+    service_ids,
   }: ICreateSalesBudgetServiceParams): Promise<number> {
-    let costPrice = 0;
+    const services: Service[] = [];
 
-    services.forEach(async (id: string): Promise<void> => {
-      const serviceById = await this.serviceRepository.findById(id);
+    for (const service_id of service_ids) {
+      const serviceById = await this.serviceRepository.findById(service_id);
 
       if (!serviceById) {
         throw new AppError('No service found with this ID.');
       }
 
-      costPrice = Number(serviceById.price) + Number(costPrice);
-    });
+      services.push(serviceById);
+    }
+
+    const costPrice = services.reduce(
+      (acc, service) => Number(acc) + Number(service.price),
+      0,
+    );
 
     return costPrice;
   }

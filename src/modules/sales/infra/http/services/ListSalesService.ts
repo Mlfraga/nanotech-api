@@ -31,6 +31,7 @@ interface IFormattedSale {
     brand: string;
     model: string;
     plate: string;
+    color: string;
   };
   company_value: number;
   hasAlreadyBeenDirected: boolean;
@@ -263,6 +264,7 @@ class ListSalesService {
             brand: sale.car.brand,
             model: sale.car.model,
             plate: sale.car.plate,
+            color: sale.car.color,
           },
           hasAlreadyBeenDirected,
           company_value: sale.company_value,

@@ -12,7 +12,7 @@ export default class SalesBudgetController {
     );
 
     const costPrice = await createSalesBudgetService.execute({
-      services,
+      service_ids: services,
     });
 
     return response.json({ costPrice });

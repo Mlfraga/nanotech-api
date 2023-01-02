@@ -79,17 +79,7 @@ class CreateSaleServiceProvidersService {
               }
             });
 
-            const formattedMessage = `*NOVO SERVIÇO DIRECIONADO PARA VOCÊ*\n\nDETALHES DO SERVIÇO: \n\nData a ser realizado:* ${format(
-              addHours(new Date(String(date_to_be_done)), -3),
-              "dd'/'MM'/'yyyy",
-              { locale: ptBR },
-            )}\n\nData de entrega:* ${format(
-              addHours(new Date(String(saleById.delivery_date)), -3),
-              "dd'/'MM'/'yyyy '-' HH:mm'h'",
-              { locale: ptBR },
-            )}\n\nVendedor(a):* ${saleById.seller.name}\n\nConcessionária:* ${
-              saleById.unit.company.name
-            }\n\nUnidade:* ${saleById.unit.name}\n\nCarro:*
+            const formattedMessage = `*NOVO SERVIÇO DIRECIONADO PARA VOCÊ*\n\nDETALHES DO SERVIÇO: \n\nData a ser realizado:* ${format(addHours(new Date(String(date_to_be_done)), -3),"dd'/'MM'/'yyyy", { locale: ptBR },)}\n\nData de entrega:* ${format(addHours(new Date(String(saleById.delivery_date)), -3),"dd'/'MM'/'yyyy '-' HH:mm'h'", { locale: ptBR },)}\n\nVendedor(a):* ${saleById.seller.name}\n\nConcessionária:* ${saleById.unit.company.name}\n\nUnidade:* ${saleById.unit.name}\n\nCarro:*  
 ${`${saleById.car.brand} ${saleById.car.model} ${saleById.car.color} - ${saleById.car.plate}`}\n\nServiços:* ${servicesMessage}\n\n*POR FAVOR LEMBRE-SE DE CHECKAR E MANTER O STATUS DO SERVIÇO ATUALIZADO NA PLATAFORMA*`;
 
             await this.wppMessagesProvider.sendMessage(formattedMessage, [

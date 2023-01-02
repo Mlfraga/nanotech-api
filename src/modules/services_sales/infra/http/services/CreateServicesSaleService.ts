@@ -72,8 +72,6 @@ class CreateServicesSaleService {
 
     let servicesMessage = '';
 
-    console.log('servicesSales', servicesSales);
-
     servicesSales.forEach((serv, index) => {
       if (index === 0) {
         servicesMessage += `${serv.service.name}`;

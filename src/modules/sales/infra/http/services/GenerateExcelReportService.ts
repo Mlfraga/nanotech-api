@@ -6,6 +6,8 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
 
+import IUserRepository from '@modules/users/repositories/IUsersRepository';
+
 import ISaleRepository from '../../../repositories/ISaleRepository';
 
 interface IGenerateExcelReportServiceParams {
@@ -13,6 +15,7 @@ interface IGenerateExcelReportServiceParams {
   endRangeFinishedDate?: Date;
   company?: string;
   status?: string;
+  user_id: string;
 }
 
 interface IGenerateExcelReportServiceResponse {
@@ -25,6 +28,9 @@ class GenerateExcelReportService {
   constructor(
     @inject('SaleRepository')
     private saleRepository: ISaleRepository,
+
+    @inject('UsersRepository')
+    private userRepository: IUserRepository,
   ) {}
 
   public async execute({
@@ -32,10 +38,16 @@ class GenerateExcelReportService {
     startRangeFinishedDate,
     endRangeFinishedDate,
     status,
+    user_id,
   }: IGenerateExcelReportServiceParams): Promise<IGenerateExcelReportServiceResponse> {
+    const user = await this.userRepository.findById(user_id);
+
     const sales = await this.saleRepository.filter({
       status: status && String(status),
-      company: company && String(company),
+      company:
+        user?.role === 'MANAGER'
+          ? user.profile.company_id
+          : company && String(company),
       initialDate: startRangeFinishedDate
         ? startOfDay(new Date(String(startRangeFinishedDate)))
         : undefined,

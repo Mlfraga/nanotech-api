@@ -28,6 +28,8 @@ export default class SalesReportController {
     const { startRangeFinishedDate, endRangeFinishedDate, company, status } =
       request.query;
 
+    const user_id = request.user.id;
+
     const generateExcelReportService = container.resolve(
       GenerateExcelReportService,
     );
@@ -41,6 +43,7 @@ export default class SalesReportController {
         : undefined,
       company: (company as string) || undefined,
       status: (status as string) || undefined,
+      user_id,
     });
 
     return response.json(excel);
