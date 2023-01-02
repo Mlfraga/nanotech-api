@@ -106,9 +106,9 @@ export default class SalesController {
 
     const deleteSalesService = container.resolve(DeleteSalesService);
 
-    const deletedSales = deleteSalesService.execute({ saleIds: ids });
+    const deletedSales = await deleteSalesService.execute({ saleIds: ids });
 
-    return response.status(200).json(deletedSales);
+    return response.json(deletedSales);
   }
 
   async update(request: Request, response: Response) {
