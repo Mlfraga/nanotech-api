@@ -1,5 +1,5 @@
 import ICreateCarDTO from '../dtos/ICreateCarDTO';
-import Car from '../infra/typeorm/entities/Car';
+import { Car } from '../infra/entities/Car';
 
 export default interface ICarRepository {
   find(): Promise<Car[] | undefined>;

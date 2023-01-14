@@ -8,7 +8,7 @@ import IServiceProviderRepository from '@modules/service_providers/repositories/
 import WhatsappNumberRepository from '@modules/whatsapp_numbers/infra/typeorm/repositories/WhatsappNumberRepository';
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
-import CarRepository from '../../modules/cars/infra/typeorm/repositories/CarRepository';
+// import CarRepository from '../../modules/cars/infra/typeorm/repositories/CarRepository';
 import ICarRepository from '../../modules/cars/repositories/ICarRepository';
 import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
 import ICompanyRepository from '../../modules/companies/repositories/ICompanyRepository';
@@ -28,6 +28,8 @@ import UnitRepository from '../../modules/unities/infra/typeorm/repositories/Uni
 import IUnitRepository from '../../modules/unities/repositories/IUnitRepository';
 import UserRepository from '../../modules/users/infra/typeorm/repositories/UserRepository';
 import IUsersRepository from '../../modules/users/repositories/IUsersRepository';
+import PrismaCarsRepository from '@modules/cars/infra/prisma/repositories/cars-repository';
+import PrismaCompaniesRepository from '@modules/companies/infra/prisma/repositories/companies-repository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -53,7 +55,7 @@ container.registerSingleton<ICompanyPricesRepository>(
 
 container.registerSingleton<ICompanyRepository>(
   'CompanyRepository',
-  CompanyRepository,
+  PrismaCompaniesRepository,
 );
 
 container.registerSingleton<IProfileRepository>(
@@ -61,7 +63,7 @@ container.registerSingleton<IProfileRepository>(
   ProfileRepository,
 );
 
-container.registerSingleton<ICarRepository>('CarRepository', CarRepository);
+container.registerSingleton<ICarRepository>('CarRepository', PrismaCarsRepository);
 
 container.registerSingleton<IUnitRepository>('UnitRepository', UnitRepository);
 
