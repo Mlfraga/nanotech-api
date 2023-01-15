@@ -5,6 +5,7 @@ import CreateCompanyService from '../services/CreateCompanyService';
 import ListCompaniesService from '../services/ListCompaniesService';
 import ShowCompanyService from '../services/ShowCompanyService';
 import UpdateCompanyService from '../services/UpdateCompanyService';
+import { CompaniesViewModel } from '../view-models/companies-view-model';
 
 export default class CompanyController {
   async index(request: Request, response: Response) {
@@ -12,7 +13,11 @@ export default class CompanyController {
 
     const companies = await listCompaniesService.execute();
 
-    return response.json(companies);
+    const formattedCompanies = companies.map(company => {
+      return CompaniesViewModel.toHttp(company);
+    });
+
+    return response.json(formattedCompanies);
   }
 
   async show(request: Request, response: Response) {
@@ -22,7 +27,9 @@ export default class CompanyController {
 
     const company = await showCompanyService.execute({ id });
 
-    return response.json(company);
+    const formattedCompany = CompaniesViewModel.toHttp(company);
+
+    return response.json(formattedCompany);
   }
 
   async store(request: Request, response: Response) {

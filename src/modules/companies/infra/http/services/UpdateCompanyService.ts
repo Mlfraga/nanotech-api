@@ -5,7 +5,7 @@ import CpfCnpjUtils from '@shared/utils/CpfCnpjUtils';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
 
-import Company from '../../typeorm/entities/Company';
+import {Company} from '../../entities/Company';
 
 type IUpdateCompanyServiceResponse = Company;
 
@@ -54,13 +54,16 @@ class UpdateCompanyService {
       throw new AppError('Already has a company with this CNPJ.', 409);
     }
 
-    const updatedCompany = await this.companyRepository.save({
-      ...company,
+    const companyToUpdate = new Company({
       client_identifier,
       name,
       telephone,
       cnpj,
-    });
+      unities: company.unities,
+      created_at: company.created_at,
+    }, company.id);
+
+    const updatedCompany = await this.companyRepository.save(companyToUpdate);
 
     return updatedCompany;
   }

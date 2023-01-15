@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import Car from '@modules/cars/infra/typeorm/entities/Car';
+import {Car} from '@modules/cars/infra/typeorm/entities/Car';
 import Person from '@modules/persons/infra/typeorm/entities/Person';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
 import SalesServiceProviders from '@modules/service_providers/infra/typeorm/entities/SaleServiceProvider';

@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
 
-import Company from '../../typeorm/entities/Company';
+import {Company} from '../../entities/Company';
 
 type ListCompaniesResponse = Company;
 

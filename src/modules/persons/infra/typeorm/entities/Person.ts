@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import Car from '@modules/cars/infra/typeorm/entities/Car';
+import {Car} from '@modules/cars/infra/typeorm/entities/Car';
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 @Entity('persons')

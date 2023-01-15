@@ -2,7 +2,7 @@ import { getRepository, Repository } from 'typeorm';
 
 import ICreateCarDTO from '../../../dtos/ICreateCarDTO';
 import ICarRepository from '../../../repositories/ICarRepository';
-import Car from '../entities/Car';
+import { Car } from '../../entities/Car';
 
 class CarRepository implements ICarRepository {
   private ormRepository: Repository<Car>;
@@ -20,7 +20,11 @@ class CarRepository implements ICarRepository {
   }
 
   public async findById(id: string): Promise<Car | undefined> {
-    const car = await this.ormRepository.findOne(id);
+    const car = await this.ormRepository.findOne({where: {id}});
+
+    if(!car) {
+      return undefined;
+    }
 
     return car;
   }
@@ -37,6 +41,10 @@ class CarRepository implements ICarRepository {
         plate: carPlate,
       },
     });
+
+    if (!car) {
+      return undefined;
+    }
 
     return car;
   }

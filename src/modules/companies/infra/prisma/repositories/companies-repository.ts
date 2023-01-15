@@ -1,6 +1,6 @@
 import ICreateCompanyDTO from "@modules/companies/dtos/ICreateCompanyDTO";
 import ICompanyRepository from "@modules/companies/repositories/ICompanyRepository";
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { Company } from "../../entities/Company";
 import { PrismaCompanyMapper } from "../mappers/prisma-company-mapper";
 
@@ -8,7 +8,9 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   public async find(): Promise<Company[]> {
     const prisma = new PrismaClient()
 
-    const companies = await prisma.companies.findMany();
+    const companies = await prisma.companies.findMany({
+      include: {unities: true}
+    });
 
     const formattedCompanies = companies.map(company => PrismaCompanyMapper.toDomain(company));
 
@@ -22,6 +24,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
       where: {
         id,
       },
+      include: {unities: true}
     });
 
     if(!company) {
@@ -37,7 +40,8 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
     const prisma = new PrismaClient()
 
     const company = await prisma.companies.create({
-      data
+      data,
+      include: {unities: true}
     });
 
     const formattedCompany = PrismaCompanyMapper.toDomain(company);
@@ -52,7 +56,8 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
       where: {
         id: company.id,
       },
-      data: company,
+      data: PrismaCompanyMapper.toPrisma(company),
+      include: {unities: true}
     });
 
     const formattedCompany = PrismaCompanyMapper.toDomain(updatedCompany);
@@ -73,6 +78,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
       where: {
         cnpj,
       },
+      include: {unities: true}
     });
 
     if(!company) {
@@ -83,6 +89,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
 
     return formattedCompany;
   }
+
   public async findByName(name: string): Promise<Company | undefined>{
     const prisma = new PrismaClient()
 
@@ -90,6 +97,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
       where: {
         name,
       },
+      include: {unities: true}
     });
 
     if(!company) {

@@ -1,23 +1,27 @@
-import { Unit } from '@modules/unities/infra/entities/Unit';
+import { Company } from '@modules/companies/infra/entities/Company';
+import { Profile } from '@modules/profiles/infra/entities/Profile';
+import { Sale } from '@modules/sales/infra/entities/Sale';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
-export interface NotificationProps {
+export interface UnitProps {
   name: string;
-  cnpj: string;
   telephone: string;
-  client_identifier: string;
+  client_identifier: string
+  company_id: string;
+  company?: Company;
+  profiles?: Profile[];
+  sales?: Sale[];
   created_at: Date;
   updated_at: Date;
-  unities: Unit[];
 }
 
-export class Company {
+export class Unit {
   private _id: string;
-  private props: NotificationProps;
+  private props: UnitProps;
 
   constructor(
-    props: Replace<NotificationProps, { created_at?: Date, updated_at?: Date }>,
+    props: Replace<UnitProps, { created_at?: Date, updated_at?: Date }>,
     id?: string,
   ) {
     this.props = { ...props, updated_at: props.updated_at ?? new Date(), created_at: props.created_at ?? new Date() };
@@ -36,14 +40,6 @@ export class Company {
     this.props.name = name;
   }
 
-  public get cnpj(): string {
-    return this.props.cnpj;
-  }
-
-  public set cnpj(cnpj: string){
-    this.props.cnpj = cnpj;
-  }
-
   public get telephone(): string {
     return this.props.telephone;
   }
@@ -60,6 +56,38 @@ export class Company {
     this.props.client_identifier = client_identifier;
   }
 
+  public get company_id(): string {
+    return this.props.company_id;
+  }
+
+  public set company_id(company_id: string){
+    this.props.company_id = company_id;
+  }
+
+  public get company(): Company | undefined {
+    return this.props.company;
+  }
+
+  public set company(company: Company | undefined){
+    this.props.company = company;
+  }
+
+  public get profiles(): Profile[] | undefined {
+    return this.props.profiles;
+  }
+
+  public set profiles(profiles: Profile[] | undefined){
+    this.props.profiles = profiles;
+  }
+
+  public get sales(): Sale[] | undefined {
+    return this.props.sales;
+  }
+
+  public set sales(sales: Sale[] | undefined){
+    this.props.sales = sales;
+  }
+
   public get created_at(): Date {
     return this.props.created_at;
   }
@@ -70,13 +98,5 @@ export class Company {
 
   public set updated_at(updated_at: Date) {
     this.props.updated_at = updated_at;
-  }
-
-  public get unities(): Unit[] {
-    return this.props.unities;
-  }
-
-  public set unities(unities: Unit[]) {
-    this.props.unities = unities;
   }
 }

@@ -1,6 +1,13 @@
 import ICreateCompanyDTO from '@modules/companies/dtos/ICreateCompanyDTO';
-import { companies as RawCompany } from '@prisma/client';
+import { Unit } from '@modules/unities/infra/entities/Unit';
+import { Prisma } from '@prisma/client';
 import { Company } from '../../entities/Company';
+
+export type PrismaCompany = Prisma.companiesGetPayload<{
+  include: {
+    unities: true;
+  };
+}>;
 
 export class PrismaCompanyMapper {
   static toPrisma(company: ICreateCompanyDTO) {
@@ -12,10 +19,22 @@ export class PrismaCompanyMapper {
     };
   }
 
-  static toDomain(raw: RawCompany) {
+  static toDomain(raw: PrismaCompany) {
     return new Company(
       {
         name: raw.name,
+        unities: raw.unities.map(unit => {
+          return new Unit({
+            name: unit.name,
+            client_identifier: unit.client_identifier,
+            created_at: unit.created_at,
+            updated_at: unit.updated_at,
+            company_id: unit.company_id,
+            telephone: unit.telephone,
+          },
+          unit.id,
+          )
+        }),
         cnpj: raw.cnpj,
         telephone: raw.telephone,
         client_identifier: raw.client_identifier,

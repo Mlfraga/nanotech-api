@@ -34,9 +34,14 @@ class UserRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(id, {
+    const user = await this.ormRepository.findOne({
       relations: ['profile', 'profile.company'],
+      where: { id },
     });
+
+    if(!user) {
+      return undefined;
+    }
 
     return user;
   }
@@ -47,6 +52,10 @@ class UserRepository implements IUsersRepository {
       relations: ['profile', 'profile.company'],
     });
 
+    if(!user) {
+      return undefined;
+    }
+
     return user;
   }
 
@@ -55,6 +64,10 @@ class UserRepository implements IUsersRepository {
       where: { email },
       relations: ['profile', 'profile.company'],
     });
+
+    if(!user) {
+      return undefined;
+    }
 
     return user;
   }

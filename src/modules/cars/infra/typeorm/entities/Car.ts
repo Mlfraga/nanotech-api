@@ -13,7 +13,7 @@ import Person from '@modules/persons/infra/typeorm/entities/Person';
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 @Entity('cars')
-export default class Car {
+export class Car {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

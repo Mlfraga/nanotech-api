@@ -1,3 +1,4 @@
+import { Person } from '@modules/persons/infra/entities/Person';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
@@ -7,7 +8,7 @@ export interface NotificationProps {
   plate: string;
   color: string;
   person_id: string;
-  // person?: Person;
+  person?: Person;
   created_at: Date;
   updated_at: Date;
 }
@@ -68,9 +69,12 @@ export class Car {
     this.props.person_id = person_id;
   }
 
-  // public get person(): Person {
-  //   return this.props.person;
-  // }
+  public get person(): Person | undefined {
+    return this.props.person;
+  }
+  public set person(person: Person | undefined) {
+    this.props.person = person;
+  }
 
   public get created_at(): Date {
     return this.props.created_at;
