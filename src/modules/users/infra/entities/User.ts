@@ -3,7 +3,6 @@ import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
 export interface UserProps {
-  name: string;
   telephone: string;
   username: string;
   password: string;
@@ -15,7 +14,7 @@ export interface UserProps {
     | 'SERVICE_PROVIDER';
   first_login: boolean;
   enabled: boolean;
-  profile: Profile;
+  profile?: Profile;
   updated_at: Date;
   created_at: Date;
 }
@@ -30,14 +29,6 @@ export class User {
   ) {
     this.props = { ...props, updated_at: props.updated_at ?? new Date(), created_at: props.created_at ?? new Date() };
     this._id = id ?? randomUUID();
-  }
-
-  public get name(): string{
-    return this.props.name;
-  }
-
-  public set name(name: string){
-    this.props.name = name;
   }
 
   public get telephone(): string{
@@ -88,11 +79,11 @@ export class User {
     this.props.enabled = enabled;
   }
 
-  public get profile(): Profile{
+  public get profile(): Profile | undefined{
     return this.props.profile;
   }
 
-  public set profile(profile: Profile){
+  public set profile(profile: Profile | undefined){
     this.props.profile = profile;
   }
 

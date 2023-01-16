@@ -1,14 +1,12 @@
 import ICreateCompanyDTO from "@modules/companies/dtos/ICreateCompanyDTO";
 import ICompanyRepository from "@modules/companies/repositories/ICompanyRepository";
-import { Prisma, PrismaClient } from '@prisma/client'
+import { prismaDb } from "@shared/infra/http/server";
 import { Company } from "../../entities/Company";
 import { PrismaCompanyMapper } from "../mappers/prisma-company-mapper";
 
 export default class PrismaCompaniesRepository implements ICompanyRepository {
   public async find(): Promise<Company[]> {
-    const prisma = new PrismaClient()
-
-    const companies = await prisma.companies.findMany({
+    const companies = await prismaDb.companies.findMany({
       include: {unities: true}
     });
 
@@ -18,9 +16,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   }
 
   public async findById(id: string): Promise<Company | undefined> {
-    const prisma = new PrismaClient()
-
-    const company = await prisma.companies.findUnique({
+    const company = await prismaDb.companies.findUnique({
       where: {
         id,
       },
@@ -37,9 +33,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   }
 
   public async create(data: ICreateCompanyDTO): Promise<Company> {
-    const prisma = new PrismaClient()
-
-    const company = await prisma.companies.create({
+    const company = await prismaDb.companies.create({
       data,
       include: {unities: true}
     });
@@ -50,9 +44,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   }
 
   public async save(company: Company): Promise<Company> {
-    const prisma = new PrismaClient()
-
-    const updatedCompany = await prisma.companies.update({
+    const updatedCompany = await prismaDb.companies.update({
       where: {
         id: company.id,
       },
@@ -66,15 +58,11 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    const prisma = new PrismaClient()
-
-    prisma.companies.delete({where: {id}});
+    prismaDb.companies.delete({where: {id}});
   }
 
   public async findByCnpj(cnpj: string): Promise<Company | undefined>{
-    const prisma = new PrismaClient()
-
-    const company = await prisma.companies.findFirst({
+    const company = await prismaDb.companies.findFirst({
       where: {
         cnpj,
       },
@@ -91,9 +79,7 @@ export default class PrismaCompaniesRepository implements ICompanyRepository {
   }
 
   public async findByName(name: string): Promise<Company | undefined>{
-    const prisma = new PrismaClient()
-
-    const company = await prisma.companies.findFirst({
+    const company = await prismaDb.companies.findFirst({
       where: {
         name,
       },

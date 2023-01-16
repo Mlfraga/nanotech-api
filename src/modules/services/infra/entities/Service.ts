@@ -7,8 +7,8 @@ export interface ServiceProps {
   price: number;
   enabled: boolean;
   company_price: number;
-  company_id: string;
-  company: Company;
+  company_id: string | null;
+  company: Company | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -61,19 +61,19 @@ export class Service {
     this.props.company_price = company_price;
   }
 
-  public get company_id(): string{
+  public get company_id(): string | null{
     return this.props.company_id;
   }
 
-  public set company_id(company_id: string){
+  public set company_id(company_id: string | null){
     this.props.company_id = company_id;
   }
 
-  public get company(): Company{
+  public get company(): Company | null{
     return this.props.company;
   }
 
-  public set company(company: Company){
+  public set company(company: Company | null){
     this.props.company = company;
   }
 

@@ -1,17 +1,11 @@
-import { Company } from '@modules/companies/infra/entities/Company';
-import { Unit } from '@modules/unities/infra/entities/Unit';
-import { User } from '@modules/users/infra/entities/User';
+import { Car } from '@modules/cars/infra/entities/Car';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
 export interface PersonProps {
   name: string;
-  company_id: string;
-  Company: Company;
-  user_id: string;
-  user: User;
-  unit_id: string;
-  unit: Unit;
+  cpf: string;
+  cars: Car[];
   updated_at: Date;
   created_at: Date;
 }
@@ -40,52 +34,20 @@ export class Person {
     this.props.name = name;
   }
 
-  public get company_id(): string{
-    return this.props.company_id;
+  public get cpf(): string{
+    return this.props.cpf;
   }
 
-  public set company_id(company_id: string){
-    this.props.company_id = company_id;
+  public set cpf(cpf: string){
+    this.props.cpf = cpf;
   }
 
-  public get Company(): Company{
-    return this.props.Company;
+  public get cars(): Car[]{
+    return this.props.cars;
   }
 
-  public set Company(Company: Company){
-    this.props.Company = Company;
-  }
-
-  public get user_id(): string{
-    return this.props.user_id;
-  }
-
-  public set user_id(user_id: string){
-    this.props.user_id = user_id;
-  }
-
-  public get user(): User{
-    return this.props.user;
-  }
-
-  public set user(user: User){
-    this.props.user = user;
-  }
-
-  public get unit_id(): string{
-    return this.props.unit_id;
-  }
-
-  public set unit_id(unit_id: string){
-    this.props.unit_id = unit_id;
-  }
-
-  public get unit(): Unit{
-    return this.props.unit;
-  }
-
-  public set unit(unit: Unit){
-    this.props.unit = unit;
+  public set cars(cars: Car[]){
+    this.props.cars = cars;
   }
 
   public get updated_at(): Date{

@@ -6,12 +6,12 @@ import { randomUUID } from 'node:crypto';
 
 export interface ProfileProps {
   name: string;
-  company_id: string;
-  Company: Company;
+  company_id?: string;
+  company?: Company;
   user_id: string;
   user: User;
-  unit_id: string;
-  unit: Unit;
+  unit_id?: string;
+  unit?: Unit;
   updated_at: Date;
   created_at: Date;
 }
@@ -40,20 +40,20 @@ export class Profile {
     this.props.name = name;
   }
 
-  public get company_id(): string{
+  public get company_id(): string | undefined{
     return this.props.company_id;
   }
 
-  public set company_id(company_id: string){
+  public set company_id(company_id: string | undefined){
     this.props.company_id = company_id;
   }
 
-  public get Company(): Company{
-    return this.props.Company;
+  public get company(): Company | undefined{
+    return this.props.company;
   }
 
-  public set Company(Company: Company){
-    this.props.Company = Company;
+  public set company(company: Company | undefined){
+    this.props.company = company;
   }
 
   public get user_id(): string{
@@ -72,19 +72,19 @@ export class Profile {
     this.props.user = user;
   }
 
-  public get unit_id(): string{
+  public get unit_id(): string | undefined{
     return this.props.unit_id;
   }
 
-  public set unit_id(unit_id: string){
+  public set unit_id(unit_id: string | undefined){
     this.props.unit_id = unit_id;
   }
 
-  public get unit(): Unit{
+  public get unit(): Unit| undefined{
     return this.props.unit;
   }
 
-  public set unit(unit: Unit){
+  public set unit(unit: Unit| undefined){
     this.props.unit = unit;
   }
 

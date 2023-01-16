@@ -1,14 +1,12 @@
 import ICreateCarDTO from "@modules/cars/dtos/ICreateCarDTO";
 import ICarRepository from "@modules/cars/repositories/ICarRepository";
-import { PrismaClient } from '@prisma/client'
+import { prismaDb } from "@shared/infra/http/server";
 import { Car } from "../../entities/Car";
 import { PrismaCarMapper } from "../mappers/prisma-car-mapper";
 
 export default class PrismaCarsRepository implements ICarRepository {
   public async find(): Promise<Car[] | undefined> {
-    const prisma = new PrismaClient()
-
-    const cars = await prisma.cars.findMany();
+    const cars = await prismaDb.cars.findMany();
 
     const formattedCars = cars.map(car => PrismaCarMapper.toDomain(car));
 
@@ -16,9 +14,7 @@ export default class PrismaCarsRepository implements ICarRepository {
   }
 
   public async findById(id: string): Promise<Car | undefined> {
-    const prisma = new PrismaClient()
-
-    const car = await prisma.cars.findUnique({
+    const car = await prismaDb.cars.findUnique({
       where: {
         id,
       },
@@ -38,9 +34,7 @@ export default class PrismaCarsRepository implements ICarRepository {
     carPlate: string,
     person: string,
   ): Promise<Car | undefined> {
-    const prisma = new PrismaClient()
-
-    const car = await prisma.cars.findFirst({
+    const car = await prismaDb.cars.findFirst({
       where: {
         person_id: person,
         model,
@@ -58,9 +52,7 @@ export default class PrismaCarsRepository implements ICarRepository {
   }
 
   public async create(data: ICreateCarDTO): Promise<Car> {
-    const prisma = new PrismaClient()
-
-    const car = await prisma.cars.create({
+    const car = await prismaDb.cars.create({
       data
     });
 
@@ -70,9 +62,7 @@ export default class PrismaCarsRepository implements ICarRepository {
   }
 
   public async save(car: Car): Promise<Car> {
-    const prisma = new PrismaClient()
-
-    const updatedCar = await prisma.cars.update({
+    const updatedCar = await prismaDb.cars.update({
       where: {
         id: car.id,
       },
@@ -85,8 +75,6 @@ export default class PrismaCarsRepository implements ICarRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    const prisma = new PrismaClient()
-
-    prisma.cars.delete({where: {id}});
+    prismaDb.cars.delete({where: {id}});
   }
 }

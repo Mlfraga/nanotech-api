@@ -1,5 +1,5 @@
 import ICreateProfileDTO from '../dtos/ICreateProfileDTO';
-import Profile from '../infra/typeorm/entities/Profile';
+import { Profile } from '../infra/entities/Profile';
 
 export default interface IProfileRepository {
   find(): Promise<Profile[] | undefined>;
@@ -14,7 +14,7 @@ export default interface IProfileRepository {
     showDisabled?: boolean,
   ): Promise<Profile[]>;
   findByUser(user_id: string): Promise<Profile | undefined>;
-  findByUnitId(unitId: string): Promise<Profile[] | undefined>;
+  findByUnitId(unitId: string): Promise<Profile[]>;
   findByCompanyId(companyId: string): Promise<Profile[]>;
   create(data: ICreateProfileDTO): Promise<Profile>;
   save(profile: Profile): Promise<Profile>;

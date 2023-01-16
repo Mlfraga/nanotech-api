@@ -1,8 +1,8 @@
 import ICreatePersonDTO from '../dtos/ICreatePersonDTO';
-import Person from '../infra/typeorm/entities/Person';
+import { Person } from '../infra/entities/Person';
 
 export default interface IPersonRepository {
-  find(): Promise<Person[] | undefined>;
+  find(): Promise<Person[]>;
   findById(id: string): Promise<Person | undefined>;
   findByCpf(cpf: string): Promise<Person | undefined>;
   create(data: ICreatePersonDTO): Promise<Person>;

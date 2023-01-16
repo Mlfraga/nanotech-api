@@ -1,15 +1,15 @@
 import ICreateCompanyPricesDTO from '../dtos/ICreateCompanyPricesDTO';
-import CompanyPrices from '../infra/typeorm/entities/CompanyPrices';
+import { CompanyPrice } from '../infra/entities/CompanyPrice';
 
-export default interface IServiceRepository {
-  find(): Promise<CompanyPrices[] | undefined>;
-  findByCompanyId(companyId: string): Promise<CompanyPrices[] | undefined>;
+export default interface ICompanyPriceRepository {
+  find(): Promise<CompanyPrice[]>;
+  findByCompanyId(companyId: string): Promise<CompanyPrice[]>;
   findByCompanyIdAndServiceId(
     company_id: string,
     service_id: string,
-  ): Promise<CompanyPrices | undefined>;
-  findById(id: string): Promise<CompanyPrices | undefined>;
-  create(data: ICreateCompanyPricesDTO): Promise<CompanyPrices>;
-  save(companyPrices: CompanyPrices): Promise<CompanyPrices>;
+  ): Promise<CompanyPrice | undefined>;
+  findById(id: string): Promise<CompanyPrice | undefined>;
+  create(data: ICreateCompanyPricesDTO): Promise<CompanyPrice>;
+  save(companyPrices: CompanyPrice): Promise<CompanyPrice>;
   delete(id: string): Promise<void>;
 }
