@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
-import './providers';
 import '@modules/users/providers';
+import './providers';
 
 import ServiceProviderRepository from '@modules/service_providers/infra/typeorm/repositories/ServiceProviderRepository';
 import IServiceProviderRepository from '@modules/service_providers/repositories/IServiceProviderRepository';
@@ -14,22 +14,23 @@ import ICarRepository from '../../modules/cars/repositories/ICarRepository';
 import ICompanyRepository from '../../modules/companies/repositories/ICompanyRepository';
 import CompanyPricesRepository from '../../modules/company_prices/infra/prisma/repositories/company-prices-repository';
 import ICompanyPricesRepository from '../../modules/company_prices/repositories/ICompanyPricesRepository';
-import PersonRepository from '../../modules/persons/infra/typeorm/repositories/PersonRepository';
+import PersonRepository from '../../modules/persons/infra/prisma/repositories/persons-repository';
 import IPersonRepository from '../../modules/persons/repositories/IPersonRepository';
-import ProfileRepository from '../../modules/profiles/infra/typeorm/repositories/ProfileRepository';
+import ProfileRepository from '../../modules/profiles/infra/prisma/repositories/profiles-repository';
 import IProfileRepository from '../../modules/profiles/repositories/IProfileRepository';
-import SaleRepository from '../../modules/sales/infra/typeorm/repositories/SaleRepository';
+// import SaleRepository from '../../modules/sales/infra/typeorm/repositories/SaleRepository';
+import PrismaCarsRepository from '@modules/cars/infra/prisma/repositories/cars-repository';
+import PrismaCompaniesRepository from '@modules/companies/infra/prisma/repositories/companies-repository';
+import SaleRepository from '../../modules/sales/infra/prisma/repositories/sales-repository';
 import ISaleRepository from '../../modules/sales/repositories/ISaleRepository';
-import ServiceSaleRepository from '../../modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
-import IServiceSaleRepository from '../../modules/services_sales/repositories/IServiceSaleRepository';
 import ServiceRepository from '../../modules/services/infra/typeorm/repositories/ServiceRepository';
 import IServiceRepository from '../../modules/services/repositories/IServiceRepository';
+import ServiceSaleRepository from '../../modules/services_sales/infra/typeorm/repositories/ServiceSaleRepository';
+import IServiceSaleRepository from '../../modules/services_sales/repositories/IServiceSaleRepository';
 import UnitRepository from '../../modules/unities/infra/typeorm/repositories/UnitRepository';
 import IUnitRepository from '../../modules/unities/repositories/IUnitRepository';
 import UserRepository from '../../modules/users/infra/typeorm/repositories/UserRepository';
 import IUsersRepository from '../../modules/users/repositories/IUsersRepository';
-import PrismaCarsRepository from '@modules/cars/infra/prisma/repositories/cars-repository';
-import PrismaCompaniesRepository from '@modules/companies/infra/prisma/repositories/companies-repository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',

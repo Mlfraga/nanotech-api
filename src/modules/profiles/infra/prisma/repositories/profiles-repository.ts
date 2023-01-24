@@ -5,7 +5,7 @@ import { prismaDb } from "@shared/infra/http/server";
 import { Profile } from "../../entities/Profile";
 import { PrismaProfileMapper } from "../mappers/prisma-profile-mapper";
 
-export default class PrismaCompanyPricesRepository implements IProfileRepository {
+export default class PrismaProfileRepository implements IProfileRepository {
   public async find(): Promise<Profile[]> {
     const profiles = await prismaDb.profiles.findMany({
       include: {
@@ -108,7 +108,7 @@ export default class PrismaCompanyPricesRepository implements IProfileRepository
   }
 
   public async create(data: ICreateProfileDTO): Promise<Profile> {
-    const company_price = await prismaDb.profiles.create({
+    const profile = await prismaDb.profiles.create({
       data,
       include: {
         unities: true,
@@ -117,7 +117,7 @@ export default class PrismaCompanyPricesRepository implements IProfileRepository
       }
     });
 
-    const formattedProfile = PrismaProfileMapper.toDomain(company_price);
+    const formattedProfile = PrismaProfileMapper.toDomain(profile);
 
     return formattedProfile;
   }
@@ -140,7 +140,7 @@ export default class PrismaCompanyPricesRepository implements IProfileRepository
   }
 
   public async save(profile: Profile): Promise<Profile> {
-    const updatedCompanyPrice = await prismaDb.profiles.update({
+    const updatedProfile = await prismaDb.profiles.update({
       where: {
         id: profile.id,
       },
@@ -152,7 +152,7 @@ export default class PrismaCompanyPricesRepository implements IProfileRepository
       }
     });
 
-    const formattedProfile = PrismaProfileMapper.toDomain(updatedCompanyPrice);
+    const formattedProfile = PrismaProfileMapper.toDomain(updatedProfile);
 
     return formattedProfile;
   }

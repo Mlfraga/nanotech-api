@@ -1,7 +1,7 @@
 import ICreateSaleDTO from '../dtos/ICreateSaleDTO';
-import Sale from '../infra/typeorm/entities/Sale';
+import { Sale } from '../infra/entities/Sale';
 
-interface IFiltersParams {
+export interface IFiltersParams {
   status?: string;
   company?: string;
   service?: string;
@@ -9,7 +9,15 @@ interface IFiltersParams {
   finalDate?: Date;
 }
 
-interface IFilters {
+export interface IPaginatedSalesResponse {
+  current_page: number;
+  total_pages: number;
+  total_items: number;
+  total_items_page: number;
+  items: Sale[];
+};
+
+export interface IFilters {
   initialDeliveryDate?: Date;
   finalDeliveryDate?: Date;
   sellerId?: string;
@@ -41,13 +49,7 @@ export default interface ISaleRepository {
       finalAvailabilityDate,
       status,
     }: IFilters,
-  ): Promise<{
-    current_page: number;
-    total_pages: number;
-    total_items: number;
-    total_items_page: number;
-    items: Sale[];
-  }>;
+  ): Promise<IPaginatedSalesResponse>;
   findAllSales(
     page: number,
     {
@@ -58,13 +60,7 @@ export default interface ISaleRepository {
       status,
       sellerId,
     }: IFilters,
-  ): Promise<{
-    current_page: number;
-    total_pages: number;
-    total_items: number;
-    total_items_page: number;
-    items: Sale[];
-  }>;
+  ): Promise<IPaginatedSalesResponse>;
   findBySeller(
     sellerId: string,
     page: number,
@@ -75,13 +71,7 @@ export default interface ISaleRepository {
       finalAvailabilityDate,
       status,
     }: IFilters,
-  ): Promise<{
-    current_page: number;
-    total_pages: number;
-    total_items: number;
-    total_items_page: number;
-    items: Sale[];
-  }>;
+  ): Promise<IPaginatedSalesResponse>;
   findByDateAndStatus(
     page: number,
     deliveryDateInitialDay: Date,
@@ -89,12 +79,6 @@ export default interface ISaleRepository {
     availabilityDateInitialDay: Date,
     availabilityDateFinalDay: Date,
     status: string,
-  ): Promise<{
-    current_page: number;
-    total_pages: number;
-    total_items: number;
-    total_items_page: number;
-    items: Sale[];
-  }>;
+  ): Promise<IPaginatedSalesResponse>;
   delete(id: string): Promise<void>;
 }

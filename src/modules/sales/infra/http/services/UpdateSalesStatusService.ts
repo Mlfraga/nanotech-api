@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
@@ -52,11 +52,12 @@ class UpdateSalesStatusService {
         continue;
       }
 
-      const updatedSale = await this.saleRepository.save({
-        ...foundSale,
-        ...(status === 'FINISHED' && { finished_at: new Date() }),
-        status,
-      });
+      foundSale.status = status;
+      if(sale === 'FINISHED'){
+        foundSale.finished_at = new Date();
+      }
+
+      const updatedSale = await this.saleRepository.save(foundSale);
 
       updated_sales.push(updatedSale.id);
     }

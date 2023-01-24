@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
@@ -8,7 +8,7 @@ import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import IUnitRepository from '@modules/unities/repositories/IUnitRepository';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
 
-import Sale from '../../typeorm/entities/Sale';
+import { Sale } from '../../entities/Sale';
 
 interface ICreateSaleServiceParams {
   user_id: string;

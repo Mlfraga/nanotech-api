@@ -98,7 +98,9 @@ export default class SalesController {
       unitId,
     });
 
-    return response.json(createdSale);
+    console.log(createdSale)
+
+    return response.json({...createdSale, id: createdSale.id});
   }
 
   async delete(request: Request, response: Response) {

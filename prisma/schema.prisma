@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
 model cars {
@@ -102,6 +104,7 @@ model sales {
   profiles                profiles                      @relation(fields: [seller_id], references: [id], onDelete: Cascade, map: "SellerSale")
   unities                 unities                       @relation(fields: [unit_id], references: [id], onDelete: Cascade, map: "UnitSale")
   sales_service_providers sales_service_providers[]
+  services                services_sales[]
 }
 
 model sales_service_providers {
@@ -124,6 +127,7 @@ model services {
   company_price  Decimal?         @db.Decimal
   company_prices company_prices[]
   companies      companies?       @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyServices")
+  services_sales services_sales[]
 }
 
 model services_sales {
@@ -134,6 +138,8 @@ model services_sales {
   service_id    String   @db.Uuid
   created_at    DateTime @default(now()) @db.Timestamp(6)
   updated_at    DateTime @default(now()) @db.Timestamp(6)
+  service       services @relation(fields: [service_id], references: [id], onDelete: Cascade, map: "ServiceSale")
+  sales         sales?   @relation(fields: [sale_id], references: [id])
 }
 
 model unities {

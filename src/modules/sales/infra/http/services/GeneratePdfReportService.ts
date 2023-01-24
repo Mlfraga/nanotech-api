@@ -3,7 +3,7 @@ import { endOfDay, format, startOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import fs from 'fs';
 import pdf, { FileInfo } from 'html-pdf';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
@@ -110,7 +110,7 @@ class GeneratePdfReportService {
         .filter((item, i, allItems) => i === allItems.indexOf(item));
 
       return {
-        number: `${sale.seller.company.client_identifier}${sale.unit.client_identifier}${sale.client_identifier}`,
+        number: `${sale.seller.company?.client_identifier}${sale.unit.client_identifier}${sale.client_identifier}`,
         company: sale.seller.company?.name,
         unit: sale?.unit?.name || sale.seller.unit?.name,
         seller: sale.seller.name,

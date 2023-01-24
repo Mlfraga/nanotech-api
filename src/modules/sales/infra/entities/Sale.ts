@@ -1,5 +1,5 @@
 import { Car } from '@modules/cars/infra/entities/Car';
-import Person from '@modules/persons/infra/typeorm/entities/Person';
+import { Person } from '@modules/persons/infra/entities/Person';
 import { Profile } from '@modules/profiles/infra/entities/Profile';
 import { ServiceSale } from '@modules/services_sales/infra/entities/ServiceSale';
 import { ServiceProvider } from '@modules/service_providers/infra/entities/ServiceProvider';
@@ -14,11 +14,11 @@ export interface SaleProps {
   delivery_date: Date;
   status: string;
   production_status: string;
-  company_value: string;
-  cost_value: string;
+  company_value: number;
+  cost_value: number;
   source: string;
-  comments: string;
-  techinical_comments: string;
+  comments: string | null;
+  techinical_comments: string | null;
   seller_id: string;
   seller: Profile;
   unit_id: string;
@@ -98,19 +98,19 @@ export class Sale {
     this.props.production_status = production_status;
   }
 
-  public get company_value(): string{
+  public get company_value(): number{
     return this.props.company_value;
   }
 
-  public set company_value(company_value: string){
+  public set company_value(company_value: number){
     this.props.company_value = company_value;
   }
 
-  public get cost_value(): string{
+  public get cost_value(): number{
     return this.props.cost_value;
   }
 
-  public set cost_value(cost_value: string){
+  public set cost_value(cost_value: number){
     this.props.cost_value = cost_value;
   }
 
@@ -122,19 +122,19 @@ export class Sale {
     this.props.source = source;
   }
 
-  public get comments(): string{
+  public get comments(): string | null{
     return this.props.comments;
   }
 
-  public set comments(comments: string){
+  public set comments(comments: string | null){
     this.props.comments = comments;
   }
 
-  public get techinical_comments(): string{
+  public get techinical_comments(): string | null{
     return this.props.techinical_comments;
   }
 
-  public set techinical_comments(techinical_comments: string){
+  public set techinical_comments(techinical_comments: string | null){
     this.props.techinical_comments = techinical_comments;
   }
 
