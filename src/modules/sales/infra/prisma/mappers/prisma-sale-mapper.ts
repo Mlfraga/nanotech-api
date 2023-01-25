@@ -3,6 +3,8 @@ import { Company } from '@modules/companies/infra/entities/Company';
 import { Person } from '@modules/persons/infra/entities/Person';
 import { Profile } from '@modules/profiles/infra/entities/Profile';
 import ICreateSaleDTO from '@modules/sales/dtos/ICreateSaleDTO';
+import { Service } from '@modules/services/infra/entities/Service';
+import { ServiceSale } from '@modules/services_sales/infra/entities/ServiceSale';
 import { Unit } from '@modules/unities/infra/entities/Unit';
 import { User } from '@modules/users/infra/entities/User';
 import { Prisma } from '@prisma/client';
@@ -21,7 +23,11 @@ export type PrismaSale = Prisma.salesGetPayload<{
     cars: true,
     services: {
       include: {
-        service: true,
+        service: {
+          include: {
+            companies: true,
+          }
+        },
       },
     }
   };
@@ -114,7 +120,30 @@ export class PrismaSaleMapper {
           telephone: raw.unities.telephone,
         }, raw.unities.id),
         service_providers: [],
-        services_sales: [],
+        services_sales: raw.services.map(service => new ServiceSale({
+          service_id: service.service_id,
+          service: new Service({
+            name: service.service.name,
+            company_id: service.service.company_id,
+            company_price: Number(service.service.company_price),
+            enabled: service.service.enabled,
+            price: Number(service.service.price),
+            company: service.service.companies ? new Company({
+              name: service.service.companies?.name ?? "",
+              cnpj: service.service.companies?.cnpj ?? "",
+              client_identifier: service.service.companies?.client_identifier ?? "",
+              unities: [],
+              created_at: service.service.companies?.created_at,
+              telephone: service.service.companies?.telephone ?? "",
+              updated_at: service.service.companies?.updated_at,
+            }, service.service.companies?.id) : null,
+          }, service.service.id),
+          company_value: Number(service.company_value),
+          cost_value: Number(service.cost_value),
+          sale_id: service.sale_id,
+          created_at: service.created_at,
+          updated_at: service.updated_at,
+        })),
         status: raw.status,
         production_status: raw.production_status ?? 'TO_DO',
         created_at: raw.created_at,

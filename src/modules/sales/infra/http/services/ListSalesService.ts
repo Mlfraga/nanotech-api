@@ -267,6 +267,7 @@ class ListSalesService {
             color: sale.car.color,
           },
           hasAlreadyBeenDirected,
+          source: sale.source,
           company_value: sale.company_value,
           cost_value: sale.cost_value,
           availability_date: sale.availability_date,

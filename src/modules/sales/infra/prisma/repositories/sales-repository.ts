@@ -23,7 +23,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -51,7 +55,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -84,7 +92,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -99,7 +111,19 @@ export default class PrismaSaleRepository implements ISaleRepository {
         id: sale.id,
       },
       data: {
-        ...sale,
+        availability_date: sale.availability_date,
+        delivery_date: sale.delivery_date,
+        car_id: sale.car_id,
+        person_id: sale.person_id,
+        client_identifier: Number(sale.client_identifier),
+        comments: sale.comments,
+        company_value: sale.company_value,
+        cost_value: sale.cost_value,
+        created_at: sale.created_at,
+        finished_at: sale.finished_at,
+        request_date: sale.request_date,
+        seller_id: sale.seller_id,
+        updated_at: new Date(),
         status: sale.status as sales_status_enum,
         production_status: sale.production_status as sales_production_status_enum,
         source: sale.source as sales_source_enum,
@@ -116,7 +140,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -156,7 +184,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -190,7 +222,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -272,7 +308,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -356,7 +396,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -440,7 +484,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }
@@ -519,7 +567,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
         cars: true,
         services: {
           include: {
-            service: true,
+            service: {
+              include: {
+                companies: true,
+              }
+            },
           },
         }
       }

@@ -4,11 +4,10 @@ import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
 export interface ServiceSaleProps {
-  id: string;
   company_value: number;
   cost_value: number;
   sale_id: string;
-  sale: Sale;
+  sale?: Sale;
   service_id: string;
   service: Service;
   created_at: Date;
@@ -55,11 +54,11 @@ export class ServiceSale {
     this.props.sale_id = sale_id;
   }
 
-  public get sale(): Sale{
+  public get sale(): Sale | undefined{
     return this.props.sale;
   }
 
-  public set sale(sale: Sale){
+  public set sale(sale: Sale | undefined){
     this.props.sale = sale;
   }
 

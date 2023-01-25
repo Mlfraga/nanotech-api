@@ -98,8 +98,6 @@ export default class SalesController {
       unitId,
     });
 
-    console.log(createdSale)
-
     return response.json({...createdSale, id: createdSale.id});
   }
 

@@ -66,7 +66,15 @@ export default class PrismaCarsRepository implements ICarRepository {
       where: {
         id: car.id,
       },
-      data: car,
+      data: {
+        model: car.model,
+        plate: car.plate,
+        color: car.color,
+        brand: car.brand,
+        person_id: car.person_id,
+        created_at: car.created_at,
+        updated_at: car.updated_at,
+      },
     });
 
     const formattedCar = PrismaCarMapper.toDomain(updatedCar);
