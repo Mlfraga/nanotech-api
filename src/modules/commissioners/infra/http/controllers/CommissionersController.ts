@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateCommissionerService from '../services/CreateCommissionerService';
 import ListCommissionerService from '../services/ListCommissionerService';
+import UpdateCommissionerEnabledService from '../services/UpdateCommissionerEnabledService';
 import UpdateCommissionerService from '../services/UpdateCommissionerService';
 
 export default class CommissionerController {
@@ -43,6 +44,22 @@ export default class CommissionerController {
     const updatedCommissioner = await updateCommissionerService.execute({
       name,
       telephone,
+      id,
+      enabled,
+    });
+
+    return response.json(updatedCommissioner);
+  }
+
+  async updateEnabled(request: Request, response: Response) {
+    const { enabled } = request.body;
+    const { id } = request.params;
+
+    const updateCommissionerEnabledService = container.resolve(
+      UpdateCommissionerEnabledService,
+    );
+
+    const updatedCommissioner = await updateCommissionerEnabledService.execute({
       id,
       enabled,
     });

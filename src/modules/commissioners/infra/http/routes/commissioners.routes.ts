@@ -52,4 +52,19 @@ commissionersRouter.patch(
   commissionersController.update
 );
 
+commissionersRouter.patch(
+  '/:id/toggle-enabled',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      enabled: Joi.boolean().required(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  commissionersController.updateEnabled
+);
+
 export default commissionersRouter;

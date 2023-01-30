@@ -1,4 +1,4 @@
-import { celebrate, Segments, Joi } from 'celebrate';
+import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
@@ -55,6 +55,7 @@ salesRouter.post(
       carModel: Joi.string().required(),
       carColor: Joi.string().required(),
       comments: Joi.string().allow(null),
+      commissioner_id: Joi.string().uuid(),
     },
   }),
   ensureAuthenticated,
