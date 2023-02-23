@@ -1,8 +1,8 @@
 import {
-  Between,
-  getRepository,
-  Repository,
-  SelectQueryBuilder,
+    Between,
+    getRepository,
+    Repository,
+    SelectQueryBuilder
 } from 'typeorm';
 
 import ICreateSaleDTO from '../../../dtos/ICreateSaleDTO';

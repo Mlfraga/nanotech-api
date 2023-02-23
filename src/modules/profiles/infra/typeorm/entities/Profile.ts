@@ -1,14 +1,14 @@
 import { Exclude } from 'class-transformer';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';

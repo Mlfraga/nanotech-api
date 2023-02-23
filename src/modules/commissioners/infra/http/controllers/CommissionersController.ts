@@ -18,13 +18,15 @@ export default class CommissionerController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, telephone, company_id } = request.body;
+    const { pix_key, pix_key_type, name, telephone, company_id } = request.body;
 
     const createCommissionerService = container.resolve(
       CreateCommissionerService,
     );
 
     const commisioner = await createCommissionerService.execute({
+      pix_key,
+      pix_key_type,
       name,
       telephone,
       company_id,
@@ -34,7 +36,7 @@ export default class CommissionerController {
   }
 
   async update(request: Request, response: Response) {
-    const { name, telephone, enabled } = request.body;
+    const { pix_key, pix_key_type, name, telephone, enabled } = request.body;
     const { id } = request.params;
 
     const updateCommissionerService = container.resolve(
@@ -42,6 +44,8 @@ export default class CommissionerController {
     );
 
     const updatedCommissioner = await updateCommissionerService.execute({
+      pix_key,
+      pix_key_type,
       name,
       telephone,
       id,

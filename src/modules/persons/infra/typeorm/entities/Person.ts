@@ -1,10 +1,6 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
+    Column,
+    CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm';
 
 import Car from '@modules/cars/infra/typeorm/entities/Car';

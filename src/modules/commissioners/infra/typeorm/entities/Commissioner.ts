@@ -8,6 +8,13 @@ import {
 
 import Company from '@modules/companies/infra/typeorm/entities/Company';
 
+export enum PixKeyTypeEnum {
+  CPF,
+  PHONE,
+  EMAIL,
+  RANDOM,
+}
+
 @Entity('commissioners')
 export default class Commissioner {
   @PrimaryGeneratedColumn('uuid')
@@ -21,6 +28,12 @@ export default class Commissioner {
 
   @Column()
   enabled: boolean;
+
+  @Column()
+  pix_key_type: string;
+
+  @Column()
+  pix_key: string;
 
   @Column()
   company_id: string;

@@ -16,6 +16,20 @@ commissionersRouter.post(
       name: Joi.string().required(),
       telephone: Joi.string().min(9).max(11).required(),
       company_id: Joi.string().uuid().required(),
+      pix_key: Joi.string().required().when('pix_key_type', {
+        is: 'PHONE',
+        then: Joi.string().min(9).max(13)
+      }).when('pix_key_type', {
+        is: 'CPF',
+        then: Joi.string().length(11)
+      }).when('pix_key_type', {
+        is: 'EMAIL',
+        then: Joi.string().email()
+      }).when('pix_key_type', {
+        is: 'RANDOM',
+        then: Joi.string().uuid()
+      }),
+      pix_key_type: Joi.string().valid('PHONE', 'CPF', 'EMAIL', 'RANDOM').required()
     },
   }),
   ensureAuthenticated,
@@ -45,6 +59,20 @@ commissionersRouter.patch(
       name: Joi.string().required(),
       telephone: Joi.string().min(9).max(11).required(),
       enabled: Joi.boolean().required(),
+      pix_key: Joi.string().required().when('pix_key_type', {
+        is: 'PHONE',
+        then: Joi.string().min(9).max(13)
+      }).when('pix_key_type', {
+        is: 'CPF',
+        then: Joi.string().length(11)
+      }).when('pix_key_type', {
+        is: 'EMAIL',
+        then: Joi.string().email()
+      }).when('pix_key_type', {
+        is: 'RANDOM',
+        then: Joi.string().uuid()
+      }),
+      pix_key_type: Joi.string().valid('PHONE', 'CPF', 'EMAIL', 'RANDOM').required()
     },
   }),
   ensureAuthenticated,

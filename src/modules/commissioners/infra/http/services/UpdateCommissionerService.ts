@@ -13,6 +13,8 @@ interface IUpdateCommissionerServiceParams {
   telephone: string;
   name: string;
   enabled: boolean;
+  pix_key_type: 'CPF' | 'PHONE' | 'EMAIL' | 'RANDOM';
+  pix_key: string;
 }
 
 @injectable()
@@ -27,6 +29,8 @@ class UpdateCommissionerService {
     telephone,
     name,
     enabled,
+    pix_key_type,
+    pix_key,
   }: IUpdateCommissionerServiceParams): Promise<IUpdateCommissionerServiceResponse> {
     const commissioner = await this.commissionerRepository.findById(id);
 
@@ -39,6 +43,8 @@ class UpdateCommissionerService {
       telephone,
       name,
       enabled,
+      pix_key_type: pix_key_type,
+      pix_key,
     });
 
     return updatedCommissioner;
