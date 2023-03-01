@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import IWppMessagesProvider from '@shared/container/providers/WppMessagesProvider/models/IWppMessagesProvider';
 import AppError from '@shared/errors/AppError';

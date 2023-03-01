@@ -7,6 +7,9 @@ export default interface ICreateUserDTO {
     | 'SELLER'
     | 'MANAGER'
     | 'ADMIN'
+    | 'COMMISSIONER'
     | 'NANOTECH_REPRESENTATIVE'
     | 'SERVICE_PROVIDER';
+    pix_key_type?:  'CPF' | 'PHONE' | 'EMAIL' | 'RANDOM';
+    pix_key?: string;
 }

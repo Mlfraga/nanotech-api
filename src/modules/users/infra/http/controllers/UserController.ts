@@ -10,16 +10,33 @@ import UpdateUserService from '@modules/users/infra/http/services/UpdateUserServ
 export default class UserController {
   async index(request: Request, response: Response) {
     const { id: user_id } = request.user;
+    const { role, name, telephone, company_id, enabled } = request.query;
 
     const listUsersService = container.resolve(ListUsersService);
 
-    const users = await listUsersService.execute(user_id);
+    const users = await listUsersService.execute({
+      ...(role && { role: role as string }),
+      ...(name && { name: name as string }),
+      ...(telephone && { telephone: telephone as string }),
+      ...(company_id && { company_id: company_id as string }),
+      ...(enabled !== undefined && { enabled: !!enabled }),
+      user_id,
+    });
 
     return response.json(users);
   }
 
   async store(request: Request, response: Response) {
-    const { username, email, role, name, telephone, company } = request.body;
+    const {
+      username,
+      email,
+      role,
+      name,
+      telephone,
+      pix_key_type,
+      pix_key,
+      company,
+    } = request.body;
 
     const createUserService = container.resolve(CreateUserService);
 
@@ -29,6 +46,8 @@ export default class UserController {
       password: '12345678',
       role,
       name,
+      pix_key_type,
+      pix_key,
       telephone,
       companyId: company,
     });

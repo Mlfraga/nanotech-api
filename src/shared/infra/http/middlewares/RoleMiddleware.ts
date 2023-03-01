@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import JWT from 'jsonwebtoken';
 import { container } from 'tsyringe';
 

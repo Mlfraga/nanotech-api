@@ -17,8 +17,16 @@ const passwordUserController = new PasswordUserController();
 
 userRouter.get(
   '/',
+  celebrate({
+    [Segments.QUERY]: {
+      role: Joi.string(),
+      name: Joi.string(),
+      telephone: Joi.string(),
+      company_id: Joi.string().uuid(),
+      enabled: Joi.bool(),
+    },
+  }),
   ensureAuthenticated,
-  RoleMiddleware.isAdminOrNanotechRepresentative,
   userController.index,
 );
 
@@ -40,6 +48,25 @@ userRouter.post(
       role: Joi.string(),
       name: Joi.string().required(),
       telephone: Joi.string().required(),
+      pix_key_type: Joi.string().valid('PHONE', 'CPF', 'EMAIL', 'RANDOM'),
+      pix_key: Joi.string()
+        .when('pix_key_type', {
+          is: 'PHONE',
+          then: Joi.string().min(9).max(13),
+        })
+        .when('pix_key_type', {
+          is: 'CPF',
+          then: Joi.string().length(11),
+        })
+        .when('pix_key_type', {
+          is: 'EMAIL',
+          then: Joi.string().email(),
+        })
+
+        .when('pix_key_type', {
+          is: 'RANDOM',
+          then: Joi.string().uuid(),
+        }),
       company: Joi.string().uuid(),
     },
   }),

@@ -1,13 +1,14 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
+import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 import Service from '@modules/services/infra/typeorm/entities/Service';
 
@@ -35,6 +36,13 @@ export default class ServiceSale {
   @ManyToOne(() => Service, service => service.services_sales, { eager: true })
   @JoinColumn({ name: 'service_id' })
   service: Service;
+
+  @Column()
+  commissioner_id: string;
+
+  @ManyToOne(() => Profile, profile => profile.referrals, { eager: true })
+  @JoinColumn({ name: 'commissioner_id' })
+  commissioner: Profile;
 
   @CreateDateColumn()
   created_at: Date;
