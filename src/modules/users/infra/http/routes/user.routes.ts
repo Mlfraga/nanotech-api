@@ -27,7 +27,6 @@ userRouter.get(
     },
   }),
   ensureAuthenticated,
-  RoleMiddleware.isAdminOrNanotechRepresentative,
   userController.index,
 );
 

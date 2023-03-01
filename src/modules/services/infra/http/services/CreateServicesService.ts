@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import IServiceRepository from '../../../repositories/IServiceRepository';
 import Service from '../../typeorm/entities/Service';
@@ -6,6 +6,7 @@ import Service from '../../typeorm/entities/Service';
 interface IRequest {
   name: string;
   price: number;
+  commission_amount?: number;
   company_id: string;
 }
 
@@ -20,11 +21,13 @@ class CreateServiceService {
     name,
     price,
     company_id,
+    commission_amount,
   }: IRequest): Promise<Service> {
     const createdService = await this.serviceRepository.create({
       name,
       price,
       company_id,
+      commission_amount,
     });
 
     return createdService;

@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
+import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
 import SalesServiceProviders from '@modules/service_providers/infra/typeorm/entities/SaleServiceProvider';
 import Unit from '@modules/unities/infra/typeorm/entities/Unit';
 import User from '@modules/users/infra/typeorm/entities/User';
@@ -49,6 +50,9 @@ export default class Profile {
 
   @OneToMany(() => Sale, sale => sale.seller)
   sales: Sale[];
+
+  @OneToMany(() => ServiceSale, serviceSale => serviceSale.commissioner)
+  referrals: ServiceSale[];
 
   @OneToMany(
     () => SalesServiceProviders,
