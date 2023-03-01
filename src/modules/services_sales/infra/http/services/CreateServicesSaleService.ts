@@ -170,7 +170,7 @@ class CreateServicesSaleService {
 Além disso, queremos informar que você pode acompanhar a evolução do serviço que indicou acessando a URL ${referralServicesMessageData.webUrl}.
 
 Atenciosamente,
-${referralServicesMessageData.companyName}`,
+${referralServicesMessageData.companyName}`;
 
       await this.wppMessagesProvider.sendMessage(referralMessage, [
         `+55${commissionerByUserId.user.telephone}`,
