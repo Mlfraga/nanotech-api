@@ -1,8 +1,8 @@
 import {
-    Between,
-    getRepository,
-    Repository,
-    SelectQueryBuilder
+  Between,
+  getRepository,
+  Repository,
+  SelectQueryBuilder
 } from 'typeorm';
 
 import ICreateSaleDTO from '../../../dtos/ICreateSaleDTO';
@@ -475,14 +475,24 @@ class SaleRepository implements ISaleRepository {
     };
   }
 
-  // join: {
-  //   alias: 'sales',
-  //   innerJoin: { providers: 'sales.service_providers' },
-  // },
-  // where: (qb: SelectQueryBuilder<Sale>) => {
-  //   qb.where('providers.service_provider_profile_id = :providerId', {
-  //     providerId,
-  //   });
+  public async findRewardedSalesByCommissioner(
+    commissioner_id: string,
+  ): Promise<Sale[]> {
+    const sales = await this.ormRepository.find({
+      join: {
+        alias: 'sales',
+        innerJoin: { service_sales: 'sales.services_sales' },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where('service_sales.commissioner_id = :commissioner_id', {
+          commissioner_id,
+        });
+      },
+      relations: ['services_sales'],
+    });
+
+    return sales;
+  }
 
   public async findByServiceProvider(providerId: string): Promise<Sale[]> {
     const sales = await this.ormRepository.find({

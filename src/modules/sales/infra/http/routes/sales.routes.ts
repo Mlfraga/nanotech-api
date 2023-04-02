@@ -5,6 +5,7 @@ import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthentica
 import RoleMiddleware from '@shared/infra/http/middlewares/RoleMiddleware';
 
 import CompaniesSalesBudgetController from '../controllers/CompaniesSalesBudgetController';
+import RewardSalesController from '../controllers/RewardSalesController';
 import SalesBudgetController from '../controllers/SalesBudgetController';
 import SalesController from '../controllers/SalesController';
 import SalesReportController from '../controllers/SalesReportController';
@@ -13,6 +14,7 @@ import UpdateStatusSaleController from '../controllers/UpdateStatusSaleControlle
 const salesRouter = Router();
 const salesController = new SalesController();
 const updateStatusSaleController = new UpdateStatusSaleController();
+const rewardSalesController = new RewardSalesController();
 const salesReportController = new SalesReportController();
 const salesBudgetController = new SalesBudgetController();
 const companiesSalesBudgetController = new CompaniesSalesBudgetController();
@@ -35,6 +37,13 @@ salesRouter.get(
   }),
   ensureAuthenticated,
   salesController.index,
+);
+
+salesRouter.get(
+  '/rewards/',
+  ensureAuthenticated,
+  RoleMiddleware.isCommissioner,
+  rewardSalesController.show,
 );
 
 salesRouter.post(

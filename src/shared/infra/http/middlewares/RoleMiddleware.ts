@@ -191,6 +191,37 @@ class RoleMiddleware {
 
     next();
   }
+
+  async isCommissioner(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader?.split(' ')[1];
+    const decoded: any = JWT.decode(String(token), { complete: true });
+
+    const userRepository = container.resolve(UserRepository);
+
+    const user_id = decoded.payload.sub;
+
+    const user = await userRepository.findById(user_id);
+
+    if (!user) {
+      throw new AppError('User not found.', 404);
+    }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
+    if (user.role !== 'COMMISSIONER') {
+      throw new AppError('User does not have commissioner permission.');
+    }
+
+    next();
+  }
 }
 
 export default new RoleMiddleware();

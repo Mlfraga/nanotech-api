@@ -96,5 +96,6 @@ export default interface ISaleRepository {
     total_items_page: number;
     items: Sale[];
   }>;
+  findRewardedSalesByCommissioner(commissioner_id: string): Promise<Sale[]>;
   delete(id: string): Promise<void>;
 }
