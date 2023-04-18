@@ -42,7 +42,7 @@ salesRouter.get(
 salesRouter.get(
   '/rewards/',
   ensureAuthenticated,
-  RoleMiddleware.isCommissioner,
+  RoleMiddleware.isCommissionerOrAdmin,
   rewardSalesController.show,
 );
 

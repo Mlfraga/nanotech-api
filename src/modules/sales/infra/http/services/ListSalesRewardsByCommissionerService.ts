@@ -27,12 +27,15 @@ class ListSalesRewardsByCommissionerService {
     if (!user) {
       throw new AppError('User not found.', 404);
     }
-
+    if (user.role === 'ADMIN' || user.role === 'MANAGER') {
+      const sales = await this.saleRepository.findAllSales(0, {});
+      console.log('admin');
+      return sales.items;
+    }
     const sales = await this.saleRepository.findRewardedSalesByCommissioner(
       user.profile.id,
     );
-
-    console.log('sales: ', sales);
+    console.log('user');
 
     return sales;
   }
