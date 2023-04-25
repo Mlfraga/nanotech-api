@@ -2,7 +2,7 @@ import {
   Between,
   getRepository,
   Repository,
-  SelectQueryBuilder
+  SelectQueryBuilder,
 } from 'typeorm';
 
 import ICreateSaleDTO from '../../../dtos/ICreateSaleDTO';
@@ -488,7 +488,44 @@ class SaleRepository implements ISaleRepository {
           commissioner_id,
         });
       },
-      relations: ['services_sales'],
+      relations: [
+        'services_sales',
+        'seller',
+        'seller.company',
+        'unit',
+        'unit.company',
+        'person',
+        'car',
+        'services_sales.service',
+      ],
+    });
+
+    return sales;
+  }
+
+  public async findRewardedSales(): Promise<Sale[]> {
+    const sales = await this.ormRepository.find({
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          // commissioner: 'service_sales.commissioner.user',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where('service_sales.commissioner_id is not null');
+      },
+      relations: [
+        'services_sales',
+        'seller',
+        'seller.company',
+        'unit',
+        'unit.company',
+        'person',
+        'car',
+        'services_sales.service',
+        // 'commissioner',
+      ],
     });
 
     return sales;

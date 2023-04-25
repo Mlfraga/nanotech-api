@@ -5,7 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
