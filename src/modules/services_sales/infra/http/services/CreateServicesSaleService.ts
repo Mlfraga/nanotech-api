@@ -2,13 +2,13 @@ import { addHours, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { inject, injectable } from 'tsyringe';
 
-// import IWppMessagesProvider from '@shared/container/providers/WppMessagesProvider/models/IWppMessagesProvider';
+import IWppMessagesProvider from '@shared/container/providers/WppMessagesProvider/models/IWppMessagesProvider';
 import AppError from '@shared/errors/AppError';
 
-import IrofileRepository from '@modules/profiles/repositories/IProfileRepository';
+import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
-import IServiceSaleRepository from '@modules/services_sales/repositories/IServiceSaleRepository';
 import IServiceRepository from '@modules/services/repositories/IServiceRepository';
+import IServiceSaleRepository from '@modules/services_sales/repositories/IServiceSaleRepository';
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
 import ServiceSale from '../../typeorm/entities/ServiceSale';
@@ -39,7 +39,10 @@ class CreateServicesSaleService {
     private saleRepository: ISaleRepository,
 
     @inject('WhatsappNumberRepository')
-    private whatsappNumberRepository: IWhatsappNumberRepository, // @inject('WppMessagesProvider') // private wppMessagesProvider: IWppMessagesProvider,
+    private whatsappNumberRepository: IWhatsappNumberRepository,
+
+    @inject('WppMessagesProvider')
+    private wppMessagesProvider: IWppMessagesProvider,
   ) {}
 
   public async execute({
@@ -83,6 +86,7 @@ class CreateServicesSaleService {
         if (referral_data) {
           isServiceReferred = referral_data.referredServices.includes(id);
         }
+
         const createdServiceSale = await this.serviceSaleRepository.create({
           sale_id: saleId,
           service_id: id,
@@ -168,9 +172,9 @@ Além disso, queremos informar que você pode acompanhar a evolução do serviç
 Atenciosamente,
 ${referralServicesMessageData.companyName}`;
 
-      // await this.wppMessagesProvider.sendMessage(referralMessage, [
-      //   `+55${commissionerByUserId.user.telephone}`,
-      // ]);
+      await this.wppMessagesProvider.sendMessage(referralMessage, [
+        `+55${commissionerByUserId.user.telephone}`,
+      ]);
     }
 
     const createdSaleMessageData = {
@@ -213,10 +217,9 @@ ${referralServicesMessageData.companyName}`;
     );
 
     for (const recipient of recipients) {
-      console.log(recipient);
-      // await this.wppMessagesProvider.sendMessage(createdSaleMessage, [
-      //   recipient,
-      // ]);
+      await this.wppMessagesProvider.sendMessage(createdSaleMessage, [
+        recipient,
+      ]);
     }
 
     return servicesSales;
