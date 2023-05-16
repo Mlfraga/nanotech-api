@@ -41,6 +41,18 @@ salesRouter.get(
 
 salesRouter.get(
   '/rewards/',
+  celebrate({
+    [Segments.QUERY]: {
+      start_delivery_date: Joi.date().allow(null),
+      end_delivery_date: Joi.date().allow(null),
+      company_id: Joi.string().uuid().allow(null),
+      production_status: Joi.string().allow(null),
+      unit_id: Joi.string().uuid().allow(null),
+      status: Joi.string().allow(null),
+      seller_id: Joi.string().uuid().allow(null),
+      page: Joi.number().required(),
+    },
+  }),
   ensureAuthenticated,
   RoleMiddleware.isCommissionerOrAdmin,
   rewardSalesController.show,

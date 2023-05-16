@@ -1,12 +1,12 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import Car from '@modules/cars/infra/typeorm/entities/Car';
@@ -64,7 +64,7 @@ export default class Sale {
   @Column()
   seller_id: string;
 
-  @ManyToOne(() => Profile, profile => profile.sales)
+  @ManyToOne(() => Profile, profile => profile.sales, { eager: true })
   @JoinColumn({ name: 'seller_id' })
   seller: Profile;
 

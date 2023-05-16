@@ -1,12 +1,16 @@
+import { endOfDay, startOfDay } from 'date-fns';
 import {
   Between,
-  getRepository,
   Repository,
   SelectQueryBuilder,
+  getRepository,
 } from 'typeorm';
 
-import ICreateSaleDTO from '../../../dtos/ICreateSaleDTO';
-import ISaleRepository from '../../../repositories/ISaleRepository';
+import ICreateSaleDTO from '@modules/sales/dtos/ICreateSaleDTO';
+
+import ISaleRepository, {
+  IListRewardParams,
+} from '../../../repositories/ISaleRepository';
 import Sale from '../entities/Sale';
 
 interface IFiltersParams {
@@ -477,17 +481,80 @@ class SaleRepository implements ISaleRepository {
 
   public async findRewardedSalesByCommissioner(
     commissioner_id: string,
-  ): Promise<Sale[]> {
+    {
+      start_delivery_date,
+      end_delivery_date,
+      company_id,
+      production_status,
+      unit_id,
+      seller_id,
+      status,
+      page,
+    }: IListRewardParams,
+  ): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }> {
+    const limit_per_page = 10;
+    const offset = page * limit_per_page;
+
+    const salesCount = await this.ormRepository.count({
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          seller: 'sales.seller',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id = :commissioner_id', {
+          commissioner_id,
+        });
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+    });
+
     const sales = await this.ormRepository.find({
+      skip: offset,
+      take: limit_per_page,
       join: {
         alias: 'sales',
         innerJoin: { service_sales: 'sales.services_sales' },
       },
       where: (qb: SelectQueryBuilder<Sale>) => {
-        qb.where('service_sales.commissioner_id = :commissioner_id', {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id = :commissioner_id', {
           commissioner_id,
         });
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
       },
+      order: { delivery_date: 'DESC' },
       relations: [
         'services_sales',
         'seller',
@@ -500,20 +567,93 @@ class SaleRepository implements ISaleRepository {
       ],
     });
 
-    return sales;
+    return {
+      current_page: Number(page),
+      total_pages: Math.floor(salesCount / limit_per_page),
+      total_items: salesCount,
+      total_items_page: sales.length,
+      items: sales,
+    };
   }
 
-  public async findRewardedSales(): Promise<Sale[]> {
-    const sales = await this.ormRepository.find({
+  public async findRewardedSales({
+    start_delivery_date,
+    end_delivery_date,
+    company_id,
+    production_status,
+    unit_id,
+    seller_id,
+    status,
+    page,
+  }: IListRewardParams): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }> {
+    const limit_per_page = 10;
+    const offset = page * limit_per_page;
+
+    let formattedStartDate: Date | null = null;
+    let formattedEndDate: Date | null = null;
+
+    if (start_delivery_date && end_delivery_date) {
+      formattedStartDate = startOfDay(new Date(start_delivery_date));
+      formattedEndDate = endOfDay(new Date(end_delivery_date));
+    }
+
+    const salesCount = await this.ormRepository.count({
       join: {
         alias: 'sales',
         innerJoin: {
           service_sales: 'sales.services_sales',
-          // commissioner: 'service_sales.commissioner.user',
+          seller: 'sales.seller',
         },
       },
       where: (qb: SelectQueryBuilder<Sale>) => {
-        qb.where('service_sales.commissioner_id is not null');
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id is not null');
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+    });
+
+    const sales = await this.ormRepository.find({
+      skip: offset,
+      take: limit_per_page,
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          seller: 'sales.seller',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(formattedStartDate, formattedEndDate),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id is not null');
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
       },
       relations: [
         'services_sales',
@@ -528,7 +668,13 @@ class SaleRepository implements ISaleRepository {
       ],
     });
 
-    return sales;
+    return {
+      current_page: Number(page),
+      total_pages: Math.floor(salesCount / limit_per_page),
+      total_items: salesCount,
+      total_items_page: sales.length,
+      items: sales,
+    };
   }
 
   public async findByServiceProvider(providerId: string): Promise<Sale[]> {

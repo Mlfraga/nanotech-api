@@ -19,6 +19,17 @@ interface IFilters {
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
 }
 
+export interface IListRewardParams {
+  end_delivery_date?: Date;
+  start_delivery_date?: Date;
+  company_id?: string;
+  production_status?: string;
+  unit_id?: string;
+  status?: string;
+  seller_id?: string;
+  page: number;
+}
+
 export default interface ISaleRepository {
   find(): Promise<Sale[] | undefined>;
   findById(id: string): Promise<Sale | undefined>;
@@ -96,7 +107,22 @@ export default interface ISaleRepository {
     total_items_page: number;
     items: Sale[];
   }>;
-  findRewardedSalesByCommissioner(commissioner_id: string): Promise<Sale[]>;
-  findRewardedSales(): Promise<Sale[]>;
+  findRewardedSalesByCommissioner(
+    commissioner_id: string,
+    params: IListRewardParams,
+  ): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }>;
+  findRewardedSales(params: IListRewardParams): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }>;
   delete(id: string): Promise<void>;
 }
