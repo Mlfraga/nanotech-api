@@ -64,7 +64,7 @@ export default class Sale {
   @Column()
   seller_id: string;
 
-  @ManyToOne(() => Profile, profile => profile.sales, { eager: true })
+  @ManyToOne(() => Profile, profile => profile.sales)
   @JoinColumn({ name: 'seller_id' })
   seller: Profile;
 
