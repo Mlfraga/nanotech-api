@@ -655,6 +655,9 @@ class SaleRepository implements ISaleRepository {
           qb.andWhere('seller.company_id = :company_id', { company_id });
         }
       },
+      order: {
+        client_identifier: 'DESC',
+      },
       relations: [
         'services_sales',
         'seller',
