@@ -7,8 +7,8 @@ import AppError from '@shared/errors/AppError';
 
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
-import IServiceRepository from '@modules/services/repositories/IServiceRepository';
 import IServiceSaleRepository from '@modules/services_sales/repositories/IServiceSaleRepository';
+import IServiceRepository from '@modules/services/repositories/IServiceRepository';
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
 import ServiceSale from '../../typeorm/entities/ServiceSale';
@@ -203,8 +203,6 @@ ${referralServicesMessageData.companyName}`;
 
     const createdSaleMessage = `*Novo pedido realizado:*\n\n*n°:* ${createdSaleMessageData.saleNumber}\n\n*Data de disponibilidade:* ${createdSaleMessageData.availabilityDate}\n\n*Data de entrega:* ${createdSaleMessageData.deliveryDate}\n\n*Data do registro da venda:* ${createdSaleMessageData.requestDate}\n\n*Vendedor(a):* ${createdSaleMessageData.seller}\n\n*Concessionária:* ${createdSaleMessageData.company}\n\n*Unidade:* ${createdSaleMessageData.unit}\n\n*Carro:* ${createdSaleMessageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${createdSaleMessageData.comments} `;
 
-    const recipients: string[] = [];
-
     const companyWhatsapNumbers =
       await this.whatsappNumberRepository.findByCompany(
         saleById.seller.company_id,
@@ -212,9 +210,10 @@ ${referralServicesMessageData.companyName}`;
     const globalWhatsappRecipients =
       await this.whatsappNumberRepository.findAllGlobalNumbers();
 
-    [...companyWhatsapNumbers, ...globalWhatsappRecipients].forEach(recipient =>
-      recipients.push(recipient.number),
-    );
+    const recipients: string[] = [
+      ...companyWhatsapNumbers.map(number => number.number),
+      ...globalWhatsappRecipients.map(number => number.number),
+    ];
 
     for (const recipient of recipients) {
       await this.wppMessagesProvider.sendMessage(createdSaleMessage, [
