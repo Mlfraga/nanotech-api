@@ -9,13 +9,16 @@ interface IFiltersParams {
   finalDate?: Date;
 }
 
-interface IFilters {
+export interface IFilters {
   initialDeliveryDate?: Date;
-  finalDeliveryDate?: Date;
+  plate?: string;
   sellerId?: string;
+  finalDeliveryDate?: Date;
   companyId?: string;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
+  startFinishedDate?: Date;
+  endFinishedDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
 }
 
@@ -67,6 +70,7 @@ export default interface ISaleRepository {
       initialAvailabilityDate,
       finalAvailabilityDate,
       status,
+      plate,
       sellerId,
     }: IFilters,
   ): Promise<{

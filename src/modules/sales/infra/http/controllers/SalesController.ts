@@ -17,6 +17,7 @@ export default class SalesController {
       endAvailabilityDate,
       startFinishedDate,
       endFinishedDate,
+      plate,
       sellerId,
       companyId,
       status,
@@ -35,6 +36,9 @@ export default class SalesController {
         }),
         ...(endDeliveryDate && {
           endDeliveryDate: new Date(String(endDeliveryDate)),
+        }),
+        ...(plate && {
+          plate: String(plate),
         }),
         ...(startAvailabilityDate && {
           startAvailabilityDate: new Date(String(startAvailabilityDate)),
