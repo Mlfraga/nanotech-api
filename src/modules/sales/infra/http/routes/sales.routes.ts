@@ -77,6 +77,7 @@ salesRouter.post(
       carModel: Joi.string().required(),
       carColor: Joi.string().required(),
       comments: Joi.string().allow(null),
+      partner_external_id: Joi.string().allow(null),
       commissioner_id: Joi.string().uuid(),
     },
   }),

@@ -62,6 +62,9 @@ export default class Sale {
   techinical_comments: string;
 
   @Column()
+  partner_external_id?: string;
+
+  @Column()
   seller_id: string;
 
   @ManyToOne(() => Profile, profile => profile.sales)

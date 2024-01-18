@@ -79,6 +79,7 @@ export default class SalesController {
       carColor,
       carModel,
       unitId,
+      partner_external_id,
     } = request.body;
 
     const user_id = request.user.id;
@@ -100,6 +101,7 @@ export default class SalesController {
       carColor,
       carModel,
       unitId,
+      partner_external_id,
     });
 
     return response.json(createdSale);

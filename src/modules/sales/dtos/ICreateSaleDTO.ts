@@ -12,4 +12,5 @@ export default interface ICreateSaleDTO {
   car_id: string;
   status?: string;
   production_status?: string;
+  partner_external_id?: string;
 }

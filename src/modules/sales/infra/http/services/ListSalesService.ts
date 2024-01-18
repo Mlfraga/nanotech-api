@@ -277,6 +277,7 @@ class ListSalesService {
           delivery_date: sale.delivery_date,
           status: sale.status,
           production_status: sale.production_status,
+          partner_external_id: sale.partner_external_id,
           services_sales: sale.services_sales.map(serviceSale => ({
             service: {
               id: serviceSale.service.id,
