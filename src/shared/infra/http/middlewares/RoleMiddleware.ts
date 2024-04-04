@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import JWT from 'jsonwebtoken';
 import { container } from 'tsyringe';
 
@@ -187,6 +187,74 @@ class RoleMiddleware {
 
     if (user.role !== 'SERVICE_PROVIDER') {
       throw new AppError('User does not have sale provider permission.');
+    }
+
+    next();
+  }
+
+  async isCommissioner(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader?.split(' ')[1];
+    const decoded: any = JWT.decode(String(token), { complete: true });
+
+    const userRepository = container.resolve(UserRepository);
+
+    const user_id = decoded.payload.sub;
+
+    const user = await userRepository.findById(user_id);
+
+    if (!user) {
+      throw new AppError('User not found.', 404);
+    }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
+    if (user.role !== 'COMMISSIONER') {
+      throw new AppError('User does not have commissioner permission.');
+    }
+
+    next();
+  }
+
+  async isCommissionerOrAdmin(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader?.split(' ')[1];
+    const decoded: any = JWT.decode(String(token), { complete: true });
+
+    const userRepository = container.resolve(UserRepository);
+
+    const user_id = decoded.payload.sub;
+
+    const user = await userRepository.findById(user_id);
+
+    if (!user) {
+      throw new AppError('User not found.', 404);
+    }
+
+    request.user = {
+      ...request.user,
+      profile_id: user.profile.id,
+    };
+
+    if (
+      user.role !== 'COMMISSIONER' &&
+      user.role !== 'ADMIN' &&
+      user.role !== 'MANAGER'
+    ) {
+      throw new AppError(
+        'User does not have commissioner,admin,manager permission.',
+      );
     }
 
     next();

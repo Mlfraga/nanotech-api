@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
@@ -9,6 +9,7 @@ interface IRequest {
   id: string;
   name: string;
   price: number;
+  commission_amount?: number;
   company_price: number;
 }
 
@@ -24,6 +25,7 @@ class UpdateServiceService {
     name,
     price,
     company_price,
+    commission_amount,
   }: IRequest): Promise<Service> {
     const serviceById = await this.serviceRepository.findById(String(id));
 
@@ -36,6 +38,7 @@ class UpdateServiceService {
       ...(name && { name }),
       ...(price && { price }),
       ...(company_price && { company_price }),
+      commission_amount,
     });
 
     return updatedService;

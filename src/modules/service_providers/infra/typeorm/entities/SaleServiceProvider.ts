@@ -1,9 +1,6 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  JoinColumn,
-  ManyToOne,
+    Column, Entity, JoinColumn,
+    ManyToOne, PrimaryGeneratedColumn
 } from 'typeorm';
 
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';

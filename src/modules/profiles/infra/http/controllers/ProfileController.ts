@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import FindProfileById from '../services/FindProfileById';
 import ListProfilesService from '../services/ListProfilesService';
 import { ProfileViewModel } from '../view-models/ProfileViewModel';
 
@@ -22,5 +23,15 @@ export default class ProfileController {
     );
 
     return response.json(formattedProfiles);
+  }
+
+  async find(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const findProfileById = container.resolve(FindProfileById);
+
+    const company = await findProfileById.execute({ id });
+
+    return response.json(company);
   }
 }

@@ -68,6 +68,7 @@ interface IRequest {
     startFinishedDate?: Date;
     endFinishedDate?: Date;
     sellerId?: string;
+    plate?: string;
     companyId?: string;
     status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
   };
@@ -117,6 +118,7 @@ class ListSalesService {
     if (user.role === 'ADMIN' || user.role === 'NANOTECH_REPRESENTATIVE') {
       sales = await this.saleRepository.findAllSales(Number(page), {
         ...(filters.sellerId && { sellerId: String(filters.sellerId) }),
+        ...(filters.plate && { plate: String(filters.plate) }),
         ...(filters.companyId && { companyId: String(filters.companyId) }),
         ...(filters.startDeliveryDate && {
           initialDeliveryDate: startOfDay(
@@ -164,6 +166,7 @@ class ListSalesService {
               new Date(filters.startDeliveryDate.toString()),
             ),
           }),
+          ...(filters.plate && { plate: String(filters.plate) }),
           ...(filters.endDeliveryDate && {
             finalDeliveryDate: endOfDay(
               new Date(filters.endDeliveryDate.toString()),
@@ -198,6 +201,7 @@ class ListSalesService {
         Number(page),
         {
           ...(filters.sellerId && { sellerId: String(filters.sellerId) }),
+          ...(filters.plate && { plate: String(filters.plate) }),
           ...(filters.startDeliveryDate && {
             initialDeliveryDate: startOfDay(
               new Date(filters.startDeliveryDate.toString()),
@@ -274,6 +278,7 @@ class ListSalesService {
           delivery_date: sale.delivery_date,
           status: sale.status,
           production_status: sale.production_status,
+          partner_external_id: sale.partner_external_id,
           services_sales: sale.services_sales.map(serviceSale => ({
             service: {
               id: serviceSale.service.id,

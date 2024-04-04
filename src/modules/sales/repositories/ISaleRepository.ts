@@ -19,12 +19,26 @@ export interface IPaginatedSalesResponse {
 
 export interface IFilters {
   initialDeliveryDate?: Date;
-  finalDeliveryDate?: Date;
+  plate?: string;
   sellerId?: string;
+  finalDeliveryDate?: Date;
   companyId?: string;
   initialAvailabilityDate?: Date;
   finalAvailabilityDate?: Date;
+  startFinishedDate?: Date;
+  endFinishedDate?: Date;
   status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
+}
+
+export interface IListRewardParams {
+  end_delivery_date?: Date;
+  start_delivery_date?: Date;
+  company_id?: string;
+  production_status?: string;
+  unit_id?: string;
+  status?: string;
+  seller_id?: string;
+  page: number;
 }
 
 export default interface ISaleRepository {
@@ -58,6 +72,7 @@ export default interface ISaleRepository {
       initialAvailabilityDate,
       finalAvailabilityDate,
       status,
+      plate,
       sellerId,
     }: IFilters,
   ): Promise<IPaginatedSalesResponse>;
@@ -79,6 +94,12 @@ export default interface ISaleRepository {
     availabilityDateInitialDay: Date,
     availabilityDateFinalDay: Date,
     status: string,
-  ): Promise<IPaginatedSalesResponse>;
+  ): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }>;
   delete(id: string): Promise<void>;
 }

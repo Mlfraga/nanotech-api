@@ -1,10 +1,11 @@
-import { celebrate, Segments, Joi } from 'celebrate';
+import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
 import RoleMiddleware from '@shared/infra/http/middlewares/RoleMiddleware';
 
 import CompaniesSalesBudgetController from '../controllers/CompaniesSalesBudgetController';
+import RewardSalesController from '../controllers/RewardSalesController';
 import SalesBudgetController from '../controllers/SalesBudgetController';
 import SalesController from '../controllers/SalesController';
 import SalesReportController from '../controllers/SalesReportController';
@@ -13,6 +14,7 @@ import UpdateStatusSaleController from '../controllers/UpdateStatusSaleControlle
 const salesRouter = Router();
 const salesController = new SalesController();
 const updateStatusSaleController = new UpdateStatusSaleController();
+const rewardSalesController = new RewardSalesController();
 const salesReportController = new SalesReportController();
 const salesBudgetController = new SalesBudgetController();
 const companiesSalesBudgetController = new CompaniesSalesBudgetController();
@@ -26,6 +28,7 @@ salesRouter.get(
       startAvailabilityDate: Joi.date().allow(null),
       endAvailabilityDate: Joi.date().allow(null),
       startFinishedDate: Joi.date().allow(null),
+      plate: Joi.string().allow(null),
       endFinishedDate: Joi.date().allow(null),
       companyId: Joi.string().uuid().allow(null),
       status: Joi.string().allow(null),
@@ -35,6 +38,25 @@ salesRouter.get(
   }),
   ensureAuthenticated,
   salesController.index,
+);
+
+salesRouter.get(
+  '/rewards/',
+  celebrate({
+    [Segments.QUERY]: {
+      start_delivery_date: Joi.date().allow(null),
+      end_delivery_date: Joi.date().allow(null),
+      company_id: Joi.string().uuid().allow(null),
+      production_status: Joi.string().allow(null),
+      unit_id: Joi.string().uuid().allow(null),
+      status: Joi.string().allow(null),
+      seller_id: Joi.string().uuid().allow(null),
+      page: Joi.number().required(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isCommissionerOrAdmin,
+  rewardSalesController.show,
 );
 
 salesRouter.post(
@@ -55,6 +77,8 @@ salesRouter.post(
       carModel: Joi.string().required(),
       carColor: Joi.string().required(),
       comments: Joi.string().allow(null),
+      partner_external_id: Joi.string().allow(null),
+      commissioner_id: Joi.string().uuid(),
     },
   }),
   ensureAuthenticated,

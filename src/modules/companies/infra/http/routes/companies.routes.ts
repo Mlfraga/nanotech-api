@@ -56,4 +56,11 @@ companiesRouter.get(
   companiesController.show,
 );
 
+companiesRouter.get(
+  '/find/:id',
+  ensureAuthenticated,
+  // RoleMiddleware.i,
+  companiesController.find,
+);
+
 export default companiesRouter;

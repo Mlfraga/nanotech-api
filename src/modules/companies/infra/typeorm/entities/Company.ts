@@ -1,12 +1,9 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
+  CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm';
 
+import Commissioner from '@modules/commissioners/infra/typeorm/entities/Commissioner';
 import CompanyPrices from '@modules/company_prices/infra/typeorm/entities/CompanyPrices';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
 import Service from '@modules/services/infra/typeorm/entities/Service';
@@ -29,6 +26,9 @@ export default class Company {
 
   @OneToMany(() => Unit, unit => unit.company, { cascade: true })
   unities: Unit[];
+
+  @OneToMany(() => Commissioner, commissioner => commissioner.company, { cascade: true })
+  commissioners: Commissioner[];
 
   @OneToMany(() => Profile, profile => profile.company, {
     cascade: true,

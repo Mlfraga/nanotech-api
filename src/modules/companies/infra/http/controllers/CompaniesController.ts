@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateCompanyService from '../services/CreateCompanyService';
+import FindCompanyById from '../services/FindCompanyById';
 import ListCompaniesService from '../services/ListCompaniesService';
 import ShowCompanyService from '../services/ShowCompanyService';
 import UpdateCompanyService from '../services/UpdateCompanyService';
@@ -30,6 +31,16 @@ export default class CompanyController {
     const formattedCompany = CompaniesViewModel.toHttp(company);
 
     return response.json(formattedCompany);
+  }
+
+  async find(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const findCompanyById = container.resolve(FindCompanyById);
+
+    const company = await findCompanyById.execute({ id });
+
+    return response.json(company);
   }
 
   async store(request: Request, response: Response) {

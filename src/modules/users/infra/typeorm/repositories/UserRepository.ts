@@ -1,7 +1,8 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, SelectQueryBuilder } from 'typeorm';
 
-import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IUsersRepository, {
+  IUserFilters
+} from '@modules/users/repositories/IUsersRepository';
 
 import User from '../entities/User';
 
@@ -12,10 +13,35 @@ class UserRepository implements IUsersRepository {
     this.ormRepository = getRepository(User);
   }
 
-  public async find(): Promise<User[] | undefined> {
+  public async find({
+    role,
+    name,
+    telephone,
+    company_id,
+    enabled,
+  }: IUserFilters): Promise<User[] | undefined> {
     const user = await this.ormRepository.find({
       order: { username: 'ASC' },
       relations: ['profile', 'profile.company'],
+      where: (qb: SelectQueryBuilder<User>) => {
+        const filtering = qb.where({
+          ...(telephone && { telephone }),
+          ...(role && { role }),
+          ...(enabled !== undefined && { enabled }),
+        });
+
+        if (company_id) {
+          filtering.andWhere('User__profile.company_id = :company_id', {
+            company_id,
+          });
+        }
+
+        if (name) {
+          qb.andWhere('User__profile.name LIKE :name', {
+            name: `%${name}%`,
+          });
+        }
+      },
     });
 
     return user;

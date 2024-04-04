@@ -5,13 +5,13 @@
     "host": "localhost",
     "port": 5432,
     "username": "postgres",
-    "password": "82d8f3b3565fba8ad6b5620e3e6cd540",
+    "password": "password",
     "database": "nanotech",
     "entities": [
-      "dist/modules/**/infra/typeorm/entities/*.js"
+      "src/modules/**/infra/typeorm/entities/*.ts"
     ],
     "migrations": [
-      "dist/shared/infra/typeorm/migrations/*.js"
+      "src/shared/infra/typeorm/migrations/*.ts"
     ],
     "cli": {
       "migrationsDir": "dist/shared/infra/typeorm/migrations"

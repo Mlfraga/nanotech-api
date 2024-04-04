@@ -11,6 +11,9 @@ import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IW
 // import CarRepository from '../../modules/cars/infra/typeorm/repositories/CarRepository';
 import ICarRepository from '../../modules/cars/repositories/ICarRepository';
 // import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
+import CommissionerRepository from '../../modules/commissioners/infra/typeorm/repositories/CommissionerRepository';
+import ICommissionerRepository from '../../modules/commissioners/repositories/ICommissionerRepository';
+import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
 import ICompanyRepository from '../../modules/companies/repositories/ICompanyRepository';
 import CompanyPricesRepository from '../../modules/company_prices/infra/prisma/repositories/company-prices-repository';
 import ICompanyPricesRepository from '../../modules/company_prices/repositories/ICompanyPricesRepository';
@@ -81,4 +84,9 @@ container.registerSingleton<IWhatsappNumberRepository>(
 container.registerSingleton<IServiceProviderRepository>(
   'ServiceProviderRepository',
   ServiceProviderRepository,
+);
+
+container.registerSingleton<ICommissionerRepository>(
+  'CommissionerRepository',
+  CommissionerRepository,
 );

@@ -1,12 +1,12 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import {Car} from '@modules/cars/infra/typeorm/entities/Car';
@@ -60,6 +60,9 @@ export default class Sale {
 
   @Column()
   techinical_comments: string;
+
+  @Column()
+  partner_external_id?: string;
 
   @Column()
   seller_id: string;

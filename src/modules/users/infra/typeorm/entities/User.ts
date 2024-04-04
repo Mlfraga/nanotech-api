@@ -1,11 +1,11 @@
 import { Exclude } from 'class-transformer';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
   OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
@@ -33,11 +33,18 @@ export default class User {
     | 'SELLER'
     | 'MANAGER'
     | 'ADMIN'
+    | 'COMMISSIONER'
     | 'NANOTECH_REPRESENTATIVE'
     | 'SERVICE_PROVIDER';
 
   @Column()
   first_login: boolean;
+
+  @Column()
+  pix_key_type: string;
+
+  @Column()
+  pix_key: string;
 
   @Column()
   enabled: boolean;

@@ -1,19 +1,19 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import Person from '@modules/persons/infra/typeorm/entities/Person';
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 @Entity('cars')
-export class Car {
+export default class Car {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

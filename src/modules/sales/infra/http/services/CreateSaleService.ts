@@ -25,6 +25,7 @@ interface ICreateSaleServiceParams {
   carColor: string;
   carModel: string;
   unitId: string;
+  partner_external_id?: string;
 }
 
 @injectable()
@@ -61,6 +62,7 @@ class CreateSaleService {
     carColor,
     carModel,
     unitId,
+    partner_external_id,
   }: ICreateSaleServiceParams): Promise<Sale> {
     const user = await this.userRepository.findById(user_id);
 
@@ -118,6 +120,7 @@ class CreateSaleService {
         production_status: 'TO_DO',
         person_id: person?.id,
         car_id: createdCar.id,
+        partner_external_id,
       });
 
       return createdSale;
@@ -156,6 +159,7 @@ class CreateSaleService {
         seller_id: sellerId,
         person_id: personByCpf?.id,
         production_status: 'TO_DO',
+        partner_external_id,
         car_id: createdCar.id,
       });
 
@@ -175,6 +179,7 @@ class CreateSaleService {
       request_date: new Date(),
       person_id: personByCpf?.id,
       car_id: carByPlateAndPersonId.id,
+      partner_external_id,
     });
 
     return createdSale;

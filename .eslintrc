@@ -72,34 +72,6 @@
     "react/require-default-props": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/label-has-for": "off",
-    "import-helpers/order-imports": [
-      "warn",
-      {
-        "newlinesBetween": "always",
-        "groups": [
-          [
-            "/^react/",
-            "/^next/"
-          ],
-          "module",
-          "/^@scraper\/shared/",
-          "/^@config/",
-          "/^@utils/",
-          "/^@shared/",
-          "/^@modules/",
-          "/^@\//",
-          [
-            "parent",
-            "sibling",
-            "index"
-          ]
-        ],
-        "alphabetize": {
-          "order": "asc",
-          "ignoreCase": true
-        }
-      }
-    ],
     "@typescript-eslint/naming-convention": [
       "error",
       {

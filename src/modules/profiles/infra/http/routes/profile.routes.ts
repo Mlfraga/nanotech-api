@@ -28,5 +28,23 @@ profileRouter.get(
   RoleMiddleware.isManagerOrAdmin,
   userController.index,
 );
+profileRouter.get(
+  '/find/:id',
+  // celebrate({
+  //   [Segments.QUERY]: {
+  //     role: Joi.string().valid(
+  //       'ADMIN',
+  //       'SELLER',
+  //       'MANAGER',
+  //       'NANOTECH_REPRESENTATIVE',
+  //       'SERVICE_PROVIDER',
+  //     ),
+  //     showDisabled: Joi.boolean(),
+  //   },
+  // }),
+  ensureAuthenticated,
+  // RoleMiddleware.isManagerOrAdmin,
+  userController.find,
+);
 
 export default profileRouter;

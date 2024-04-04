@@ -1,12 +1,17 @@
+import { endOfDay, startOfDay } from 'date-fns';
 import {
   Between,
-  getRepository,
   Repository,
   SelectQueryBuilder,
+  getRepository,
 } from 'typeorm';
 
-import ICreateSaleDTO from '../../../dtos/ICreateSaleDTO';
-import ISaleRepository from '../../../repositories/ISaleRepository';
+import ICreateSaleDTO from '@modules/sales/dtos/ICreateSaleDTO';
+
+import ISaleRepository, {
+  IListRewardParams,
+  IFilters,
+} from '../../../repositories/ISaleRepository';
 import Sale from '../entities/Sale';
 
 interface IFiltersParams {
@@ -16,19 +21,6 @@ interface IFiltersParams {
   initialDate?: Date;
   finalDate?: Date;
 }
-
-interface IFilters {
-  initialDeliveryDate?: Date;
-  sellerId?: string;
-  finalDeliveryDate?: Date;
-  companyId?: string;
-  initialAvailabilityDate?: Date;
-  finalAvailabilityDate?: Date;
-  startFinishedDate?: Date;
-  endFinishedDate?: Date;
-  status?: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'FINISHED';
-}
-
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
 
@@ -168,6 +160,7 @@ class SaleRepository implements ISaleRepository {
       sellerId,
       startFinishedDate,
       endFinishedDate,
+      plate,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -180,34 +173,46 @@ class SaleRepository implements ISaleRepository {
     const offset = page * limit_per_page;
 
     const count = await this.ormRepository.count({
-      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      join: {
+        alias: 'sale',
+        innerJoin: { seller: 'sale.seller', car: 'sale.car' },
+      },
       where: (qb: SelectQueryBuilder<Sale>) => {
-        qb.where({
-          ...(initialDeliveryDate &&
-            finalDeliveryDate && {
-              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-            }),
-          ...(initialAvailabilityDate &&
-            finalAvailabilityDate && {
-              availability_date: Between(
-                initialAvailabilityDate,
-                finalAvailabilityDate,
-              ),
-            }),
-          ...(startFinishedDate &&
-            endFinishedDate && {
-              finished_at: Between(startFinishedDate, endFinishedDate),
-            }),
-          ...(status && { status }),
-          ...(sellerId && { seller_id: sellerId }),
-        }).andWhere('seller.company_id = :companyId', { companyId });
+        const query = qb
+          .where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
+              }),
+            ...(status && { status }),
+            ...(sellerId && { seller_id: sellerId }),
+          })
+          .andWhere('seller.company_id = :companyId', { companyId });
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
+        }
       },
     });
 
     const sales = await this.ormRepository.find({
       skip: offset,
       take: limit_per_page,
-      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      join: {
+        alias: 'sale',
+        innerJoin: { seller: 'sale.seller', car: 'sale.car' },
+      },
       relations: [
         'seller',
         'seller.company',
@@ -218,25 +223,31 @@ class SaleRepository implements ISaleRepository {
         'services_sales.service',
       ],
       where: (qb: SelectQueryBuilder<Sale>) => {
-        qb.where({
-          ...(initialDeliveryDate &&
-            finalDeliveryDate && {
-              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-            }),
-          ...(initialAvailabilityDate &&
-            finalAvailabilityDate && {
-              availability_date: Between(
-                initialAvailabilityDate,
-                finalAvailabilityDate,
-              ),
-            }),
-          ...(startFinishedDate &&
-            endFinishedDate && {
-              finished_at: Between(startFinishedDate, endFinishedDate),
-            }),
-          ...(status && { status }),
-          ...(sellerId && { seller_id: sellerId }),
-        }).andWhere('seller.company_id = :companyId', { companyId });
+        const query = qb
+          .where({
+            ...(initialDeliveryDate &&
+              finalDeliveryDate && {
+                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+              }),
+            ...(initialAvailabilityDate &&
+              finalAvailabilityDate && {
+                availability_date: Between(
+                  initialAvailabilityDate,
+                  finalAvailabilityDate,
+                ),
+              }),
+            ...(startFinishedDate &&
+              endFinishedDate && {
+                finished_at: Between(startFinishedDate, endFinishedDate),
+              }),
+            ...(status && { status }),
+            ...(sellerId && { seller_id: sellerId }),
+          })
+          .andWhere('seller.company_id = :companyId', { companyId });
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
+        }
       },
       order: { request_date: 'DESC' },
     });
@@ -262,6 +273,7 @@ class SaleRepository implements ISaleRepository {
       companyId,
       status,
       sellerId,
+      plate,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -274,48 +286,37 @@ class SaleRepository implements ISaleRepository {
     const offset = page * limit_per_page;
 
     const count = await this.ormRepository.count({
-      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      join: {
+        alias: 'sale',
+        innerJoin: { seller: 'sale.seller', car: 'sale.car' },
+      },
       where: (qb: SelectQueryBuilder<Sale>) => {
+        const query = qb.where({
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
+            }),
+          ...(sellerId && { seller_id: sellerId }),
+          ...(status && { status }),
+        });
+
         if (companyId) {
-          qb.where({
-            ...(initialDeliveryDate &&
-              finalDeliveryDate && {
-                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-              }),
-            ...(initialAvailabilityDate &&
-              finalAvailabilityDate && {
-                availability_date: Between(
-                  initialAvailabilityDate,
-                  finalAvailabilityDate,
-                ),
-              }),
-            ...(startFinishedDate &&
-              endFinishedDate && {
-                finished_at: Between(startFinishedDate, endFinishedDate),
-              }),
-            ...(sellerId && { seller_id: sellerId }),
-            ...(status && { status }),
-          }).andWhere('seller.company_id = :companyId', { companyId });
-        } else {
-          qb.where({
-            ...(initialDeliveryDate &&
-              finalDeliveryDate && {
-                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-              }),
-            ...(initialAvailabilityDate &&
-              finalAvailabilityDate && {
-                availability_date: Between(
-                  initialAvailabilityDate,
-                  finalAvailabilityDate,
-                ),
-              }),
-            ...(startFinishedDate &&
-              endFinishedDate && {
-                finished_at: Between(startFinishedDate, endFinishedDate),
-              }),
-            ...(sellerId && { seller_id: sellerId }),
-            ...(status && { status }),
-          });
+          query.andWhere('seller.company_id = :companyId', { companyId });
+        }
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
         }
       },
     });
@@ -323,48 +324,37 @@ class SaleRepository implements ISaleRepository {
     const sales = await this.ormRepository.find({
       skip: offset,
       take: limit_per_page,
-      join: { alias: 'sale', innerJoin: { seller: 'sale.seller' } },
+      join: {
+        alias: 'sale',
+        innerJoin: { seller: 'sale.seller', car: 'sale.car' },
+      },
       where: (qb: SelectQueryBuilder<Sale>) => {
+        const query = qb.where({
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
+            }),
+          ...(sellerId && { seller_id: sellerId }),
+          ...(status && { status }),
+        });
+
         if (companyId) {
-          qb.where({
-            ...(initialDeliveryDate &&
-              finalDeliveryDate && {
-                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-              }),
-            ...(initialAvailabilityDate &&
-              finalAvailabilityDate && {
-                availability_date: Between(
-                  initialAvailabilityDate,
-                  finalAvailabilityDate,
-                ),
-              }),
-            ...(startFinishedDate &&
-              endFinishedDate && {
-                finished_at: Between(startFinishedDate, endFinishedDate),
-              }),
-            ...(sellerId && { seller_id: sellerId }),
-            ...(status && { status }),
-          }).andWhere('seller.company_id = :companyId', { companyId });
-        } else {
-          qb.where({
-            ...(initialDeliveryDate &&
-              finalDeliveryDate && {
-                delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-              }),
-            ...(initialAvailabilityDate &&
-              finalAvailabilityDate && {
-                availability_date: Between(
-                  initialAvailabilityDate,
-                  finalAvailabilityDate,
-                ),
-              }),
-            ...(startFinishedDate &&
-              endFinishedDate && {
-                finished_at: Between(startFinishedDate, endFinishedDate),
-              }),
-            ...(sellerId && { seller_id: sellerId }),
-            ...(status && { status }),
-          });
+          query.andWhere('seller.company_id = :companyId', { companyId });
+        }
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
         }
       },
       order: { request_date: 'DESC' },
@@ -399,6 +389,7 @@ class SaleRepository implements ISaleRepository {
       status,
       startFinishedDate,
       endFinishedDate,
+      plate,
     }: IFilters,
   ): Promise<{
     current_page: number;
@@ -411,49 +402,69 @@ class SaleRepository implements ISaleRepository {
     const offset = page * limit_per_page;
 
     const count = await this.ormRepository.count({
-      where: {
-        seller_id: sellerId,
-        ...(initialDeliveryDate &&
-          finalDeliveryDate && {
-            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-          }),
-        ...(initialAvailabilityDate &&
-          finalAvailabilityDate && {
-            availability_date: Between(
-              initialAvailabilityDate,
-              finalAvailabilityDate,
-            ),
-          }),
-        ...(startFinishedDate &&
-          endFinishedDate && {
-            finished_at: Between(startFinishedDate, endFinishedDate),
-          }),
-        ...(status && { status }),
+      join: {
+        alias: 'sale',
+        innerJoin: { car: 'sale.car' },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        const query = qb.where({
+          seller_id: sellerId,
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
+            }),
+          ...(status && { status }),
+        });
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
+        }
       },
     });
 
     const sales = await this.ormRepository.find({
+      join: {
+        alias: 'sale',
+        innerJoin: { car: 'sale.car' },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        const query = qb.where({
+          seller_id: sellerId,
+          ...(initialDeliveryDate &&
+            finalDeliveryDate && {
+              delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
+            }),
+          ...(initialAvailabilityDate &&
+            finalAvailabilityDate && {
+              availability_date: Between(
+                initialAvailabilityDate,
+                finalAvailabilityDate,
+              ),
+            }),
+          ...(startFinishedDate &&
+            endFinishedDate && {
+              finished_at: Between(startFinishedDate, endFinishedDate),
+            }),
+          ...(status && { status }),
+        });
+
+        if (plate) {
+          query.andWhere('car.plate = :plate', { plate });
+        }
+      },
       skip: offset,
       take: limit_per_page,
-      where: {
-        seller_id: sellerId,
-        ...(initialDeliveryDate &&
-          finalDeliveryDate && {
-            delivery_date: Between(initialDeliveryDate, finalDeliveryDate),
-          }),
-        ...(startFinishedDate &&
-          endFinishedDate && {
-            finished_at: Between(startFinishedDate, endFinishedDate),
-          }),
-        ...(initialAvailabilityDate &&
-          finalAvailabilityDate && {
-            availability_date: Between(
-              initialAvailabilityDate,
-              finalAvailabilityDate,
-            ),
-          }),
-        ...(status && { status }),
-      },
       order: { request_date: 'DESC' },
       relations: [
         'seller',
@@ -475,14 +486,206 @@ class SaleRepository implements ISaleRepository {
     };
   }
 
-  // join: {
-  //   alias: 'sales',
-  //   innerJoin: { providers: 'sales.service_providers' },
-  // },
-  // where: (qb: SelectQueryBuilder<Sale>) => {
-  //   qb.where('providers.service_provider_profile_id = :providerId', {
-  //     providerId,
-  //   });
+  public async findRewardedSalesByCommissioner(
+    commissioner_id: string,
+    {
+      start_delivery_date,
+      end_delivery_date,
+      company_id,
+      production_status,
+      unit_id,
+      seller_id,
+      status,
+      page,
+    }: IListRewardParams,
+  ): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }> {
+    const limit_per_page = 10;
+    const offset = page * limit_per_page;
+
+    const salesCount = await this.ormRepository.count({
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          seller: 'sales.seller',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id = :commissioner_id', {
+          commissioner_id,
+        });
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+    });
+
+    const sales = await this.ormRepository.find({
+      skip: offset,
+      take: limit_per_page,
+      join: {
+        alias: 'sales',
+        innerJoin: { service_sales: 'sales.services_sales' },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id = :commissioner_id', {
+          commissioner_id,
+        });
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+      order: { delivery_date: 'DESC' },
+      relations: [
+        'services_sales',
+        'seller',
+        'seller.company',
+        'unit',
+        'unit.company',
+        'person',
+        'car',
+        'services_sales.service',
+      ],
+    });
+
+    return {
+      current_page: Number(page),
+      total_pages: Math.floor(salesCount / limit_per_page),
+      total_items: salesCount,
+      total_items_page: sales.length,
+      items: sales,
+    };
+  }
+
+  public async findRewardedSales({
+    start_delivery_date,
+    end_delivery_date,
+    company_id,
+    production_status,
+    unit_id,
+    seller_id,
+    status,
+    page,
+  }: IListRewardParams): Promise<{
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    total_items_page: number;
+    items: Sale[];
+  }> {
+    const limit_per_page = 10;
+    const offset = page * limit_per_page;
+
+    let formattedStartDate: Date | null = null;
+    let formattedEndDate: Date | null = null;
+
+    if (start_delivery_date && end_delivery_date) {
+      formattedStartDate = startOfDay(new Date(start_delivery_date));
+      formattedEndDate = endOfDay(new Date(end_delivery_date));
+    }
+
+    const salesCount = await this.ormRepository.count({
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          seller: 'sales.seller',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(start_delivery_date, end_delivery_date),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id is not null');
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+    });
+
+    const sales = await this.ormRepository.find({
+      skip: offset,
+      take: limit_per_page,
+      join: {
+        alias: 'sales',
+        innerJoin: {
+          service_sales: 'sales.services_sales',
+          seller: 'sales.seller',
+        },
+      },
+      where: (qb: SelectQueryBuilder<Sale>) => {
+        qb.where({
+          ...(start_delivery_date &&
+            end_delivery_date && {
+              delivery_date: Between(formattedStartDate, formattedEndDate),
+            }),
+          ...(production_status && { production_status }),
+          ...(unit_id && { unit_id }),
+          ...(seller_id && { seller_id }),
+          ...(status && { status }),
+        }).andWhere('service_sales.commissioner_id is not null');
+
+        if (company_id) {
+          qb.andWhere('seller.company_id = :company_id', { company_id });
+        }
+      },
+      order: {
+        client_identifier: 'DESC',
+      },
+      relations: [
+        'services_sales',
+        'seller',
+        'seller.company',
+        'unit',
+        'unit.company',
+        'person',
+        'car',
+        'services_sales.service',
+        // 'commissioner',
+      ],
+    });
+
+    return {
+      current_page: Number(page),
+      total_pages: Math.floor(salesCount / limit_per_page),
+      total_items: salesCount,
+      total_items_page: sales.length,
+      items: sales,
+    };
+  }
 
   public async findByServiceProvider(providerId: string): Promise<Sale[]> {
     const sales = await this.ormRepository.find({

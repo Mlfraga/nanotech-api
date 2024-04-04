@@ -17,6 +17,7 @@ export default class SalesController {
       endAvailabilityDate,
       startFinishedDate,
       endFinishedDate,
+      plate,
       sellerId,
       companyId,
       status,
@@ -35,6 +36,9 @@ export default class SalesController {
         }),
         ...(endDeliveryDate && {
           endDeliveryDate: new Date(String(endDeliveryDate)),
+        }),
+        ...(plate && {
+          plate: String(plate),
         }),
         ...(startAvailabilityDate && {
           startAvailabilityDate: new Date(String(startAvailabilityDate)),
@@ -75,6 +79,7 @@ export default class SalesController {
       carColor,
       carModel,
       unitId,
+      partner_external_id,
     } = request.body;
 
     const user_id = request.user.id;
@@ -96,6 +101,7 @@ export default class SalesController {
       carColor,
       carModel,
       unitId,
+      partner_external_id,
     });
 
     return response.json({...createdSale, id: createdSale.id});

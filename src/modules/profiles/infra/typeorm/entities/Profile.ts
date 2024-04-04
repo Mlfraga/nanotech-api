@@ -1,18 +1,19 @@
 import { Exclude } from 'class-transformer';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 import SalesServiceProviders from '@modules/service_providers/infra/typeorm/entities/SaleServiceProvider';
+import ServiceSale from '@modules/services_sales/infra/typeorm/entities/ServiceSale';
 import Unit from '@modules/unities/infra/typeorm/entities/Unit';
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -43,12 +44,15 @@ export default class Profile {
   @JoinColumn({ name: 'unit_id' })
   unit: Unit;
 
-  @OneToOne(() => User, user => user.profile)
+  @OneToOne(() => User, user => user.profile, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
   @OneToMany(() => Sale, sale => sale.seller)
   sales: Sale[];
+
+  @OneToMany(() => ServiceSale, serviceSale => serviceSale.commissioner)
+  referrals: ServiceSale[];
 
   @OneToMany(
     () => SalesServiceProviders,

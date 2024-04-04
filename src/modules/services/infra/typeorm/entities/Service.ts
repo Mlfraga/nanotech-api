@@ -1,12 +1,12 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 import Company from '@modules/companies/infra/typeorm/entities/Company';
@@ -28,6 +28,9 @@ export default class Service {
 
   @Column()
   company_price: number;
+
+  @Column()
+  commission_amount?: number;
 
   @OneToMany(() => ServiceSale, serviceSale => serviceSale.id, {
     cascade: true,
