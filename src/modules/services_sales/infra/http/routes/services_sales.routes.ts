@@ -1,9 +1,7 @@
-import { celebrate, Joi, Segments } from 'celebrate';
-import { Router } from 'express';
-
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
 import RoleMiddleware from '@shared/infra/http/middlewares/RoleMiddleware';
-
+import { celebrate, Joi, Segments } from 'celebrate';
+import { Request, Response, Router } from 'express';
 import ServicesSalesController from '../controllers/ServicesSalesController';
 
 const servicesSalesRouter = Router();
@@ -25,6 +23,17 @@ servicesSalesRouter.post(
     },
   }),
   servicesSalesController.store,
+);
+
+servicesSalesRouter.get('/test/:saleId', (req: Request, res: Response) => {
+  console.log('OPA');
+
+  return res.json({ ok: true });
+});
+
+servicesSalesRouter.post(
+  '/send-message/:saleId',
+  servicesSalesController.sendMessage,
 );
 
 export default servicesSalesRouter;
