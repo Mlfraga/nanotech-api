@@ -4,6 +4,7 @@ import ServiceSale from '../infra/typeorm/entities/ServiceSale';
 export default interface IServiceSaleRepository {
   find(): Promise<ServiceSale[] | undefined>;
   findById(id: string): Promise<ServiceSale | undefined>;
+  findBySale(id: string): Promise<ServiceSale[]>;
   create(data: ICreateServiceSaleDTO): Promise<ServiceSale>;
   save(unit: ServiceSale): Promise<ServiceSale>;
   delete(id: string): Promise<void>;

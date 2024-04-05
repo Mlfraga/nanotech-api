@@ -1,5 +1,4 @@
 import { Between, getRepository, Repository } from 'typeorm';
-
 import ICreateServiceSaleDTO from '../../../dtos/ICreateServiceSaleDTO';
 import IServiceSaleRepository from '../../../repositories/IServiceSaleRepository';
 import ServiceSale from '../entities/ServiceSale';
@@ -17,6 +16,17 @@ class ServiceSaleRepository implements IServiceSaleRepository {
     });
 
     return serviceSale;
+  }
+
+  public async findBySale(saleId: string): Promise<ServiceSale[]> {
+    const serviceSales = await this.ormRepository.find({
+      order: { created_at: 'ASC' },
+      where: {
+        sale_id: saleId,
+      },
+    });
+
+    return serviceSales;
   }
 
   public async filter(
