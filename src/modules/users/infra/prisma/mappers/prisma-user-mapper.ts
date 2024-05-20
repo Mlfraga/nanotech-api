@@ -5,7 +5,7 @@ import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import { Profile } from '@modules/profiles/infra/entities/Profile';
 import { Company } from '@modules/companies/infra/entities/Company';
 
-export type PrismaUnitiesProvider = Prisma.usersGetPayload<{
+export type PrismaUsersProvider = Prisma.usersGetPayload<{
   include: {
     profiles: {
       include: {
@@ -26,7 +26,7 @@ export class PrismaUserMapper {
     };
   }
 
-  static toDomain(raw: PrismaUnitiesProvider) {
+  static toDomain(raw: PrismaUsersProvider) {
     return new User({
       enabled: raw.enabled,
       first_login: raw.first_login,

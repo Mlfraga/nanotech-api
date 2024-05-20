@@ -1,5 +1,5 @@
 import ICreateWhatsappNumberDTO from '../dtos/ICreateWhatsappNumberDTO';
-import WhatsappNumber from '../infra/typeorm/entities/WhatsappNumber';
+import { WhatsappNumber } from '../infra/entities/WhatsappNumber';
 
 export default interface IWhatsappNumberRepository {
   find(): Promise<WhatsappNumber[] | undefined>;
