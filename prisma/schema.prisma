@@ -119,6 +119,16 @@ model sales_service_providers {
   sales                       sales    @relation(fields: [sale_id], references: [id], onDelete: Cascade, map: "ServiceProviderSale")
 }
 
+model service_group {
+  id         String     @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String     @db.VarChar
+  decription String?    @db.VarChar
+  image_url  String?    @db.VarChar
+  created_at DateTime   @default(now()) @db.Timestamp(6)
+  updated_at DateTime   @default(now()) @db.Timestamp(6)
+  services   services[]
+}
+
 model services {
   id                String           @id(map: "PK_ba2d347a3168a296416c6c5ccb2") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name              String           @db.VarChar
@@ -126,11 +136,13 @@ model services {
   enabled           Boolean          @default(true)
   created_at        DateTime         @default(now()) @db.Timestamp(6)
   updated_at        DateTime         @default(now()) @db.Timestamp(6)
+  service_group_id  String?          @db.Uuid
   company_id        String?          @db.Uuid
   company_price     Decimal?         @db.Decimal
   commission_amount Decimal?         @db.Decimal
   company_prices    company_prices[]
   companies         companies?       @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyServices")
+  service_group     service_group?   @relation(fields: [service_group_id], references: [id], onDelete: Cascade, map: "ServiceGroupServices")
   services_sales    services_sales[]
 }
 
