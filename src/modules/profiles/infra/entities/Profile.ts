@@ -9,7 +9,7 @@ export interface ProfileProps {
   company_id?: string;
   company?: Company;
   user_id: string;
-  user: User;
+  user?: User;
   unit_id?: string;
   unit?: Unit;
   updated_at: Date;
@@ -64,11 +64,11 @@ export class Profile {
     this.props.user_id = user_id;
   }
 
-  public get user(): User{
+  public get user(): User | undefined {
     return this.props.user;
   }
 
-  public set user(user: User){
+  public set user(user: User | undefined){
     this.props.user = user;
   }
 

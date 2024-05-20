@@ -3,8 +3,9 @@ import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 
 export interface UserProps {
-  telephone: string;
+  email: string;
   username: string;
+  telephone: string;
   password: string;
   role:
     | 'SELLER'
@@ -15,6 +16,8 @@ export interface UserProps {
     | 'SERVICE_PROVIDER';
   first_login: boolean;
   enabled: boolean;
+  pix_key_type?: "CPF" | "PHONE" | "EMAIL" | "RANDOM";
+  pix_key?: string;
   profile?: Profile;
   updated_at: Date;
   created_at: Date;
@@ -32,6 +35,10 @@ export class User {
     this._id = id ?? randomUUID();
   }
 
+  public get id(): string{
+    return this._id;
+  }
+
   public get telephone(): string{
     return this.props.telephone;
   }
@@ -46,6 +53,30 @@ export class User {
 
   public set username(username: string){
     this.props.username = username;
+  }
+
+  public get email(): string{
+    return this.props.email;
+  }
+
+  public set pix_key_type(pix_key_type: "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined){
+    this.props.pix_key_type = pix_key_type;
+  }
+
+  public get pix_key_type(): "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined {
+    return this.props.pix_key_type;
+  }
+
+  public set pix_key(pix_key: string | undefined){
+    this.props.pix_key = pix_key;
+  }
+
+  public get pix_key(): string | undefined {
+    return this.props.pix_key;
+  }
+
+  public set email(email: string){
+    this.props.email = email;
   }
 
   public get password(): string{
