@@ -1,14 +1,15 @@
 import { Company } from '@modules/companies/infra/entities/Company';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
+import Service from '../typeorm/entities/Service';
 
 export interface ServiceGroupProps {
   name: string;
-  price: number;
   decription: string | null;
   image_url: string | null;
   created_at: Date;
   updated_at: Date;
+  services?: Service[];
 }
 
 export class ServiceGroup {
@@ -65,5 +66,13 @@ export class ServiceGroup {
 
   public set updated_at(updated_at: Date){
     this.props.updated_at = updated_at;
+  }
+
+  public get services(): Service[] | undefined{
+    return this.props.services;
+  }
+
+  public set services(services: Service[] | undefined){
+    this.props.services = services;
   }
 }

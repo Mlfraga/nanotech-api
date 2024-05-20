@@ -1,5 +1,5 @@
 import ICreateServiceSaleDTO from '../dtos/ICreateServiceSaleDTO';
-import ServiceSale from '../infra/typeorm/entities/ServiceSale';
+import { ServiceSale } from '../infra/entities/ServiceSale';
 
 export default interface IServiceSaleRepository {
   find(): Promise<ServiceSale[] | undefined>;
