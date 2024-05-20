@@ -1,5 +1,5 @@
 import ICreateServiceDTO from '../dtos/ICreateServiceDTO';
-import Service from '../infra/typeorm/entities/Service';
+import { Service } from '../infra/entities/Service';
 
 export default interface IServiceRepository {
   find(): Promise<Service[] | undefined>;

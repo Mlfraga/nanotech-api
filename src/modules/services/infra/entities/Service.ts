@@ -1,14 +1,17 @@
 import { Company } from '@modules/companies/infra/entities/Company';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
+import { ServiceGroup } from './ServiceGroup';
 
 export interface ServiceProps {
   name: string;
   price: number;
   enabled: boolean;
   company_price: number;
-  company_id: string | null;
-  company: Company | null;
+  company_id?: string;
+  service_group_id?: string;
+  service_group?: ServiceGroup;
+  company?: Company;
   created_at: Date;
   updated_at: Date;
 }
@@ -61,19 +64,19 @@ export class Service {
     this.props.company_price = company_price;
   }
 
-  public get company_id(): string | null{
+  public get company_id(): string | undefined{
     return this.props.company_id;
   }
 
-  public set company_id(company_id: string | null){
+  public set company_id(company_id: string | undefined){
     this.props.company_id = company_id;
   }
 
-  public get company(): Company | null{
+  public get company(): Company | undefined{
     return this.props.company;
   }
 
-  public set company(company: Company | null){
+  public set company(company: Company | undefined){
     this.props.company = company;
   }
 
@@ -83,6 +86,22 @@ export class Service {
 
   public set created_at(created_at: Date){
     this.props.created_at = created_at;
+  }
+
+  public get service_group_id(): string | undefined{
+    return this.props.service_group_id;
+  }
+
+  public set service_group_id(service_group_id: string | undefined){
+    this.props.service_group_id = service_group_id;
+  }
+
+  public get service_group(): ServiceGroup | undefined{
+    return this.props.service_group;
+  }
+
+  public set service_group(service_group: ServiceGroup | undefined){
+    this.props.service_group = service_group;
   }
 
   public get updated_at(): Date{
