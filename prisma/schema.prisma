@@ -70,7 +70,7 @@ model profiles {
   name                    String                    @db.VarChar
   company_id              String?                   @db.Uuid
   unit_id                 String?                   @db.Uuid
-  user_id                 String                    @db.Uuid
+  user_id                 String                    @unique @db.Uuid
   created_at              DateTime                  @default(now()) @db.Timestamp(6)
   updated_at              DateTime                  @default(now()) @db.Timestamp(6)
   companies               companies?                @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyProfile")
@@ -186,7 +186,7 @@ model users {
   updated_at   DateTime                 @default(now()) @db.Timestamp(6)
   pix_key_type users_pix_key_type_enum?
   pix_key      String?                  @db.VarChar
-  profiles     profiles[]
+  profiles     profiles?
 }
 
 model whatsapp_numbers {
