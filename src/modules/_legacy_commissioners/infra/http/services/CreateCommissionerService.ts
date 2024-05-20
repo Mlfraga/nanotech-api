@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import ICommissionerRepository from '@modules/commissioners/repositories/ICommissionerRepository';
+import ICommissionerRepository from '@modules/_legacy_commissioners/repositories/ICommissionerRepository';
 
 import Commissioner from '../../typeorm/entities/Commissioner';
 

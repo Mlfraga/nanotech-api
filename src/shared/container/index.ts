@@ -11,8 +11,8 @@ import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IW
 // import CarRepository from '../../modules/cars/infra/typeorm/repositories/CarRepository';
 import ICarRepository from '../../modules/cars/repositories/ICarRepository';
 // import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
-import CommissionerRepository from '../../modules/commissioners/infra/typeorm/repositories/CommissionerRepository';
-import ICommissionerRepository from '../../modules/commissioners/repositories/ICommissionerRepository';
+import CommissionerRepository from '../../modules/_legacy_commissioners/infra/typeorm/repositories/CommissionerRepository';
+import ICommissionerRepository from '../../modules/_legacy_commissioners/repositories/ICommissionerRepository';
 import CompanyRepository from '../../modules/companies/infra/typeorm/repositories/CompanyRepository';
 import ICompanyRepository from '../../modules/companies/repositories/ICompanyRepository';
 import CompanyPricesRepository from '../../modules/company_prices/infra/prisma/repositories/company-prices-repository';

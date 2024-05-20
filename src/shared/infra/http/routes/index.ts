@@ -1,6 +1,6 @@
 import express from 'express';
 
-import commissionersRouter from '@modules/commissioners/infra/http/routes/commissioners.routes';
+import commissionersRouter from '@modules/_legacy_commissioners/infra/http/routes/commissioners.routes';
 import companiesRouter from '@modules/companies/infra/http/routes/companies.routes';
 import companyPricesRouter from '@modules/company_prices/infra/http/routes/company_prices.routes';
 import profileRouter from '@modules/profiles/infra/http/routes/profile.routes';
@@ -35,6 +35,9 @@ routes.use('/services', servicesRouter);
 routes.use('/company-services', companyPricesRouter);
 routes.use('/sales', salesRouter);
 routes.use('/service-sales', servicesSalesRouter);
-routes.use('/commissioners', commissionersRouter);
+
+
+// LEGACY routes.use('/commissioners', commissionersRouter);
+
 
 export default routes;
