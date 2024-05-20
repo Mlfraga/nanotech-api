@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import IServiceRepository from '../../../repositories/IServiceRepository';
-import Service from '../../typeorm/entities/Service';
+import { Service } from '../../entities/Service';
 
 interface IRequest {
   id: string;

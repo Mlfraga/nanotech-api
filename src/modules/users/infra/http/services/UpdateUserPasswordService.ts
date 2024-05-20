@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import IHashProvider from '../../../providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '../../entities/User';
 
 interface IRequest {
   user_id: string;
@@ -30,9 +30,11 @@ class UpdateUserPasswordService {
 
     const passwordCrypt = await this.hashProvider.generateHash(newPassword);
 
-    await this.usersRepository.save({ ...userById, password: passwordCrypt });
+    userById.password = passwordCrypt;
 
-    return { ...userById, password: passwordCrypt };
+    await this.usersRepository.save(userById);
+
+    return userById;
   }
 }
 

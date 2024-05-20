@@ -4,7 +4,7 @@ import { Unit } from "../../entities/Unit";
 import IUnitRepository from "@modules/unities/repositories/IUnitRepository";
 import ICreateUnitDTO from "@modules/unities/dtos/ICreateUnitDTO";
 
-export default class UnitRepository implements IUnitRepository {
+export default class PrismaUnitRepository implements IUnitRepository {
   async find(): Promise<Unit[] | undefined> {
     const unities = await prismaDb.unities.findMany({
       orderBy: {

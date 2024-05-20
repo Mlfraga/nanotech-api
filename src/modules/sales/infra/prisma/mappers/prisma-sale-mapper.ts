@@ -18,7 +18,11 @@ export type PrismaSale = Prisma.salesGetPayload<{
         users: true,
       }
     },
-    unities: true,
+    unities: {
+      include: {
+        companies: true,
+      }
+    },
     persons: true,
     cars: true,
     services_sales: {

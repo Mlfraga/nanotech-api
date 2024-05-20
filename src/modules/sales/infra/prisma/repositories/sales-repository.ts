@@ -21,7 +21,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -53,7 +53,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -90,7 +90,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -138,7 +138,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -182,7 +182,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -220,7 +220,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -306,7 +306,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -394,7 +394,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -482,7 +482,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {
@@ -565,7 +565,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
         unities: true,
         persons: true,
         cars: true,
-        services: {
+        services_sales: {
           include: {
             service: {
               include: {

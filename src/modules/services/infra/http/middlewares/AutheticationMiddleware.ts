@@ -4,7 +4,7 @@ import JWT from 'jsonwebtoken';
 
 import AppError from '@shared/errors/AppError';
 
-import User from '@modules/users/infra/typeorm/entities/User';
+import { User } from '@modules/users/infra/entities/User';
 
 dotenv.config();
 
@@ -115,8 +115,10 @@ class AuthenticationMiddleware {
         throw new AppError('SECRET_KEY_INVALID.', 403);
       }
 
-      request.user.user = user as User;
-
+      request.user = {
+        id: (user as User).id,
+        profile_id: (user as User)?.profile?.id ?? undefined,
+      };
       next();
     });
   }

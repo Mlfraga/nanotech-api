@@ -1,6 +1,4 @@
-import ICreateProfileDTO from "@modules/profiles/dtos/ICreateProfileDTO";
 import IServiceProviderRepository from "@modules/service_providers/repositories/IServiceProviderRepository";
-import { users_role_enum } from "@prisma/client";
 import { prismaDb } from "@shared/infra/http/server";
 import { ServiceProvider } from "../../entities/ServiceProvider";
 import { ServiceProviderMapper } from "../mappers/service-provider-mapper";
@@ -18,7 +16,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
@@ -38,7 +44,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
@@ -60,7 +74,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
@@ -96,7 +118,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
@@ -118,7 +148,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
@@ -139,12 +177,21 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 
     return ServiceProviderMapper.toDomain(serviceProvider);
   }
+
   public async save(saleServiceProvider: ServiceProvider): Promise<ServiceProvider>{
     const serviceProvider = await prismaDb.sales_service_providers.update({
       where: {
@@ -158,7 +205,15 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
             companies: true,
           }
         },
-        sales: true,
+        sales: {
+          include: {
+            persons: true,
+            cars: true,
+            profiles: true,
+            sales_service_providers: true,
+            unities: true,
+          }
+        },
       }
     });
 

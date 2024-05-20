@@ -3,8 +3,10 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import ServiceRepository from '../../../../services/infra/typeorm/repositories/ServiceRepository';
-import CompanyPricesRepository from '../../typeorm/repositories/CompanyPricesRepository';
+import ServiceRepository from '../../../../services/infra/prisma/repositories/service-provider-repository';
+import CompanyPricesRepository from '../../prisma/repositories/company-prices-repository';
+import { CompanyPricesViewModel } from '../../view-models/company-prices-view-model';
+import { Service } from '@modules/services/infra/entities/Service';
 
 export default class CompanyPricesController {
   async store(request: Request, response: Response) {
@@ -19,7 +21,7 @@ export default class CompanyPricesController {
       throw new AppError('No company found with this ID.');
     }
 
-    const companiesUpdated = [];
+    const companiesUpdated: Service[] = [];
 
     for (const service of services) {
       const serviceById = await serviceRepository.findById(service.serviceId);
@@ -38,6 +40,6 @@ export default class CompanyPricesController {
       }
     }
 
-    return response.json(companiesUpdated);
+    return response.json(CompanyPricesViewModel.toHttp(companiesUpdated));
   }
 }

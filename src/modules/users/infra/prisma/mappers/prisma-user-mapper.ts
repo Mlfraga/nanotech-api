@@ -43,6 +43,7 @@ export class PrismaUserMapper {
         profile: new Profile({
           name: raw.profiles.name,
           user_id: raw.profiles.user_id,
+          user: {} as User,
           company_id: raw.profiles.company_id ?? undefined,
           created_at: raw.profiles.created_at,
           unit_id: raw.profiles.unit_id ?? undefined,

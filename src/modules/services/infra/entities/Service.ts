@@ -8,6 +8,7 @@ export interface ServiceProps {
   price: number;
   enabled: boolean;
   company_price: number;
+  commission_amount?: number;
   company_id?: string;
   service_group_id?: string;
   service_group?: ServiceGroup;
@@ -78,6 +79,14 @@ export class Service {
 
   public set company(company: Company | undefined){
     this.props.company = company;
+  }
+
+  public get commission_amount(): number | undefined{
+    return this.props.commission_amount;
+  }
+
+  public set commission_amount(commission_amount: number | undefined){
+    this.props.commission_amount = commission_amount;
   }
 
   public get created_at(): Date{

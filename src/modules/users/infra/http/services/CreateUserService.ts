@@ -3,12 +3,12 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
-import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import { Profile } from '@modules/profiles/infra/entities/Profile';
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 
 import IHashProvider from '../../../providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '@modules/users/infra/entities/User';
 
 interface IRequest {
   username: string;

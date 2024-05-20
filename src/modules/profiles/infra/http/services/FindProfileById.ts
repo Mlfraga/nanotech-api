@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 
-import Profile from '../../typeorm/entities/Profile';
+import {Profile} from '../../entities/Profile';
 
 interface IRequest {
   id: string;

@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import { Profile } from '@modules/profiles/infra/entities/Profile';
 
 import IUsersRepository from '../../../repositories/IUsersRepository';
 
@@ -32,7 +32,13 @@ class ShowUserService {
       throw new AppError('This user does not exists.');
     }
 
-    return user;
+    return {
+      role: user.role,
+      email: user.email,
+      enabled: user.enabled,
+      username: user.username,
+      profile: user.profile as Profile,
+    };
   }
 }
 

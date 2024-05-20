@@ -1,4 +1,3 @@
-import { Company } from '@modules/companies/infra/entities/Company';
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 import Service from '../typeorm/entities/Service';

@@ -11,7 +11,7 @@ import IServiceSaleRepository from '@modules/services_sales/repositories/IServic
 import IServiceRepository from '@modules/services/repositories/IServiceRepository';
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
-import ServiceSale from '../../typeorm/entities/ServiceSale';
+import { ServiceSale } from '../../entities/ServiceSale';
 
 interface IRequest {
   isReferred: boolean;
@@ -98,15 +98,13 @@ class CreateServicesSaleService {
             }),
         });
 
+        createdServiceSale.service = serviceById;
+
         if (isServiceReferred) {
-          console.log('createdServiceSale: ', createdServiceSale);
-          referredServices.push({
-            ...createdServiceSale,
-            service: serviceById,
-          });
+          referredServices.push(createdServiceSale);
         }
 
-        return { ...createdServiceSale, service: serviceById };
+        return createdServiceSale;
       },
     );
 
@@ -178,7 +176,7 @@ ${referralServicesMessageData.companyName}`;
     }
 
     const createdSaleMessageData = {
-      saleNumber: `${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
+      saleNumber: `${saleById?.seller?.company?.client_identifier ?? ''}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
       availabilityDate: format(
         addHours(new Date(String(saleById?.availability_date)), -3),
         "dd'/'MM'/'yyyy '-' HH:mm'h'",
@@ -195,7 +193,7 @@ ${referralServicesMessageData.companyName}`;
         { locale: ptBR },
       ),
       seller: saleById?.seller.name,
-      company: saleById?.seller.company.name,
+      company: saleById?.seller?.company?.name ?? '',
       unit: saleById?.unit?.name,
       car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate}`,
       comments: saleById?.comments ? saleById?.comments : ' ',
@@ -203,10 +201,10 @@ ${referralServicesMessageData.companyName}`;
 
     const createdSaleMessage = `*Novo pedido realizado:*\n\n*n°:* ${createdSaleMessageData.saleNumber}\n\n*Data de disponibilidade:* ${createdSaleMessageData.availabilityDate}\n\n*Data de entrega:* ${createdSaleMessageData.deliveryDate}\n\n*Data do registro da venda:* ${createdSaleMessageData.requestDate}\n\n*Vendedor(a):* ${createdSaleMessageData.seller}\n\n*Concessionária:* ${createdSaleMessageData.company}\n\n*Unidade:* ${createdSaleMessageData.unit}\n\n*Carro:* ${createdSaleMessageData.car}\n\n*Serviços:*\n${servicesMessage}\n\n*Observações:* ${createdSaleMessageData.comments} `;
 
-    const companyWhatsapNumbers =
+    const companyWhatsapNumbers = saleById.seller.company_id ?
       await this.whatsappNumberRepository.findByCompany(
         saleById.seller.company_id,
-      );
+      ) : [];
     const globalWhatsappRecipients =
       await this.whatsappNumberRepository.findAllGlobalNumbers();
 

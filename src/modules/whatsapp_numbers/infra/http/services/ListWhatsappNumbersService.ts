@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import IWhatsappNumberRepository from '../../../repositories/IWhatsappNumberRepository';
-import WhatsappNumber from '../../typeorm/entities/WhatsappNumber';
+import { WhatsappNumber } from '../../entities/WhatsappNumber';
 
 @injectable()
 class ListWhatsappNumbersService {

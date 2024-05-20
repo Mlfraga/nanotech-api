@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import IServiceRepository from '../../../repositories/IServiceRepository';
-import Service from '../../typeorm/entities/Service';
+import { Service } from '../../entities/Service';
 
 interface IRequest {
   name: string;

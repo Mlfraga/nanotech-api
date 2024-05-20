@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import IUnitRepository from '../../../repositories/IUnitRepository';
-import Unit from '../../typeorm/entities/Unit';
+import { Unit } from '../../entities/Unit';
 
 interface IUpdateUnitServiceParams {
   id: string;

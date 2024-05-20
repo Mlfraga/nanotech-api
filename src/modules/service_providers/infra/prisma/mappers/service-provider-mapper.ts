@@ -6,6 +6,9 @@ import { User } from '@modules/users/infra/entities/User';
 import { Company } from '@modules/companies/infra/entities/Company';
 import { Profile } from '@modules/profiles/infra/entities/Profile';
 import ICreateServiceProviderDTO from '@modules/service_providers/dtos/ICreateServiceProviderDTO';
+import { Person } from '@modules/persons/infra/entities/Person';
+import { Car } from '@modules/cars/infra/entities/Car';
+import { Unit } from '@modules/unities/infra/entities/Unit';
 
 export type PrismaServiceProvider = Prisma.sales_service_providersGetPayload<{
   include: {
@@ -15,7 +18,15 @@ export type PrismaServiceProvider = Prisma.sales_service_providersGetPayload<{
         companies: true,
       }
     },
-    sales: true,
+    sales: {
+      include: {
+        persons: true,
+        cars: true,
+        profiles: true,
+        sales_service_providers: true,
+        unities: true,
+      }
+    },
   };
 }>;
 
@@ -29,6 +40,12 @@ export class ServiceProviderMapper {
   }
 
   static toDomain(raw: PrismaServiceProvider) {
+    const customer = new Person({
+      name: raw.sales.persons.name,
+      cpf: raw.sales.persons.cpf,
+      cars: [],
+    }, raw.sales.persons.id);
+
     return new ServiceProvider(
       {
         sale_id: raw.sale_id,
@@ -56,6 +73,55 @@ export class ServiceProviderMapper {
           services_sales: [],
           service_providers: [],
           partner_external_id: raw.sales.partner_external_id,
+          person: customer,
+          car: new Car({
+            brand: raw.sales.cars.brand,
+            model: raw.sales.cars.model,
+            color: raw.sales.cars.color,
+            person_id: raw.sales.cars.person_id,
+            plate: raw.sales.cars.plate,
+            created_at: raw.sales.cars.created_at,
+            updated_at: raw.sales.cars.updated_at,
+            person: customer,
+          }, raw.sales.cars.id),
+          seller: new Profile({
+            name: raw.profiles.name,
+            user_id: raw.profiles.user_id,
+            user: new User({
+              enabled: raw.profiles.users.enabled,
+              first_login: raw.profiles.users.first_login,
+              password: raw.profiles.users.password,
+              role: raw.profiles.users.role,
+              email: raw.profiles.users.email,
+              pix_key: raw.profiles.users.pix_key ?? undefined,
+              pix_key_type: raw.profiles.users.pix_key_type ?? undefined,
+              username: raw.profiles.users.username,
+              created_at: raw.profiles.users.created_at,
+              updated_at: raw.profiles.users.updated_at,
+              telephone: raw.profiles.users.telephone,
+            }, raw.profiles.users.id),
+            company_id: raw.profiles.company_id ?? undefined,
+            ...(raw.profiles.companies && {company: new Company({
+              name: raw.profiles.companies.name,
+              cnpj: raw.profiles.companies.cnpj,
+              client_identifier: raw.profiles.companies.client_identifier,
+              unities: [],
+              created_at: raw.profiles.companies.created_at,
+              updated_at: raw.profiles.companies.updated_at,
+              telephone: raw.profiles.companies.telephone,
+            }, raw.profiles.companies.id)}),
+            created_at: raw.profiles.created_at,
+            unit_id: raw.profiles.unit_id ?? undefined,
+            updated_at: raw.profiles.updated_at,
+          }, raw.profiles.id),
+          unit: new Unit({
+            name: raw.sales.unities.name,
+            company_id: raw.sales.unities.company_id,
+            created_at: raw.sales.unities.created_at,
+            updated_at: raw.sales.unities.updated_at,
+            client_identifier: raw.sales.unities.client_identifier,
+            telephone: raw.sales.unities.telephone,
+          }, raw.sales.unities.id),
         }, raw.sales.id),
         provider: new Profile({
           name: raw.profiles.name,

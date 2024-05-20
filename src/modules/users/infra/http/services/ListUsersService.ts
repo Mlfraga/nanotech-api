@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '../../entities/User';
 
 interface IListUsersServiceParams {
   role?: string;

@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import IUnitRepository from '../../../repositories/IUnitRepository';
-import Unit from '../../typeorm/entities/Unit';
+import { Unit } from '../../entities/Unit';
 
 interface IRequest {
   company_id: string;

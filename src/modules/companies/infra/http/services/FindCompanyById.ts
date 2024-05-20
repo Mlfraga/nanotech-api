@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
 
-import Company from '../../typeorm/entities/Company';
+import { Company } from '../../entities/Company';
 
 type IListCompaniesResponse = Company;
 

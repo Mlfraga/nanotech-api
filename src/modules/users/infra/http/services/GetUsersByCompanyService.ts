@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import { Profile } from '@modules/profiles/infra/entities/Profile';
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 
 interface IRequest {
@@ -19,7 +19,7 @@ class GetUsersByCompanyService {
   public async execute({ user_id }: IRequest): Promise<Profile[] | undefined> {
     const profileByUserId = await this.profileRepository.findByUser(user_id);
 
-    if (!profileByUserId) {
+    if (!profileByUserId || !profileByUserId.company_id) {
       throw new AppError('Profile was not found', 404);
     }
 
