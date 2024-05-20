@@ -21,7 +21,7 @@ export type PrismaSale = Prisma.salesGetPayload<{
     unities: true,
     persons: true,
     cars: true,
-    services: {
+    services_sales: {
       include: {
         service: {
           include: {
@@ -96,7 +96,7 @@ export class PrismaSaleMapper {
             created_at: raw.profiles.users.created_at,
             updated_at: raw.profiles.users.updated_at,
             telephone: raw.profiles.users.telephone,
-          }),
+          }, raw.profiles.users.id),
           company_id: raw.profiles.company_id ?? undefined,
           ...(raw.profiles.companies && {company: new Company({
             name: raw.profiles.companies.name,
@@ -106,7 +106,7 @@ export class PrismaSaleMapper {
             created_at: raw.profiles.companies.created_at,
             updated_at: raw.profiles.companies.updated_at,
             telephone: raw.profiles.companies.telephone,
-          })}),
+          }, raw.profiles.companies.id)}),
           created_at: raw.profiles.created_at,
           unit_id: raw.profiles.unit_id ?? undefined,
           updated_at: raw.profiles.updated_at,
@@ -121,7 +121,7 @@ export class PrismaSaleMapper {
           telephone: raw.unities.telephone,
         }, raw.unities.id),
         service_providers: [],
-        services_sales: raw.services.map(service => new ServiceSale({
+        services_sales: raw.services_sales.map(service => new ServiceSale({
           service_id: service.service_id,
           service: new Service({
             name: service.service.name,

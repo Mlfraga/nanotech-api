@@ -23,6 +23,10 @@ export class ServiceProvider {
     this._id = id ?? randomUUID();
   }
 
+  public get id(): string {
+    return this._id;
+  }
+
   public get sale_id(): string{
     return this.props.sale_id;
   }

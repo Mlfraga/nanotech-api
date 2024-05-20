@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 
 export interface PersonProps {
   name: string;
-  cpf: string;
+  cpf: string | null;
   cars: Car[];
   updated_at: Date;
   created_at: Date;
@@ -34,11 +34,11 @@ export class Person {
     this.props.name = name;
   }
 
-  public get cpf(): string{
+  public get cpf(): string | null{
     return this.props.cpf;
   }
 
-  public set cpf(cpf: string){
+  public set cpf(cpf: string | null){
     this.props.cpf = cpf;
   }
 

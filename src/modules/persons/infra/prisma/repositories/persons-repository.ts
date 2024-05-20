@@ -65,7 +65,10 @@ export default class PrismaPersonPricesRepository implements IPersonRepository {
       where: {
         id: person.id,
       },
-      data: PrismaPersonMapper.toPrisma(person),
+      data: PrismaPersonMapper.toPrisma({
+        cpf: person.cpf,
+        name: person.name,
+      }),
       include: {cars: true}
     });
 

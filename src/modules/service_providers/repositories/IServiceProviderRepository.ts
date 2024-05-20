@@ -1,14 +1,14 @@
 import ICreateServiceProviderDTO from '../dtos/ICreateServiceProviderDTO';
-import SaleServiceProvider from '../infra/typeorm/entities/SaleServiceProvider';
+import { ServiceProvider } from '../infra/entities/ServiceProvider';
 
 export default interface IServiceProviderRepository {
-  find(): Promise<SaleServiceProvider[] | undefined>;
-  findById(id: string): Promise<SaleServiceProvider | undefined>;
-  findBySale(sale_id: string): Promise<SaleServiceProvider[]>;
-  findByProviderId(provider_id: string,listFrom?: 'yesterday' | 'today' | 'tomorrow',): Promise<SaleServiceProvider[]>;
-  findByProviderAndSaleId(provider_id: string,sale_id: string,): Promise<SaleServiceProvider | undefined>;
-  create(data: ICreateServiceProviderDTO): Promise<SaleServiceProvider>;
-  save(saleServiceProvider: SaleServiceProvider): Promise<SaleServiceProvider>;
+  find(): Promise<ServiceProvider[] | undefined>;
+  findById(id: string): Promise<ServiceProvider | undefined>;
+  findBySale(sale_id: string): Promise<ServiceProvider[]>;
+  findByProviderId(provider_id: string,listFrom?: 'yesterday' | 'today' | 'tomorrow',): Promise<ServiceProvider[]>;
+  findByProviderAndSaleId(provider_id: string,sale_id: string,): Promise<ServiceProvider | undefined>;
+  create(data: ICreateServiceProviderDTO): Promise<ServiceProvider>;
+  save(saleServiceProvider: ServiceProvider): Promise<ServiceProvider>;
   delete(id: string): Promise<void>;
   deleteBySale(sale_id: string): Promise<void>;
 }

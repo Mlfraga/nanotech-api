@@ -3,42 +3,180 @@ import IServiceProviderRepository from "@modules/service_providers/repositories/
 import { users_role_enum } from "@prisma/client";
 import { prismaDb } from "@shared/infra/http/server";
 import { ServiceProvider } from "../../entities/ServiceProvider";
-import { PrismaProfileMapper } from "../mappers/prisma-profile-mapper";
+import { ServiceProviderMapper } from "../mappers/service-provider-mapper";
+import { addDays, endOfDay, startOfDay } from "date-fns";
+import ICreateServiceProviderDTO from "@modules/service_providers/dtos/ICreateServiceProviderDTO";
+
 
 export default class PrismaServiceProviderRepository implements IServiceProviderRepository {
-  public async find(): Promise<SaleServiceProvider[] | undefined>{
+  public async find(): Promise<ServiceProvider[] | undefined>{
     const saleServiceProviders = await prismaDb.sales_service_providers.findMany({
       include: {
-        provider: true,
-        sale: true,
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
       }
     });
 
+    const formattedServiceProviders = saleServiceProviders.map(saleServiceProvider => ServiceProviderMapper.toDomain(saleServiceProvider));
 
+    return formattedServiceProviders;
+  }
+  public async findById(id: string): Promise<ServiceProvider | undefined>{
+    const serviceProvider = await prismaDb.sales_service_providers.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
+
+    if(!serviceProvider) {
+      return undefined;
+    }
+
+    return ServiceProviderMapper.toDomain(serviceProvider);
+  }
+  public async findBySale(sale_id: string): Promise<ServiceProvider[]>{
+    const serviceProviders = await prismaDb.sales_service_providers.findMany({
+      where: {
+        sale_id,
+      },
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
+
+    const formattedServiceProviders = serviceProviders.map(serviceProvider => ServiceProviderMapper.toDomain(serviceProvider));
+
+    return formattedServiceProviders;
+  }
+  public async findByProviderId(provider_id: string, listFrom?: 'yesterday' | 'today' | 'tomorrow',): Promise<ServiceProvider[]>{
+    let dateFilterCriterias = {
+      today: {
+        lte: new Date(startOfDay(new Date())),
+        gte: new Date(endOfDay(new Date())),
+      },
+      yesterday: {
+        lte: new Date(addDays(startOfDay(new Date()), -1),),
+        gte: new Date(addDays(endOfDay(new Date()), -1),),
+      },
+      tomorrow: {
+        lte: new Date(addDays(startOfDay(new Date()), 1),),
+        gte: new Date(addDays(endOfDay(new Date()), 1),)
+      },
+    };
+
+    const serviceProviders = await prismaDb.sales_service_providers.findMany({
+      where: {
+        service_provider_profile_id: provider_id,
+        date_to_be_done: dateFilterCriterias[listFrom || 'today']
+      },
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
+
+    const formattedServiceProviders = serviceProviders.map(serviceProvider => ServiceProviderMapper.toDomain(serviceProvider));
+
+    return formattedServiceProviders;
 
   }
-  public async findById(id: string): Promise<SaleServiceProvider | undefined>{
+  public async findByProviderAndSaleId(provider_id: string, sale_id: string,): Promise<ServiceProvider | undefined>{
+    const serviceProvider = await prismaDb.sales_service_providers.findFirst({
+      where: {
+        service_provider_profile_id: provider_id,
+        sale_id,
+      },
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
+
+    if(!serviceProvider) {
+      return undefined;
+    }
+
+    return ServiceProviderMapper.toDomain(serviceProvider);
 
   }
-  public async findBySale(sale_id: string): Promise<SaleServiceProvider[]>{
+  public async create(data: ICreateServiceProviderDTO): Promise<ServiceProvider>{
+    const serviceProvider = await prismaDb.sales_service_providers.create({
+      data: ServiceProviderMapper.toPrisma(data),
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
 
+    return ServiceProviderMapper.toDomain(serviceProvider);
   }
-  public async findByProviderId(provider_id: string,listFrom?: 'yesterday' | 'today' | 'tomorrow',): Promise<SaleServiceProvider[]>{
+  public async save(saleServiceProvider: ServiceProvider): Promise<ServiceProvider>{
+    const serviceProvider = await prismaDb.sales_service_providers.update({
+      where: {
+        id: saleServiceProvider.id,
+      },
+      data: ServiceProviderMapper.toPrisma(saleServiceProvider),
+      include: {
+        profiles: {
+          include: {
+            users: true,
+            companies: true,
+          }
+        },
+        sales: true,
+      }
+    });
 
-  }
-  public async findByProviderAndSaleId(provider_id: string,sale_id: string,): Promise<SaleServiceProvider | undefined>{
-
-  }
-  public async create(data: ICreateServiceProviderDTO): Promise<SaleServiceProvider>{
-
-  }
-  public async save(saleServiceProvider: SaleServiceProvider): Promise<SaleServiceProvider>{
+    return ServiceProviderMapper.toDomain(serviceProvider);
 
   }
   public async delete(id: string): Promise<void>{
-
+    await prismaDb.sales_service_providers.delete({
+      where: {
+        id,
+      }
+    });
   }
   public async deleteBySale(sale_id: string): Promise<void>{
-
+    await prismaDb.sales_service_providers.deleteMany({
+      where: {
+        sale_id,
+      }
+    });
   }
 }

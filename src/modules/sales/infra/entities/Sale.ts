@@ -21,13 +21,13 @@ export interface SaleProps {
   partner_external_id: string | null;
   techinical_comments: string | null;
   seller_id: string;
-  seller: Profile;
+  seller?: Profile;
   unit_id: string;
-  unit: Unit;
+  unit?: Unit;
   person_id: string;
-  person: Person;
+  person?: Person;
   car_id: string;
-  car: Car;
+  car?: Car;
   services_sales: ServiceSale[];
   service_providers: ServiceProvider[];
   updated_at: Date;
@@ -147,11 +147,11 @@ export class Sale {
     this.props.seller_id = seller_id;
   }
 
-  public get seller(): Profile{
+  public get seller(): Profile | undefined{
     return this.props.seller;
   }
 
-  public set seller(seller: Profile){
+  public set seller(seller: Profile | undefined){
     this.props.seller = seller;
   }
 
@@ -163,11 +163,11 @@ export class Sale {
     this.props.unit_id = unit_id;
   }
 
-  public get unit(): Unit{
+  public get unit(): Unit | undefined{
     return this.props.unit;
   }
 
-  public set unit(unit: Unit){
+  public set unit(unit: Unit | undefined){
     this.props.unit =unit ;
   }
 
@@ -179,11 +179,11 @@ export class Sale {
     this.props.person_id = person_id;
   }
 
-  public get person(): Person{
+  public get person(): Person | undefined{
     return this.props.person;
   }
 
-  public set person(person: Person){
+  public set person(person: Person | undefined){
     this.props.person = person;
   }
 
@@ -203,11 +203,11 @@ export class Sale {
     this.props.partner_external_id = partner_external_id;
   }
 
-  public get car(): Car{
+  public get car(): Car | undefined{
     return this.props.car;
   }
 
-  public set car(car: Car){
+  public set car(car: Car | undefined){
     this.props.car = car;
   }
 
