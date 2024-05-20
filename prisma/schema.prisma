@@ -1,6 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
+  provider        = "prisma-client-js"
 }
 
 datasource db {
@@ -27,7 +27,7 @@ model companies {
   name              String             @db.VarChar
   cnpj              String             @db.VarChar
   telephone         String             @db.VarChar
-  client_identifier String             @db.VarChar
+  client_identifier String             @unique @db.VarChar
   created_at        DateTime           @default(now()) @db.Timestamp(6)
   updated_at        DateTime           @default(now()) @db.Timestamp(6)
   company_prices    company_prices[]
@@ -55,13 +55,14 @@ model migrations {
 }
 
 model persons {
-  id         String   @id(map: "PK_74278d8812a049233ce41440ac7") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  cpf        String   @db.VarChar
-  name       String   @db.VarChar
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @default(now()) @db.Timestamp(6)
-  cars       cars[]
-  sales      sales[]
+  id           String   @id(map: "PK_74278d8812a049233ce41440ac7") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  cpf          String?  @db.VarChar
+  phone_number String?  @db.VarChar
+  name         String   @db.VarChar
+  created_at   DateTime @default(now()) @db.Timestamp(6)
+  updated_at   DateTime @default(now()) @db.Timestamp(6)
+  cars         cars[]
+  sales        sales[]
 }
 
 model profiles {
@@ -106,6 +107,7 @@ model sales {
   profiles                profiles                      @relation(fields: [seller_id], references: [id], onDelete: Cascade, map: "SellerSale")
   unities                 unities                       @relation(fields: [unit_id], references: [id], onDelete: Cascade, map: "UnitSale")
   sales_service_providers sales_service_providers[]
+  services_sales          services_sales[]
 }
 
 model sales_service_providers {
@@ -129,6 +131,7 @@ model services {
   commission_amount Decimal?         @db.Decimal
   company_prices    company_prices[]
   companies         companies?       @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyServices")
+  services_sales    services_sales[]
 }
 
 model services_sales {
@@ -141,6 +144,8 @@ model services_sales {
   updated_at      DateTime  @default(now()) @db.Timestamp(6)
   commissioner_id String?   @db.Uuid
   profiles        profiles? @relation(fields: [commissioner_id], references: [id], onDelete: Cascade, map: "ServiceSaleCommissioner")
+  sale            sales     @relation(fields: [sale_id], references: [id], onDelete: Cascade, map: "ServiceSale")
+  service         services  @relation(fields: [service_id], references: [id], onDelete: Cascade, map: "SaleService")
 }
 
 model unities {
@@ -202,6 +207,13 @@ enum sales_status_enum {
   FINISHED
 }
 
+enum users_pix_key_type_enum {
+  CPF
+  PHONE
+  EMAIL
+  RANDOM
+}
+
 enum users_role_enum {
   ADMIN
   MANAGER
@@ -209,11 +221,4 @@ enum users_role_enum {
   NANOTECH_REPRESENTATIVE
   SERVICE_PROVIDER
   COMMISSIONER
-}
-
-enum users_pix_key_type_enum {
-  CPF
-  PHONE
-  EMAIL
-  RANDOM
 }

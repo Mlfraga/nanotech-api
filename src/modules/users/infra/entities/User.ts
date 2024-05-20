@@ -11,6 +11,7 @@ export interface UserProps {
     | 'MANAGER'
     | 'ADMIN'
     | 'NANOTECH_REPRESENTATIVE'
+    | 'COMMISSIONER'
     | 'SERVICE_PROVIDER';
   first_login: boolean;
   enabled: boolean;
@@ -55,11 +56,11 @@ export class User {
     this.props.password = password;
   }
 
-  public get role(): 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE' | 'SERVICE_PROVIDER'{
+  public get role(): 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE' | 'COMMISSIONER' | 'SERVICE_PROVIDER'{
     return this.props.role;
   }
 
-  public set role(role: 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE' | 'SERVICE_PROVIDER'){
+  public set role(role: 'SELLER' | 'MANAGER' | 'ADMIN' | 'NANOTECH_REPRESENTATIVE' | 'COMMISSIONER' | 'SERVICE_PROVIDER'){
     this.props.role = role;
   }
 

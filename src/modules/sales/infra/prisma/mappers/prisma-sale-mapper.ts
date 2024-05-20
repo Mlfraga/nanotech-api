@@ -70,6 +70,10 @@ export class PrismaSaleMapper {
         person_id: raw.person_id,
         person: customer,
         car_id: raw.car_id,
+        partner_external_id: raw.partner_external_id,
+        comments: raw.comments,
+        client_identifier: String(raw.client_identifier),
+        seller_id: raw.seller_id,
         car: new Car({
           brand: raw.cars.brand,
           model: raw.cars.model,
@@ -80,9 +84,6 @@ export class PrismaSaleMapper {
           updated_at: raw.cars.updated_at,
           person: customer,
         }, raw.cars.id),
-        comments: raw.comments,
-        client_identifier: String(raw.client_identifier),
-        seller_id: raw.seller_id,
         seller: new Profile({
           name: raw.profiles.name,
           user_id: raw.profiles.user_id,

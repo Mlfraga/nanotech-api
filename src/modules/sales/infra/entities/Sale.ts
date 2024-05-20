@@ -18,6 +18,7 @@ export interface SaleProps {
   cost_value: number;
   source: string;
   comments: string | null;
+  partner_external_id: string | null;
   techinical_comments: string | null;
   seller_id: string;
   seller: Profile;
@@ -192,6 +193,14 @@ export class Sale {
 
   public set car_id(car_id: string){
     this.props.car_id = car_id;
+  }
+
+  public get partner_external_id(): string | null{
+    return this.props.partner_external_id;
+  }
+
+  public set partner_external_id(partner_external_id: string | null){
+    this.props.partner_external_id = partner_external_id;
   }
 
   public get car(): Car{
