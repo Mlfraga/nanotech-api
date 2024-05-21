@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import ShowUnitsByCompanyService from '../services/ShowUnitsByCompanyService';
+import { UnitViewModel } from '../view-models/unities-view-model';
 
 export default class UnitController {
   async index(request: Request, response: Response) {
@@ -13,6 +14,8 @@ export default class UnitController {
 
     const units = await showUnitsByCompanyService.execute({ company_id });
 
-    return response.json(units);
+    const formattedUnities = units.map(unit => UnitViewModel.toHttp(unit));
+
+    return response.json(formattedUnities);
   }
 }

@@ -95,7 +95,7 @@ class ListSalesService {
   }: IRequest): Promise<IListSalesResponse> {
     const user = await this.userRepository.findById(user_id);
 
-    if (!user) {
+    if (!user || !user.profile) {
       throw new AppError('User not found.', 404);
     }
 
@@ -197,7 +197,7 @@ class ListSalesService {
       );
     } else {
       sales = await this.saleRepository.findByCompanyAndFinishedStatus(
-        user.profile.company_id,
+        user.profile.company_id as string,
         Number(page),
         {
           ...(filters.sellerId && { sellerId: String(filters.sellerId) }),

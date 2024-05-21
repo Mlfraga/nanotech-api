@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateServicesSaleService from '../services/CreateServicesSaleService';
 import SendServicesSaleMessageService from '../services/SendServicesSaleMessageService';
+import { ServiceSalesProviderViewModel } from '../view-models/services-sales-view-model';
 
 export default class ServicesSalesController {
   async store(request: Request, response: Response) {
@@ -18,7 +19,9 @@ export default class ServicesSalesController {
       referral_data,
     });
 
-    return response.json(createdServicesSale);
+    const formattedServiceSales = createdServicesSale.map(serviceSale => ServiceSalesProviderViewModel.toHttp(serviceSale));
+
+    return response.json(formattedServiceSales);
   }
 
   async sendMessage(request: Request, response: Response) {

@@ -80,7 +80,8 @@ class AuthenticateUserService {
     await this.cacheProvider.save('refresh-tokens', refreshTokens);
 
     if (user.first_login) {
-      await this.usersRepository.save({ ...user, first_login: false });
+      user.first_login = false;
+      await this.usersRepository.save(user);
     }
 
     return { user, access_token, refresh_token };

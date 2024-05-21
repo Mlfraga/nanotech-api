@@ -40,7 +40,7 @@ export default class CompanyController {
 
     const company = await findCompanyById.execute({ id });
 
-    return response.json(company);
+    return response.json(CompaniesViewModel.toHttp(company));
   }
 
   async store(request: Request, response: Response) {
@@ -55,7 +55,7 @@ export default class CompanyController {
       client_identifier,
     });
 
-    return response.json(company);
+    return response.json(CompaniesViewModel.toHttp(company));
   }
 
   async update(request: Request, response: Response) {
@@ -72,6 +72,6 @@ export default class CompanyController {
       client_identifier,
     });
 
-    return response.json(updatedCompany);
+    return response.json(CompaniesViewModel.toHttp(updatedCompany));
   }
 }

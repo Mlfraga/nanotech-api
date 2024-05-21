@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import GetUsersByCompanyService from '@modules/users/infra/http/services/GetUsersByCompanyService';
+import { UsersViewModel } from '../view-models/users-view-model';
+import { ProfileViewModel } from '@modules/profiles/infra/http/view-models/ProfileViewModel';
 
 export default class CompanyUsersController {
   async show(request: Request, response: Response) {
@@ -11,8 +13,10 @@ export default class CompanyUsersController {
       GetUsersByCompanyService,
     );
 
-    const createdUser = await getUsersByCompanyService.execute({ user_id });
+    const users = await getUsersByCompanyService.execute({ user_id });
 
-    return response.json(createdUser);
+    const formattedUsers = users.map(user => ProfileViewModel.toHttp(user));
+
+    return response.json(formattedUsers);
   }
 }

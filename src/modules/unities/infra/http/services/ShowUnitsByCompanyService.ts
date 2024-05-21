@@ -14,7 +14,7 @@ class ShowUnitsByCompanyService {
     private unitRepository: IUnitRepository,
   ) {}
 
-  public async execute({ company_id }: IRequest): Promise<Unit[] | undefined> {
+  public async execute({ company_id }: IRequest): Promise<Unit[]> {
     const units = await this.unitRepository.findByCompanyId(company_id);
 
     return units;

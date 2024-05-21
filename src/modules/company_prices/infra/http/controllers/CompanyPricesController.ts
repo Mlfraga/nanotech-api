@@ -5,8 +5,8 @@ import AppError from '@shared/errors/AppError';
 
 import ServiceRepository from '../../../../services/infra/prisma/repositories/service-provider-repository';
 import CompanyPricesRepository from '../../prisma/repositories/company-prices-repository';
-import { CompanyPricesViewModel } from '../../view-models/company-prices-view-model';
 import { Service } from '@modules/services/infra/entities/Service';
+import { ServicesViewModel } from '@modules/services/infra/http/view-models/services-view-model';
 
 export default class CompanyPricesController {
   async store(request: Request, response: Response) {
@@ -21,7 +21,7 @@ export default class CompanyPricesController {
       throw new AppError('No company found with this ID.');
     }
 
-    const companiesUpdated: Service[] = [];
+    const updatedServices: Service[] = [];
 
     for (const service of services) {
       const serviceById = await serviceRepository.findById(service.serviceId);
@@ -30,16 +30,19 @@ export default class CompanyPricesController {
         throw new AppError('No service found with this ID.');
       }
 
-      const serviceUpdated = await serviceRepository.save({
-        ...serviceById,
-        company_price: service.price,
-      });
+      serviceById.company_price = service.price;
+
+      const serviceUpdated = await serviceRepository.save(serviceById);
 
       if (serviceUpdated) {
-        companiesUpdated.push(serviceUpdated);
+        updatedServices.push(serviceUpdated);
       }
     }
 
-    return response.json(CompanyPricesViewModel.toHttp(companiesUpdated));
+    const formattedServices = updatedServices.map(service => {
+      return ServicesViewModel.toHttp(service);
+    });
+
+    return response.json(formattedServices);
   }
 }

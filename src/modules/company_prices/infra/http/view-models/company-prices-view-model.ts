@@ -1,4 +1,4 @@
-import { CompanyPrice } from '../../infra/entities/CompanyPrice';
+import { CompanyPrice } from '../../../infra/entities/CompanyPrice';
 
 export class CompanyPricesViewModel {
   static list(companyPrices: CompanyPrice[]) {

@@ -16,7 +16,7 @@ class GetUsersByCompanyService {
     private profileRepository: IProfileRepository,
   ) {}
 
-  public async execute({ user_id }: IRequest): Promise<Profile[] | undefined> {
+  public async execute({ user_id }: IRequest): Promise<Profile[]> {
     const profileByUserId = await this.profileRepository.findByUser(user_id);
 
     if (!profileByUserId || !profileByUserId.company_id) {

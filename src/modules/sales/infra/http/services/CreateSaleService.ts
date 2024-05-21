@@ -66,7 +66,7 @@ class CreateSaleService {
   }: ICreateSaleServiceParams): Promise<Sale> {
     const user = await this.userRepository.findById(user_id);
 
-    if (!user) {
+    if (!user || !user.profile) {
       throw new AppError('User not found.', 404);
     }
 

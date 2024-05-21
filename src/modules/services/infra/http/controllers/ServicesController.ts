@@ -6,6 +6,7 @@ import ToggleServiceEnabledService from '@modules/services/infra/http/services/T
 import CreateServiceService from '../services/CreateServicesService';
 import ListServicesByCompanyService from '../services/ListServicesByCompanyService';
 import UpdateServiceService from '../services/UpdateServiceService';
+import { ServicesViewModel } from '../view-models/services-view-model';
 
 export default class ServicesController {
   async index(request: Request, response: Response) {
@@ -21,7 +22,9 @@ export default class ServicesController {
       showDisabled: Boolean(showDisabled),
     });
 
-    return response.json(services);
+    const formattedServices = services.map(service => ServicesViewModel.toHttp(service));
+
+    return response.json(formattedServices);
   }
 
   async store(request: Request, response: Response) {
@@ -36,7 +39,7 @@ export default class ServicesController {
       commission_amount,
     });
 
-    return response.json(createdService);
+    return response.json(ServicesViewModel.toHttp(createdService));
   }
 
   async update(request: Request, response: Response) {
@@ -53,7 +56,7 @@ export default class ServicesController {
       commission_amount,
     });
 
-    return response.json(updatedService);
+    return response.json(ServicesViewModel.toHttp(updatedService));
   }
 
   async enable(request: Request, response: Response) {

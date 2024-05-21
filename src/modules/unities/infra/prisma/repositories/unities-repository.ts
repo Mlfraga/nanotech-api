@@ -31,7 +31,7 @@ export default class PrismaUnitRepository implements IUnitRepository {
     return UnitiesMapper.toDomain(unity);
   }
 
-  async findByCompanyId(company_id: string): Promise<Unit[] | undefined> {
+  async findByCompanyId(company_id: string): Promise<Unit[]> {
     const unities = await prismaDb.unities.findMany({
       where: {
         company_id
@@ -43,7 +43,7 @@ export default class PrismaUnitRepository implements IUnitRepository {
     return formattedUnities;
   }
 
-  async findByNameAndCompany(companyId: string, name: string): Promise<Unit[] | undefined> {
+  async findByNameAndCompany(companyId: string, name: string): Promise<Unit[]> {
     const unities = await prismaDb.unities.findMany({
       where: {
         company_id: companyId,

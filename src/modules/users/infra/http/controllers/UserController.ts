@@ -6,6 +6,8 @@ import ListUsersService from '@modules/users/infra/http/services/ListUsersServic
 import ShowUserService from '@modules/users/infra/http/services/ShowUserService';
 import ToggleUserEnabledService from '@modules/users/infra/http/services/ToggleUserEnabledService';
 import UpdateUserService from '@modules/users/infra/http/services/UpdateUserService';
+import { UsersViewModel } from '../view-models/users-view-model';
+import { ProfileViewModel } from '@modules/profiles/infra/http/view-models/ProfileViewModel';
 
 export default class UserController {
   async index(request: Request, response: Response) {
@@ -23,7 +25,9 @@ export default class UserController {
       user_id,
     });
 
-    return response.json(users);
+    const formattedUsers = users.map(user => UsersViewModel.toHttp(user));
+
+    return response.json(formattedUsers);
   }
 
   async store(request: Request, response: Response) {
@@ -40,7 +44,7 @@ export default class UserController {
 
     const createUserService = container.resolve(CreateUserService);
 
-    const createdUser = await createUserService.execute({
+    const signedInUser = await createUserService.execute({
       username,
       email,
       password: '12345678',
@@ -52,7 +56,12 @@ export default class UserController {
       companyId: company,
     });
 
-    return response.json(createdUser);
+    const formattedResponse = {
+      user: UsersViewModel.toHttp(signedInUser.user),
+      profile: ProfileViewModel.toHttp(signedInUser.profile),
+    }
+
+    return response.json(formattedResponse);
   }
 
   async signup(request: Request, response: Response) {
@@ -71,7 +80,12 @@ export default class UserController {
       companyId,
     });
 
-    return response.json(createdUser);
+    const formattedResponse = {
+      user: UsersViewModel.toHttp(createdUser.user),
+      profile: ProfileViewModel.toHttp(createdUser.profile),
+    }
+
+    return response.json(formattedResponse);
   }
 
   async update(request: Request, response: Response) {
@@ -95,7 +109,9 @@ export default class UserController {
 
     const user = await showUserService.execute({ id: String(request.user.id) });
 
-    return response.json(user);
+    const formattedUser = {...user, profile: ProfileViewModel.toHttp(user.profile)};
+
+    return response.json(formattedUser);
   }
 
   async disable(request: Request, response: Response) {

@@ -48,7 +48,7 @@ export default class ServiceSaleProviderController {
 
     const salesByProvider = await listSalesByProviderService.execute({
       listFrom: listFrom as 'yesterday' | 'today' | 'tomorrow',
-      profile_id: request.user.profile_id,
+      profile_id: request.user.profile_id as string,
     });
 
     return response.json(salesByProvider);
