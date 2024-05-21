@@ -7,7 +7,10 @@ import { PrismaCompanyMapper } from "../mappers/prisma-company-mapper";
 export default class PrismaCompaniesRepository implements ICompanyRepository {
   public async find(): Promise<Company[]> {
     const companies = await prismaDb.companies.findMany({
-      include: {unities: true}
+      orderBy: {
+        created_at: 'asc'
+      },
+      include: { unities: true }
     });
 
     const formattedCompanies = companies.map(company => PrismaCompanyMapper.toDomain(company));

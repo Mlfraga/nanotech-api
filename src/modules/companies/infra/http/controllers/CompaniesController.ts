@@ -11,7 +11,6 @@ import { CompaniesViewModel } from '../view-models/companies-view-model';
 export default class CompanyController {
   async index(request: Request, response: Response) {
     const listCompaniesService = container.resolve(ListCompaniesService);
-
     const companies = await listCompaniesService.execute();
 
     const formattedCompanies = companies.map(company => {

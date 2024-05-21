@@ -2,7 +2,7 @@ import ICreateWhatsappNumberDTO from '../dtos/ICreateWhatsappNumberDTO';
 import { WhatsappNumber } from '../infra/entities/WhatsappNumber';
 
 export default interface IWhatsappNumberRepository {
-  find(): Promise<WhatsappNumber[] | undefined>;
+  find(): Promise<WhatsappNumber[]>;
   findById(id: string): Promise<WhatsappNumber | undefined>;
   findByNumber(number: string): Promise<WhatsappNumber | undefined>;
   findByCompany(company_id: string): Promise<WhatsappNumber[]>;

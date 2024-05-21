@@ -9,7 +9,7 @@ export default class PrismaWhatsappNumbersRepository implements IWhatsappNumberR
     throw new Error("Method not implemented.");
   }
 
-  async find(): Promise<WhatsappNumber[] | undefined> {
+  async find(): Promise<WhatsappNumber[]> {
     const whatsappNumbers = await prismaDb.whatsapp_numbers.findMany();
 
     const formattedWhatsappNumbers = whatsappNumbers.map(whatsappNumber => PrismaWhatsappNumberMapper.toDomain(whatsappNumber));

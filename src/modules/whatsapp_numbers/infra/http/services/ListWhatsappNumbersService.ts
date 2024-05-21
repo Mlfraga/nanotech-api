@@ -10,7 +10,7 @@ class ListWhatsappNumbersService {
     private whatsappNumberRepository: IWhatsappNumberRepository,
   ) {}
 
-  public async execute(): Promise<WhatsappNumber[] | undefined> {
+  public async execute(): Promise<WhatsappNumber[]> {
     const whatsappNumbers = await this.whatsappNumberRepository.find();
 
     return whatsappNumbers;

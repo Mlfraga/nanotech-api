@@ -5,7 +5,7 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
+import UserRepository from '@modules/users/infra/prisma/repositories/users-repository';
 
 dotenv.config();
 
@@ -18,12 +18,14 @@ class RoleMiddleware {
     const authHeader = request.headers['authorization'];
     const token = authHeader && authHeader?.split(' ')[1];
     const decoded: any = JWT.decode(String(token), { complete: true });
+    console.log("🚀 ~ RoleMiddleware ~ decoded:", decoded)
 
     const userRepository = container.resolve(UserRepository);
 
     const user_id = decoded.payload.sub;
 
     const user = await userRepository.findById(user_id);
+    console.log("🚀 ~ RoleMiddleware ~ user:", user)
 
     if (!user) {
       throw new AppError('User not found.', 404);
@@ -31,7 +33,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'ADMIN' && user.role !== 'NANOTECH_REPRESENTATIVE') {
@@ -58,7 +60,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'ADMIN') {
@@ -84,7 +86,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'MANAGER') {
@@ -114,7 +116,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (
@@ -151,7 +153,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'MANAGER' && user.role !== 'SELLER') {
@@ -182,7 +184,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'SERVICE_PROVIDER') {
@@ -213,7 +215,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'COMMISSIONER') {
@@ -244,7 +246,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (
