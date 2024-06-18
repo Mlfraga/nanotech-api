@@ -120,13 +120,14 @@ model sales_service_providers {
 }
 
 model service_group {
-  id         String     @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name       String     @db.VarChar
-  decription String?    @db.VarChar
-  image_url  String?    @db.VarChar
-  created_at DateTime   @default(now()) @db.Timestamp(6)
-  updated_at DateTime   @default(now()) @db.Timestamp(6)
-  services   services[]
+  id          String     @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String     @db.VarChar
+  description String?    @db.VarChar
+  image_url   String?    @db.VarChar
+  enabled     Boolean    @default(true)
+  created_at  DateTime   @default(now()) @db.Timestamp(6)
+  updated_at  DateTime   @default(now()) @db.Timestamp(6)
+  services    services[]
 }
 
 model services {

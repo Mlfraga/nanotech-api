@@ -3,7 +3,6 @@ import { errors } from 'celebrate';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Request, Response, NextFunction, RequestHandler } from 'express';
-import '@shared/infra/typeorm';
 import 'reflect-metadata';
 import '@shared/container';
 import 'express-async-errors';
@@ -48,6 +47,21 @@ app.listen(process.env.PORT || 3333, () => {
   console.log(`🚀 Backend started on ${process.env.PORT || 3333}!`);
 });
 
-let prismaDb = new PrismaClient()
+let prismaDb = new PrismaClient({log: [{
+      emit: 'stdout',
+      level: 'query',
+    },
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'info',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },]})
 
 export { prismaDb };

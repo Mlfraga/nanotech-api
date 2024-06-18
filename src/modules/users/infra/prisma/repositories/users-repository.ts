@@ -1,8 +1,9 @@
 import ICreateUserDTO from "@modules/users/dtos/ICreateUserDTO";
-import IUserRepository from "@modules/users/repositories/IUsersRepository";
+import IUserRepository, { IUserFilters } from "@modules/users/repositories/IUsersRepository";
 import { prismaDb } from "@shared/infra/http/server";
 import { User } from "../../entities/User";
 import { PrismaUserMapper } from "../mappers/prisma-user-mapper";
+import { users_role_enum } from "@prisma/client";
 
 export default class PrismaUsersRepository implements IUserRepository {
   async findByUsername(username: string): Promise<User | undefined> {
@@ -68,8 +69,29 @@ export default class PrismaUsersRepository implements IUserRepository {
     return formattedUsers;
   }
 
-  public async find(): Promise<User[] | undefined> {
+  public async find({
+    role,
+    name,
+    telephone,
+    company_id,
+    enabled,
+  }: IUserFilters): Promise<User[] | undefined> {
+    console.log('test: ', {
+      ...(role && { role: role as users_role_enum }),
+      ...(name && { name: name as string }),
+      ...(telephone && { telephone: telephone as string }),
+      ...(company_id && { company_id: company_id as string }),
+      ...(enabled !== undefined && { enabled: !!enabled }),
+    })
+
     const users = await prismaDb.users.findMany({
+      where: {
+        ...(role && { role: role as users_role_enum }),
+        ...(name && { profiles: {name: { contains: name as string }} }),
+        ...(telephone && { telephone: { contains: telephone as string } }),
+        ...(company_id && { profiles: { company_id: { equals: company_id as string } }}),
+        ...(enabled !== undefined && { enabled: !!enabled }),
+      },
       include: {
         profiles: {
           include: {
@@ -125,6 +147,7 @@ export default class PrismaUsersRepository implements IUserRepository {
   }
 
   public async save(user: User): Promise<User> {
+    console.log("🚀 ~ PrismaUsersRepository ~ save ~ user:", user.id)
     const updatedUser = await prismaDb.users.update({
       where: {
         id: user.id,

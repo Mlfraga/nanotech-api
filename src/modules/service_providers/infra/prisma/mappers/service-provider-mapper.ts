@@ -9,6 +9,8 @@ import ICreateServiceProviderDTO from '@modules/service_providers/dtos/ICreateSe
 import { Person } from '@modules/persons/infra/entities/Person';
 import { Car } from '@modules/cars/infra/entities/Car';
 import { Unit } from '@modules/unities/infra/entities/Unit';
+import { Service } from '@modules/services/infra/entities/Service';
+import { ServiceSale } from '@modules/services_sales/infra/entities/ServiceSale';
 
 export type PrismaServiceProvider = Prisma.sales_service_providersGetPayload<{
   include: {
@@ -25,6 +27,11 @@ export type PrismaServiceProvider = Prisma.sales_service_providersGetPayload<{
         profiles: true,
         sales_service_providers: true,
         unities: true,
+        services_sales: {
+          include: {
+            service: true,
+          }
+        }
       }
     },
   };
@@ -70,7 +77,23 @@ export class ServiceProviderMapper {
           created_at: raw.sales.created_at,
           updated_at: raw.sales.updated_at,
           finished_at: raw.sales.finished_at || undefined,
-          services_sales: [],
+          services_sales: raw.sales.services_sales.map(serviceSale => new ServiceSale({
+            company_value: Number(serviceSale.company_value),
+            cost_value: Number(serviceSale.cost_value),
+            sale_id: serviceSale.sale_id,
+            service_id: serviceSale.service_id,
+            service: new Service({
+              name: serviceSale.service.name,
+              price: Number(serviceSale.service.price),
+              enabled: serviceSale.service.enabled,
+              company_price: Number(serviceSale.service.company_price),
+              commission_amount: Number(serviceSale.service.commission_amount),
+              company_id: serviceSale.service.company_id || undefined,
+              service_group_id: serviceSale.service.service_group_id || undefined,
+              created_at: serviceSale.service.created_at,
+              updated_at: serviceSale.service.updated_at,
+            }, serviceSale.service_id),
+          }, serviceSale.id)),
           service_providers: [],
           partner_external_id: raw.sales.partner_external_id,
           person: customer,

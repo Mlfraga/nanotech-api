@@ -23,10 +23,9 @@ class ToggleUserEnabledService {
       throw new AppError('This user was not found.', 404);
     }
 
-    const isServiceUpdated = this.usersRepository.save({
-      ...user,
-      enabled,
-    });
+    user.enabled = enabled;
+
+    const isServiceUpdated = this.usersRepository.save(user);
 
     return !!isServiceUpdated;
   }

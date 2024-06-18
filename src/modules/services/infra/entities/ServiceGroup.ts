@@ -4,8 +4,9 @@ import Service from '../typeorm/entities/Service';
 
 export interface ServiceGroupProps {
   name: string;
-  decription: string | null;
-  image_url: string | null;
+  description: string | undefined;
+  image_url: string | undefined;
+  enabled: boolean;
   created_at: Date;
   updated_at: Date;
   services?: Service[];
@@ -35,19 +36,27 @@ export class ServiceGroup {
     this.props.name = name;
   }
 
-  public get decription(): string | null{
-    return this.props.decription;
+  public get description(): string | undefined{
+    return this.props.description;
   }
 
-  public set decription(decription: string | null){
-    this.props.decription = decription;
+  public set description(description: string | undefined){
+    this.props.description = description;
   }
 
-  public get image_url(): string | null{
+  public get enabled(): boolean{
+    return this.props.enabled;
+  }
+
+  public set enabled(enabled: boolean){
+    this.props.enabled = enabled;
+  }
+
+  public get image_url(): string | undefined{
     return this.props.image_url;
   }
 
-  public set image_url(image_url: string | null){
+  public set image_url(image_url: string | undefined){
     this.props.image_url = image_url;
   }
 

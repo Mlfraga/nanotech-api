@@ -47,8 +47,9 @@ export class ServiceSalesMapper {
               created_at: raw.service.service_group.created_at,
               name: raw.service.service_group.name,
               updated_at: raw.service.service_group.updated_at,
-              decription: raw.service.service_group.decription,
-              image_url: raw.service.service_group.image_url,
+              description: raw.service.service_group.description ?? undefined,
+              image_url: raw.service.service_group.image_url ?? undefined,
+              enabled: raw.service.service_group.enabled,
             }, raw.service.service_group.id)
           })),
         }, raw.service.id),

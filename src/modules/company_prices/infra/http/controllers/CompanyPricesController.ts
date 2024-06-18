@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import ServiceRepository from '../../../../services/infra/prisma/repositories/service-provider-repository';
+import ServiceRepository from '../../../../services/infra/prisma/repositories/service-repository';
 import CompanyPricesRepository from '../../prisma/repositories/company-prices-repository';
 import { Service } from '@modules/services/infra/entities/Service';
 import { ServicesViewModel } from '@modules/services/infra/http/view-models/services-view-model';
@@ -22,6 +22,7 @@ export default class CompanyPricesController {
     }
 
     const updatedServices: Service[] = [];
+    console.log("🚀 ~ CompanyPricesController ~ store ~ services:", services)
 
     for (const service of services) {
       const serviceById = await serviceRepository.findById(service.serviceId);
@@ -29,10 +30,14 @@ export default class CompanyPricesController {
       if (!serviceById) {
         throw new AppError('No service found with this ID.');
       }
+      console.log("🚀 ~ CompanyPricesController ~ store ~ serviceById:", serviceById)
 
       serviceById.company_price = service.price;
+      console.log("🚀 ~ CompanyPricesController ~ store ~ serviceById:", serviceById)
+      console.log("🚀 ~ CompanyPricesController ~ store ~ service.price:", service.price)
 
       const serviceUpdated = await serviceRepository.save(serviceById);
+      console.log("🚀 ~ CompanyPricesController ~ store ~ serviceUpdated:", serviceUpdated)
 
       if (serviceUpdated) {
         updatedServices.push(serviceUpdated);

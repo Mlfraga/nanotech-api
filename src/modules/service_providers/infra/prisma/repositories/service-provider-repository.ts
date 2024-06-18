@@ -18,6 +18,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -46,6 +51,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -76,6 +86,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -93,18 +108,23 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
   public async findByProviderId(provider_id: string, listFrom?: 'yesterday' | 'today' | 'tomorrow',): Promise<ServiceProvider[]>{
     let dateFilterCriterias = {
       today: {
-        lte: new Date(startOfDay(new Date())),
-        gte: new Date(endOfDay(new Date())),
+        lte: new Date(endOfDay(new Date())),
+        gte: new Date(startOfDay(new Date())),
       },
       yesterday: {
-        lte: new Date(addDays(startOfDay(new Date()), -1),),
-        gte: new Date(addDays(endOfDay(new Date()), -1),),
+        lte: new Date(addDays(endOfDay(new Date()), -1),),
+        gte: new Date(addDays(startOfDay(new Date()), -1),),
       },
       tomorrow: {
-        lte: new Date(addDays(startOfDay(new Date()), 1),),
-        gte: new Date(addDays(endOfDay(new Date()), 1),)
+        lte: new Date(addDays(endOfDay(new Date()), 1),),
+        gte: new Date(addDays(startOfDay(new Date()), 1),),
       },
     };
+
+    console.log('where: ', {
+        service_provider_profile_id: provider_id,
+        date_to_be_done: dateFilterCriterias[listFrom || 'today']
+      })
 
     const serviceProviders = await prismaDb.sales_service_providers.findMany({
       where: {
@@ -120,6 +140,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -150,6 +175,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -179,6 +209,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,
@@ -207,6 +242,11 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
         },
         sales: {
           include: {
+            services_sales: {
+              include: {
+                service: true,
+              }
+            },
             persons: true,
             cars: true,
             profiles: true,

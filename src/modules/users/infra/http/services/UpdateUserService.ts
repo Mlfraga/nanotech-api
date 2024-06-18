@@ -30,16 +30,16 @@ class UpdateUserService {
       throw new AppError('This user does not exists.');
     }
 
-    await this.profileRepository.save({
-      ...user.profile,
-      name,
-    });
+    if(user.profile) {
+      user.profile.name = name;
 
-    await this.usersRepository.save({
-      ...user,
-      telephone,
-      ...(role && { role }),
-    });
+      await this.profileRepository.save(user.profile);
+    }
+
+    user.telephone = telephone;
+    user.role = role;
+
+    await this.usersRepository.save(user);
   }
 }
 

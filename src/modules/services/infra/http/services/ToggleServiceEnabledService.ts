@@ -23,10 +23,13 @@ class ToggleServiceEnabledService {
       throw new AppError('This service was not found.', 404);
     }
 
-    const isServiceUpdated = this.serviceRepository.save({
-      ...service,
-      enabled,
-    });
+    if (service.service_group && !service.service_group.enabled) {
+      throw new AppError('You cannot enable a service that belongs to a disabled group.');
+    }
+
+    service.enabled = enabled;
+
+    const isServiceUpdated = this.serviceRepository.save(service);
 
     return !!isServiceUpdated;
   }

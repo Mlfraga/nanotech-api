@@ -5,6 +5,7 @@ export default interface IServiceRepository {
   find(): Promise<Service[] | undefined>;
   findById(id: string): Promise<Service | undefined>;
   findByCompanyId(companyId: string, showDisabled: boolean): Promise<Service[]>;
+  findByCompanyIdAndServiceGroup(companyId: string, serviceGroupId: string): Promise<Service | undefined>;
   findByName(name: string): Promise<Service | undefined>;
   create(data: ICreateServiceDTO): Promise<Service>;
   save(service: Service): Promise<Service>;

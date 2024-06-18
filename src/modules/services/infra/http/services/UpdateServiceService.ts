@@ -33,13 +33,12 @@ class UpdateServiceService {
       throw new AppError('Service does not exists.', 404);
     }
 
-    const updatedService = await this.serviceRepository.save({
-      ...serviceById,
-      ...(name && { name }),
-      ...(price && { price }),
-      ...(company_price && { company_price }),
-      commission_amount,
-    });
+    serviceById.name = name;
+    serviceById.price = price;
+    serviceById.company_price = company_price;
+    serviceById.commission_amount = commission_amount;
+
+    const updatedService = await this.serviceRepository.save(serviceById);
 
     return updatedService;
   }

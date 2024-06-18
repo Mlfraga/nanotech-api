@@ -28,7 +28,7 @@ export default class ServicesController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, price, company_id, commission_amount } = request.body;
+    const { name, price, company_id, commission_amount, service_group_id } = request.body;
 
     const createServiceService = container.resolve(CreateServiceService);
 
@@ -37,6 +37,7 @@ export default class ServicesController {
       price,
       company_id,
       commission_amount,
+      service_group_id
     });
 
     return response.json(ServicesViewModel.toHttp(createdService));

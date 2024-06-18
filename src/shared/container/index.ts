@@ -7,7 +7,7 @@ import IServiceProviderRepository from '@modules/service_providers/repositories/
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
 import ICarRepository from '../../modules/cars/repositories/ICarRepository';
-import ICommissionerRepository from '../../modules/_legacy_commissioners/repositories/ICommissionerRepository';
+import IServiceGroupRepository from '../../modules/services/repositories/IServiceGroupRepository';
 import ICompanyRepository from '../../modules/companies/repositories/ICompanyRepository';
 import CompanyPricesRepository from '../../modules/company_prices/infra/prisma/repositories/company-prices-repository';
 import ICompanyPricesRepository from '../../modules/company_prices/repositories/ICompanyPricesRepository';
@@ -26,9 +26,10 @@ import IUsersRepository from '../../modules/users/repositories/IUsersRepository'
 import PrismaUsersRepository from '@modules/users/infra/prisma/repositories/users-repository';
 import PrismaServiceSalesRepository from '@modules/services_sales/infra/prisma/repositories/service-sales-repository';
 import PrismaUnitRepository from '@modules/unities/infra/prisma/repositories/unities-repository';
-import PrismaServiceRepository from '@modules/services/infra/prisma/repositories/service-provider-repository';
+import PrismaServiceRepository from '@modules/services/infra/prisma/repositories/service-repository';
 import PrismaWhatsappNumbersRepository from '@modules/whatsapp_numbers/infra/prisma/repositories/whatsapp-numbers-repository';
 import PrismaServiceProviderRepository from '@modules/service_providers/infra/prisma/repositories/service-provider-repository';
+import PrismaServiceGroupRepository from '@modules/services/infra/prisma/repositories/service-group-repository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -69,6 +70,11 @@ container.registerSingleton<IUnitRepository>('UnitRepository', PrismaUnitReposit
 container.registerSingleton<IServiceRepository>(
   'ServiceRepository',
   PrismaServiceRepository,
+);
+
+container.registerSingleton<IServiceGroupRepository>(
+  'ServiceGroupRepository',
+  PrismaServiceGroupRepository,
 );
 
 container.registerSingleton<IWhatsappNumberRepository>(

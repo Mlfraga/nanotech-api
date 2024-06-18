@@ -1,6 +1,5 @@
 import { prismaDb } from "@shared/infra/http/server";
 import { Service } from "../../entities/Service";
-import { addDays, endOfDay, startOfDay } from "date-fns";
 import ICreateServiceDTO from "@modules/services/dtos/ICreateServiceDTO";
 import IServiceRepository from "@modules/services/repositories/IServiceRepository";
 import { ServiceMapper } from "../mappers/service-mapper";
@@ -13,9 +12,10 @@ export default class PrismaServiceRepository implements IServiceRepository {
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
       }
     });
 
@@ -30,9 +30,30 @@ export default class PrismaServiceRepository implements IServiceRepository {
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
+      }
+    });
+
+    if (!service) {
+      return undefined;
+    }
+
+    return ServiceMapper.toDomain(service);
+  }
+
+  async findByCompanyIdAndServiceGroup(companyId: string, serviceGroupId: string): Promise<Service | undefined> {
+    const service = await prismaDb.services.findFirst({
+      where: { company_id: companyId, service_group_id: serviceGroupId },
+      include: {
+        companies: {
+          include: {
+            company_prices: true,
+          }
+        },
+        service_group: true,
       }
     });
 
@@ -50,9 +71,10 @@ export default class PrismaServiceRepository implements IServiceRepository {
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
       }
     });
 
@@ -67,9 +89,10 @@ export default class PrismaServiceRepository implements IServiceRepository {
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
       }
     });
 
@@ -80,15 +103,16 @@ export default class PrismaServiceRepository implements IServiceRepository {
     return ServiceMapper.toDomain(service);
   }
 
-  async create(data: ICreateServiceDTO): Promise<Service> {
+  async create(data: Service): Promise<Service> {
     const service = await prismaDb.services.create({
       data: ServiceMapper.toPrisma(data),
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
       }
     });
 
@@ -102,9 +126,10 @@ export default class PrismaServiceRepository implements IServiceRepository {
       include: {
         companies: {
           include: {
-            company_prices: true
+            company_prices: true,
           }
-        }
+        },
+        service_group: true,
       }
     });
 

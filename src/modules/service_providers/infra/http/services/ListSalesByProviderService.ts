@@ -47,6 +47,7 @@ class ListSalesByServiceProvider {
       profile_id,
       listFrom,
     );
+    console.log("🚀 ~ ListSalesByServiceProvider ~ sales:", (JSON.stringify(sales)))
 
     const formattedSales: IListeSalesByProviderResponse[] = sales.map(sale => ({
       id: sale.sale.id,
@@ -56,8 +57,8 @@ class ListSalesByServiceProvider {
       client_identifier: String(sale.sale.client_identifier),
       status: sale.sale.status,
       production_status: sale.sale.production_status,
-      comments: sale.sale.comments,
-      techinical_comments: sale.sale.techinical_comments,
+      comments: sale.sale?.comments || '',
+      techinical_comments: sale.sale?.techinical_comments || '',
       sellerName: sale.sale.seller.name,
       car: {
         name: sale.sale.car.brand,
@@ -67,7 +68,7 @@ class ListSalesByServiceProvider {
       unit: {
         name: sale.sale.unit.name,
         company: {
-          name: sale.sale.unit.company.name,
+          name: sale.sale.unit.company?.name || '',
         },
       },
       services: sale.sale.services_sales.map(serviceSale => ({
