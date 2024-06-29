@@ -15,12 +15,37 @@ servicesGroupRouter.post(
     [Segments.BODY]: {
       name: Joi.string().required(),
       description: Joi.string(),
-      image_url: Joi.string(),
+      defaultNanotechPrice: Joi.number(),
+      imageUrl: Joi.string(),
     },
   }),
   ensureAuthenticated,
   RoleMiddleware.isAdminOrNanotechRepresentative,
   servicesGroupController.store,
+);
+
+servicesGroupRouter.get(
+  '/',
+  celebrate({
+    [Segments.QUERY]: {
+      enabled: Joi.boolean(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  servicesGroupController.index,
+);
+
+servicesGroupRouter.patch(
+  '/status/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  servicesGroupController.toggleNanotechServiceGroupStatus,
 );
 
 

@@ -29,7 +29,6 @@ class ListUsersService {
     company_id,
     enabled,
   }: IListUsersServiceParams): Promise<User[]> {
-    console.log("🚀 ~ ListUsersService ~ name:", name)
     const users = await this.usersRepository.find({
       role,
       name,

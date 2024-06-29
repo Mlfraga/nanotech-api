@@ -5,6 +5,7 @@ import { ServiceGroup } from '../../entities/ServiceGroup';
 
 interface IRequest {
   name: string;
+  defaultNanotechPrice?: number;
   description?: string;
   imageUrl?: string;
 }
@@ -19,13 +20,16 @@ class CreateServiceGroupService {
   public async execute({
     name,
     description,
+    defaultNanotechPrice,
     imageUrl,
   }: IRequest): Promise<ServiceGroup> {
-    const createdServiceGroup = await this.serviceGroupRepository.create({
+    const createdServiceGroup = await this.serviceGroupRepository.create(new ServiceGroup({
       name,
       description,
-      imageUrl,
-    });
+      image_url: imageUrl,
+      enabled: true,
+      default_nanotech_price: defaultNanotechPrice
+    }));
 
     return createdServiceGroup;
   }

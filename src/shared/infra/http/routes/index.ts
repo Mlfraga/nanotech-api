@@ -12,6 +12,7 @@ import unitiesRouter from '@modules/unities/infra/http/routes/unities.routes';
 import sessionRouter from '@modules/users/infra/http/routes/session.routes';
 import userRouter from '@modules/users/infra/http/routes/user.routes';
 import whatsappNumbersRouter from '@modules/whatsapp_numbers/infra/http/routes/whatsapp_numbers.routes';
+import servicesGroupRouter from '@modules/services/infra/http/routes/services-group.routes';
 
 const routes = express.Router();
 
@@ -35,6 +36,7 @@ routes.use('/services', servicesRouter);
 routes.use('/company-services', companyPricesRouter);
 routes.use('/sales', salesRouter);
 routes.use('/service-sales', servicesSalesRouter);
+routes.use('/service-groups', servicesGroupRouter);
 
 
 // LEGACY routes.use('/commissioners', commissionersRouter);

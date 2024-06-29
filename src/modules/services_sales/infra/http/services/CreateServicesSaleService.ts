@@ -110,8 +110,6 @@ class CreateServicesSaleService {
 
     const servicesSales = await Promise.all<ServiceSale>(promises);
 
-    console.log('servicesSales: ', servicesSales);
-
     let servicesMessage = '';
 
     servicesSales.forEach((serv, index) => {
@@ -125,8 +123,6 @@ class CreateServicesSaleService {
     if (referral_data && commissionerByUserId) {
       let referredServicesNames = '';
 
-      console.log('referredServices: ', referredServices);
-
       referredServices.forEach((serv, index) => {
         if (index === 0) {
           referredServicesNames += `${serv.service.name}`;
@@ -138,8 +134,6 @@ class CreateServicesSaleService {
       const commissionAmounts = referredServices.map(
         s => s.service.commission_amount || 0,
       );
-
-      console.log(commissionAmounts);
 
       const totalReferralAmount = commissionAmounts.reduce(
         (accumulator, currentvalue) =>

@@ -76,13 +76,6 @@ export default class PrismaUsersRepository implements IUserRepository {
     company_id,
     enabled,
   }: IUserFilters): Promise<User[] | undefined> {
-    console.log('test: ', {
-      ...(role && { role: role as users_role_enum }),
-      ...(name && { name: name as string }),
-      ...(telephone && { telephone: telephone as string }),
-      ...(company_id && { company_id: company_id as string }),
-      ...(enabled !== undefined && { enabled: !!enabled }),
-    })
 
     const users = await prismaDb.users.findMany({
       where: {
@@ -147,7 +140,6 @@ export default class PrismaUsersRepository implements IUserRepository {
   }
 
   public async save(user: User): Promise<User> {
-    console.log("🚀 ~ PrismaUsersRepository ~ save ~ user:", user.id)
     const updatedUser = await prismaDb.users.update({
       where: {
         id: user.id,

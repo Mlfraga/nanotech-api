@@ -26,7 +26,6 @@ export default class ServicesSalesController {
 
   async sendMessage(request: Request, response: Response) {
     const { saleId } = request.params;
-    console.log('saleId', saleId);
 
     const sendServicesSaleMessageService = container.resolve(
       SendServicesSaleMessageService,

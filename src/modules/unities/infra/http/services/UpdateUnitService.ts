@@ -31,12 +31,11 @@ class UpdateUnitService {
       throw new AppError('Does not exist a unit with this id.');
     }
 
-    const unit = await this.unitRepository.save({
-      ...unitById,
-      ...(name && { name }),
-      ...(telephone && { telephone }),
-      ...(client_identifier && { client_identifier }),
-    });
+    unitById.telephone = telephone;
+    unitById.name = name;
+    unitById.client_identifier = client_identifier;
+
+    const unit = await this.unitRepository.save(unitById);
 
     return unit;
   }

@@ -3,7 +3,9 @@ import { inject, injectable } from 'tsyringe';
 import IServiceGroupRepository from '@modules/services/repositories/IServiceGroupRepository';
 import { ServiceGroup } from '../../entities/ServiceGroup';
 
-interface IRequest {}
+interface IRequest {
+  enabled?: boolean;
+}
 
 @injectable()
 class ListServiceGroupService {
@@ -12,8 +14,10 @@ class ListServiceGroupService {
     private serviceGroupRepository: IServiceGroupRepository,
   ) {}
 
-  public async execute({}: IRequest): Promise<ServiceGroup[]> {
-    const serviceGroups = await this.serviceGroupRepository.find();
+  public async execute({ enabled }: IRequest): Promise<ServiceGroup[]> {
+    const serviceGroups = await this.serviceGroupRepository.find({
+      enabled
+    });
 
     return serviceGroups;
   }

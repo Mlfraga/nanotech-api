@@ -26,8 +26,6 @@ servicesSalesRouter.post(
 );
 
 servicesSalesRouter.get('/test/:saleId', (req: Request, res: Response) => {
-  console.log('OPA');
-
   return res.json({ ok: true });
 });
 

@@ -28,12 +28,11 @@ export default class ServicesController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, price, company_id, commission_amount, service_group_id } = request.body;
+    const { price, company_id, commission_amount, service_group_id } = request.body;
 
     const createServiceService = container.resolve(CreateServiceService);
 
     const createdService = await createServiceService.execute({
-      name,
       price,
       company_id,
       commission_amount,

@@ -47,7 +47,6 @@ class ListSalesByServiceProvider {
       profile_id,
       listFrom,
     );
-    console.log("🚀 ~ ListSalesByServiceProvider ~ sales:", (JSON.stringify(sales)))
 
     const formattedSales: IListeSalesByProviderResponse[] = sales.map(sale => ({
       id: sale.sale.id,

@@ -1,10 +1,14 @@
 import ICreateServiceGroupDTO from '../dtos/ICreateServiceGroupDTO';
 import { ServiceGroup } from '../infra/entities/ServiceGroup';
 
+export interface IFindFilters {
+  enabled?: boolean;
+}
+
 export default interface IServiceGroupRepository {
-  find(): Promise<ServiceGroup[]>;
+  find(filters: IFindFilters): Promise<ServiceGroup[]>;
   findById(id: string): Promise<ServiceGroup | undefined>;
-  create(data: ICreateServiceGroupDTO): Promise<ServiceGroup>;
+  create(data: ServiceGroup): Promise<ServiceGroup>;
   save(service: ServiceGroup): Promise<ServiceGroup>;
   delete(id: string): Promise<void>;
 }

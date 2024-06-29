@@ -121,11 +121,6 @@ export default class PrismaServiceProviderRepository implements IServiceProvider
       },
     };
 
-    console.log('where: ', {
-        service_provider_profile_id: provider_id,
-        date_to_be_done: dateFilterCriterias[listFrom || 'today']
-      })
-
     const serviceProviders = await prismaDb.sales_service_providers.findMany({
       where: {
         service_provider_profile_id: provider_id,

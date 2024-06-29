@@ -1,10 +1,11 @@
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
-import Service from '../typeorm/entities/Service';
+import { Service } from './Service';
 
 export interface ServiceGroupProps {
   name: string;
   description: string | undefined;
+  default_nanotech_price?: number;
   image_url: string | undefined;
   enabled: boolean;
   created_at: Date;
@@ -42,6 +43,14 @@ export class ServiceGroup {
 
   public set description(description: string | undefined){
     this.props.description = description;
+  }
+
+  public get default_nanotech_price(): number | undefined{
+    return this.props.default_nanotech_price;
+  }
+
+  public set default_nanotech_price(default_nanotech_price: number | undefined){
+    this.props.default_nanotech_price = default_nanotech_price;
   }
 
   public get enabled(): boolean{

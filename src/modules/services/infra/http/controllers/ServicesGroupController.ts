@@ -4,13 +4,15 @@ import { container } from 'tsyringe';
 import CreateServiceGroupService from '../services/CreateServiceGroupService';
 import { ServiceGroupViewModel } from '../view-models/service-group-view-model';
 import ListServiceGroupService from '../services/ListServiceGroupService';
+import ToggleServiceGroupStatusService from '../services/ToggleServiceGroupStatusService';
 
 export default class ServicesGroupController {
  async store(request: Request, response: Response) {
    const {
       name,
       description,
-      image_url,
+      imageUrl,
+      defaultNanotechPrice,
     } = request .body;
 
     const createServicGroupService = container.resolve(CreateServiceGroupService);
@@ -18,19 +20,32 @@ export default class ServicesGroupController {
     const serviceGroupCreated = await createServicGroupService.execute({
       name,
       description,
-      imageUrl: image_url,
+      imageUrl,
+      defaultNanotechPrice
     });
 
     return response.json(ServiceGroupViewModel.toHttp(serviceGroupCreated));
   }
 
   async index(request: Request, response: Response) {
+    const { enabled } = request.query;
+
    const listServiceGroupService = container.resolve(ListServiceGroupService);
 
-    const serviceGroups = await listServiceGroupService.execute({});
+    const serviceGroups = await listServiceGroupService.execute({ enabled: enabled as any as boolean});
 
     const formattedServiceGroups = serviceGroups.map((serviceGroup) => ServiceGroupViewModel.toHttp(serviceGroup))
 
     return response.json(formattedServiceGroups);
+  }
+
+  async toggleNanotechServiceGroupStatus(request: Request, response: Response) {
+    const { id } = request.params;
+
+   const toggleServiceGroupStatusService = container.resolve(ToggleServiceGroupStatusService);
+
+    await toggleServiceGroupStatusService.execute({ id });
+
+    return response.sendStatus(204);
   }
 }

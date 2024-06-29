@@ -35,6 +35,9 @@ export class ServiceMapper {
         company_price: Number(raw.company_price),
         enabled: raw.enabled,
         name: raw.name,
+        ...(raw.commission_amount && {
+          commission_amount: Number(raw.commission_amount),
+        }),
         service_group_id: raw.service_group_id ?? undefined,
         ...(raw.service_group && {
           service_group: new ServiceGroup({

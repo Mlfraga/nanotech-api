@@ -18,14 +18,12 @@ class RoleMiddleware {
     const authHeader = request.headers['authorization'];
     const token = authHeader && authHeader?.split(' ')[1];
     const decoded: any = JWT.decode(String(token), { complete: true });
-    console.log("🚀 ~ RoleMiddleware ~ decoded:", decoded)
 
     const userRepository = container.resolve(UserRepository);
 
     const user_id = decoded.payload.sub;
 
     const user = await userRepository.findById(user_id);
-    console.log("🚀 ~ RoleMiddleware ~ user:", user)
 
     if (!user) {
       throw new AppError('User not found.', 404);

@@ -82,7 +82,6 @@ class ListSalesRewardsByCommissionerService {
         page,
       },
     );
-    console.log('user');
 
     return sales;
   }
