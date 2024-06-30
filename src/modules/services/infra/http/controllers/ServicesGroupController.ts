@@ -13,6 +13,7 @@ export default class ServicesGroupController {
       description,
       imageUrl,
       defaultNanotechPrice,
+      companiesToLink
     } = request .body;
 
     const createServicGroupService = container.resolve(CreateServiceGroupService);
@@ -21,7 +22,8 @@ export default class ServicesGroupController {
       name,
       description,
       imageUrl,
-      defaultNanotechPrice
+      defaultNanotechPrice,
+      companiesToLink
     });
 
     return response.json(ServiceGroupViewModel.toHttp(serviceGroupCreated));

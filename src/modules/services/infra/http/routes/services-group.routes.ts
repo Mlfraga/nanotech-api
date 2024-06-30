@@ -17,6 +17,12 @@ servicesGroupRouter.post(
       description: Joi.string(),
       defaultNanotechPrice: Joi.number(),
       imageUrl: Joi.string(),
+      companiesToLink: Joi.array().items(Joi.object({
+        id: Joi.string().uuid().required(),
+        name: Joi.string(),
+        price: Joi.number().required(),
+        commission: Joi.number().required(),
+      })).required(),
     },
   }),
   ensureAuthenticated,
