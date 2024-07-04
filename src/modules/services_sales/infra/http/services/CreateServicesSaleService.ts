@@ -169,6 +169,12 @@ ${referralServicesMessageData.companyName}`;
       ]);
     }
 
+    const formattedSources = {
+      'USED': 'Seminovo',
+      'NEW': '0 KM',
+      'WORKSHOP': 'Oficina',
+    }
+
     const createdSaleMessageData = {
       saleNumber: `${saleById?.seller?.company?.client_identifier ?? ''}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
       availabilityDate: format(
@@ -189,7 +195,7 @@ ${referralServicesMessageData.companyName}`;
       seller: saleById?.seller.name,
       company: saleById?.seller?.company?.name ?? '',
       unit: saleById?.unit?.name,
-      car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate} - ${saleById.source}`,
+      car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate} - ${formattedSources[saleById.source as 'USED' | 'NEW' | 'WORKSHOP'] || ''}`,
       comments: saleById?.comments ? saleById?.comments : ' ',
     };
 

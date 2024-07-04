@@ -91,6 +91,11 @@ export default class PrismaUsersRepository implements IUserRepository {
             companies: true,
           }
         }
+      },
+      orderBy: {
+        profiles: {
+          name: 'asc'
+        }
       }
     });
 
@@ -122,9 +127,9 @@ export default class PrismaUsersRepository implements IUserRepository {
     return formattedUser;
   }
 
-  public async create(data: ICreateUserDTO): Promise<User> {
+  public async create(data: User): Promise<User> {
     const user = await prismaDb.users.create({
-      data,
+      data: PrismaUserMapper.toPrisma(data),
       include: {
         profiles: {
           include: {

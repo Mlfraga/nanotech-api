@@ -28,7 +28,7 @@ interface IResponse {
 }
 
 @injectable()
-class ShowUserService {
+class CreateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -72,15 +72,19 @@ class ShowUserService {
 
     const passwordCrypt = await this.hashProvider.generateHash(password);
 
-    const user = await this.usersRepository.create({
-        username,
-        telephone,
-        email,
-        password: passwordCrypt,
-        pix_key,
-        pix_key_type: pix_key_type as "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined,
-        role: role as "SELLER" | "MANAGER" | "COMMISSIONER" | "ADMIN" | "NANOTECH_REPRESENTATIVE" | "SERVICE_PROVIDER",
-    });
+    const userToCreate = new User({
+      username,
+      telephone,
+      email,
+      password: passwordCrypt,
+      pix_key,
+      pix_key_type: pix_key_type as "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined,
+      role: role as "SELLER" | "MANAGER" | "COMMISSIONER" | "ADMIN" | "NANOTECH_REPRESENTATIVE" | "SERVICE_PROVIDER",
+      enabled: true,
+      first_login: true,
+    })
+
+    const user = await this.usersRepository.create(userToCreate);
 
     let profile: Profile | undefined;
 
@@ -101,4 +105,4 @@ class ShowUserService {
   }
 }
 
-export default ShowUserService;
+export default CreateUserService;

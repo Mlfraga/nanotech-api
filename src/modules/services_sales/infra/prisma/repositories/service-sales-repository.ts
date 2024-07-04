@@ -116,8 +116,8 @@ export default class PrismaServiceSalesRepository implements IServiceSaleReposit
         service_id: serviceId,
         sale: {
           delivery_date: {
-            lte: startDeliveryDate,
-            gte: endDeliveryDate
+            lte: endDeliveryDate,
+            gte: startDeliveryDate
           },
           profiles: {
             company_id: companyId,

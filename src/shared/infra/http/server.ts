@@ -47,21 +47,35 @@ app.listen(process.env.PORT || 3333, () => {
   console.log(`🚀 Backend started on ${process.env.PORT || 3333}!`);
 });
 
-let prismaDb = new PrismaClient({log: [{
-      emit: 'stdout',
-      level: 'query',
-    },
-    {
-      emit: 'stdout',
-      level: 'error',
-    },
-    {
-      emit: 'stdout',
-      level: 'info',
-    },
-    {
-      emit: 'stdout',
-      level: 'warn',
-    },]})
+const prismaLogsEnabled = process.env.PRISMA_LOGS_ENABLED ? process.env.PRISMA_LOGS_ENABLED === 'true' : false;
+
+let prismaDb = new PrismaClient({
+  ...(prismaLogsEnabled && {
+    log: [
+      {
+        emit: 'stdout',
+        level: 'query',
+      },
+      {
+        emit: 'stdout',
+        level: 'error',
+      },
+      {
+        emit: 'stdout',
+        level: 'info',
+      },
+      {
+        emit: 'stdout',
+        level: 'warn',
+      },
+    ]
+  })
+});
+
+if (prismaLogsEnabled) {
+  prismaDb.$on("query" as never, async (e: any) => {
+      console.log(`${e.query} ${e.params}`)
+  });
+}
 
 export { prismaDb };

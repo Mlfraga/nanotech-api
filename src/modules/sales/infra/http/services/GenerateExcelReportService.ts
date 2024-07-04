@@ -46,7 +46,7 @@ class GenerateExcelReportService {
       status: status && String(status),
       company:
         user?.role === 'MANAGER'
-          ? user.profile.company_id
+          ? user.profile?.company_id
           : company && String(company),
       initialDate: startRangeFinishedDate
         ? startOfDay(new Date(String(startRangeFinishedDate)))

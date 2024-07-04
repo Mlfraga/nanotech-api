@@ -18,7 +18,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -50,7 +54,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -87,7 +95,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -135,7 +147,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -167,8 +183,8 @@ export default class PrismaSaleRepository implements ISaleRepository {
         ...(company && { company_id: company }),
         ...(initialDate && finalDate && {
           finished_at: {
-            lte: initialDate,
-            gte: finalDate,
+            lte: finalDate,
+            gte: initialDate,
           }
         }),
       },
@@ -179,7 +195,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -217,7 +237,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -247,7 +271,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
       finalDeliveryDate,
       initialAvailabilityDate,
       finalAvailabilityDate,
+      startFinishedDate,
+      endFinishedDate,
       status,
+      plate,
+      sellerId
     }: IFilters,
   ): Promise<IPaginatedSalesResponse>{
     const limit_per_page = 10;
@@ -255,20 +283,36 @@ export default class PrismaSaleRepository implements ISaleRepository {
 
     const count = await prismaDb.sales.count({
       where: {
-        ...(companyId && {profiles: {
-          company_id: companyId,
-        }}),
+        ...(companyId && {unities: {
+          company_id: companyId
+        }
+        }),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
+        ...(sellerId && { seller_id: sellerId }),
         ...(status && {status: status as sales_status_enum}),
         ...(initialDeliveryDate && finalDeliveryDate && {
-          finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
+          }
+        }),
+        ...(startFinishedDate && endFinishedDate && {
+          finished_at: {
+            lte: endFinishedDate,
+            gte: startFinishedDate,
           }
         }),
       },
@@ -279,20 +323,35 @@ export default class PrismaSaleRepository implements ISaleRepository {
       take: limit_per_page,
       orderBy: {request_date: "desc"},
       where: {
-        ...(companyId && {profiles: {
-          company_id: companyId,
+        ...(companyId && {unities: {
+          company_id: companyId
         }}),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
+        ...(sellerId && { seller_id: sellerId }),
         ...(status && {status: status as sales_status_enum}),
         ...(initialDeliveryDate && finalDeliveryDate && {
-          finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
+          }
+        }),
+        ...(startFinishedDate && endFinishedDate && {
+          finished_at: {
+            lte: endFinishedDate,
+            gte: startFinishedDate,
           }
         }),
       },
@@ -303,7 +362,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -338,8 +401,12 @@ export default class PrismaSaleRepository implements ISaleRepository {
       finalDeliveryDate,
       initialAvailabilityDate,
       finalAvailabilityDate,
+      endFinishedDate,
+      startFinishedDate,
       status,
       sellerId,
+      plate,
+      companyId
     }: IFilters,
   ): Promise<IPaginatedSalesResponse> {
     const limit_per_page = 10;
@@ -347,40 +414,77 @@ export default class PrismaSaleRepository implements ISaleRepository {
 
     const count = await prismaDb.sales.count({
       where: {
-        ...(sellerId && {seller_id: sellerId}),
+        ...(companyId && {
+          unities: {
+            company_id: companyId,
+          }
+        }),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
+        ...(sellerId && { seller_id: sellerId }),
         ...(status && {status: status as sales_status_enum}),
+        ...(startFinishedDate && endFinishedDate && {
+          delivery_date: {
+            lte: endFinishedDate,
+            gte: startFinishedDate,
+          }
+        }),
         ...(initialDeliveryDate && finalDeliveryDate && {
-          finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
           }
         }),
       },
     });
-
     const sales = await prismaDb.sales.findMany({
       skip: offset,
       take: limit_per_page,
       orderBy: {request_date: "desc"},
       where: {
-        ...(sellerId && {seller_id: sellerId}),
-        ...(status && {status: status as sales_status_enum}),
-        ...(initialDeliveryDate && finalDeliveryDate && {
+        ...(companyId && {
+          unities: {
+            company_id: companyId,
+          }
+        }),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
+        ...(sellerId && { seller_id: sellerId }),
+        ...(status && { status: status as sales_status_enum }),
+        ...(startFinishedDate && endFinishedDate && {
           finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+            lte: endFinishedDate,
+            gte: startFinishedDate,
+          }
+        }),
+        ...(initialDeliveryDate && finalDeliveryDate && {
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
           }
         }),
       },
@@ -391,7 +495,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -427,7 +535,10 @@ export default class PrismaSaleRepository implements ISaleRepository {
       finalDeliveryDate,
       initialAvailabilityDate,
       finalAvailabilityDate,
+      endFinishedDate,
+      startFinishedDate,
       status,
+      plate,
     }: IFilters,
   ): Promise<IPaginatedSalesResponse> {
     const limit_per_page = 10;
@@ -435,18 +546,32 @@ export default class PrismaSaleRepository implements ISaleRepository {
 
     const count = await prismaDb.sales.count({
       where: {
-        ...(sellerId && {seller_id: sellerId}),
+        ...(sellerId && { seller_id: sellerId }),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
         ...(status && {status: status as sales_status_enum}),
         ...(initialDeliveryDate && finalDeliveryDate && {
-          finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
+          }
+        }),
+        ...(startFinishedDate && endFinishedDate && {
+          finished_at: {
+            lte: endFinishedDate,
+            gte: startFinishedDate,
           }
         }),
       },
@@ -458,17 +583,31 @@ export default class PrismaSaleRepository implements ISaleRepository {
       orderBy: {request_date: "desc"},
       where: {
         ...(sellerId && {seller_id: sellerId}),
+        ...(plate && {
+          cars: {
+            plate: {
+              contains: plate,
+              mode: 'insensitive',
+            }
+          }
+        }),
         ...(status && {status: status as sales_status_enum}),
         ...(initialDeliveryDate && finalDeliveryDate && {
-          finished_at: {
-            lte: initialDeliveryDate,
-            gte: finalDeliveryDate,
+          delivery_date: {
+            lte: finalDeliveryDate,
+            gte: initialDeliveryDate,
           }
         }),
         ...(initialAvailabilityDate && finalAvailabilityDate && {
           availability_date: {
-            lte: initialAvailabilityDate,
-            gte: finalAvailabilityDate,
+            lte: finalAvailabilityDate,
+            gte: initialAvailabilityDate,
+          }
+        }),
+        ...(startFinishedDate && endFinishedDate && {
+          finished_at: {
+            lte: endFinishedDate,
+            gte: startFinishedDate,
           }
         }),
       },
@@ -479,7 +618,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -522,15 +665,15 @@ export default class PrismaSaleRepository implements ISaleRepository {
       where: {
         ...(status && {status: status as sales_status_enum}),
         ...(deliveryDateInitialDay && deliveryDateFinalDay && {
-          finished_at: {
-            lte: deliveryDateInitialDay,
-            gte: deliveryDateFinalDay,
+          delivery_date: {
+            lte: deliveryDateFinalDay,
+            gte: deliveryDateInitialDay,
           }
         }),
         ...(availabilityDateInitialDay && availabilityDateFinalDay && {
           availability_date: {
-            lte: availabilityDateInitialDay,
-            gte: availabilityDateFinalDay,
+            lte: availabilityDateFinalDay,
+            gte: availabilityDateInitialDay,
           }
         }),
       },
@@ -543,15 +686,15 @@ export default class PrismaSaleRepository implements ISaleRepository {
       where: {
         ...(status && {status: status as sales_status_enum}),
         ...(deliveryDateInitialDay && deliveryDateFinalDay && {
-          finished_at: {
-            lte: deliveryDateInitialDay,
-            gte: deliveryDateFinalDay,
+          delivery_date: {
+            lte: deliveryDateFinalDay,
+            gte: deliveryDateInitialDay,
           }
         }),
         ...(availabilityDateInitialDay && availabilityDateFinalDay && {
           availability_date: {
-            lte: availabilityDateInitialDay,
-            gte: availabilityDateFinalDay,
+            lte: availabilityDateFinalDay,
+            gte: availabilityDateInitialDay,
           }
         }),
       },
@@ -562,7 +705,11 @@ export default class PrismaSaleRepository implements ISaleRepository {
             users: true,
           }
         },
-        unities: true,
+        unities: {
+          include: {
+            companies: true,
+          }
+        },
         persons: true,
         cars: true,
         services_sales: {
@@ -592,7 +739,7 @@ export default class PrismaSaleRepository implements ISaleRepository {
 
   public async delete(id: string): Promise<void>{
     await prismaDb.sales.delete({
-      where: {id: id},
+      where: { id },
     });
   }
 }

@@ -5,8 +5,9 @@ import { WhatsappNumber } from "../../entities/WhatsappNumber";
 import { PrismaWhatsappNumberMapper } from "../mappers/prisma-whatsapp-number-mapper";
 
 export default class PrismaWhatsappNumbersRepository implements IWhatsappNumberRepository {
-  deleteAll(): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async deleteAll(): Promise<void> {
+    await prismaDb.whatsapp_numbers.deleteMany();
   }
 
   async find(): Promise<WhatsappNumber[]> {

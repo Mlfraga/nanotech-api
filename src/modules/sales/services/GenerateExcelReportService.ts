@@ -46,7 +46,7 @@ class GenerateExcelReportService {
       status: status && String(status),
       company:
         user?.role === 'MANAGER'
-          ? user.profile.company_id
+          ? user.profile?.company_id
           : company && String(company),
       initialDate: startRangeFinishedDate
         ? startOfDay(new Date(String(startRangeFinishedDate)))
@@ -111,7 +111,7 @@ class GenerateExcelReportService {
         status: getTranslatedSalesStatus(sale.status),
         date: sale.created_at,
         finished_date: sale.finished_at,
-        company: `${sale.unit.company.name} ${sale.unit.name}`,
+        company: `${sale.unit.company?.name} ${sale.unit.name}`,
         services: formattedServices,
       });
     }

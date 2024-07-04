@@ -1,7 +1,6 @@
 
 import { Prisma } from '@prisma/client';
 import { User } from '../../entities/User';
-import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import { Profile } from '@modules/profiles/infra/entities/Profile';
 import { Company } from '@modules/companies/infra/entities/Company';
 
@@ -16,13 +15,17 @@ export type PrismaUsersProvider = Prisma.usersGetPayload<{
 }>;
 
 export class PrismaUserMapper {
-  static toPrisma(user: ICreateUserDTO) {
+  static toPrisma(user: User) {
     return {
       email: user.email,
       username: user.username,
       telephone: user.telephone,
       password: user.password,
       role: user.role,
+      first_login: user.first_login,
+      enabled: user.enabled,
+      pix_key: user.pix_key,
+      pix_key_type: user.pix_key_type,
     };
   }
 
