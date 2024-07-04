@@ -82,6 +82,7 @@ class AuthenticateUserService {
     if (user.first_login) {
       user.first_login = false;
       await this.usersRepository.save(user);
+      user.first_login = true;
     }
 
     return { user, access_token, refresh_token };
