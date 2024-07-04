@@ -189,7 +189,7 @@ ${referralServicesMessageData.companyName}`;
       seller: saleById?.seller.name,
       company: saleById?.seller?.company?.name ?? '',
       unit: saleById?.unit?.name,
-      car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate}`,
+      car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate} - ${saleById.source}`,
       comments: saleById?.comments ? saleById?.comments : ' ',
     };
 
