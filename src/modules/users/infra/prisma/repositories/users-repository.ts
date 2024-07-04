@@ -80,7 +80,7 @@ export default class PrismaUsersRepository implements IUserRepository {
     const users = await prismaDb.users.findMany({
       where: {
         ...(role && { role: role as users_role_enum }),
-        ...(name && { profiles: {name: { contains: name as string }} }),
+        ...(name && { profiles: {name: { contains: name as string, mode: 'insensitive' }} }),
         ...(telephone && { telephone: { contains: telephone as string } }),
         ...(company_id && { profiles: { company_id: { equals: company_id as string } }}),
         ...(enabled !== undefined && { enabled: !!enabled }),
