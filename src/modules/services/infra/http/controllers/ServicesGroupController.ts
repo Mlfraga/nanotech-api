@@ -14,7 +14,8 @@ export default class ServicesGroupController {
       description,
       imageUrl,
       defaultNanotechPrice,
-      companiesToLink
+     companiesToLink,
+     category_id
     } = request .body;
 
     const createServicGroupService = container.resolve(CreateServiceGroupService);
@@ -24,7 +25,8 @@ export default class ServicesGroupController {
       description,
       imageUrl,
       defaultNanotechPrice,
-      companiesToLink
+      companiesToLink,
+      category_id
     });
 
     return response.json(ServiceGroupViewModel.toHttp(serviceGroupCreated));
@@ -54,11 +56,11 @@ export default class ServicesGroupController {
 
   async update(request: Request, response: Response) {
     const { id } = request.params;
-    const { name, description } = request.body;
+    const { name, description, category_id } = request.body;
 
    const updateServiceGroupService = container.resolve(UpdateServiceGroupService);
 
-    await updateServiceGroupService.execute({ id, name, description });
+    await updateServiceGroupService.execute({ id, name, description, category_id });
 
     return response.sendStatus(204);
   }

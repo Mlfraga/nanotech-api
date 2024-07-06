@@ -30,6 +30,8 @@ import PrismaServiceRepository from '@modules/services/infra/prisma/repositories
 import PrismaWhatsappNumbersRepository from '@modules/whatsapp_numbers/infra/prisma/repositories/whatsapp-numbers-repository';
 import PrismaServiceProviderRepository from '@modules/service_providers/infra/prisma/repositories/service-provider-repository';
 import PrismaServiceGroupRepository from '@modules/services/infra/prisma/repositories/service-group-repository';
+import IServiceGroupCategoryRepository from '@modules/services/repositories/IServiceGroupCategoryRepository';
+import PrismaServiceGroupCategoryRepository from '@modules/services/infra/prisma/repositories/service-group-category-repository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -75,6 +77,11 @@ container.registerSingleton<IServiceRepository>(
 container.registerSingleton<IServiceGroupRepository>(
   'ServiceGroupRepository',
   PrismaServiceGroupRepository,
+);
+
+container.registerSingleton<IServiceGroupCategoryRepository>(
+  'ServiceGroupCategoryRepository',
+  PrismaServiceGroupCategoryRepository,
 );
 
 container.registerSingleton<IWhatsappNumberRepository>(

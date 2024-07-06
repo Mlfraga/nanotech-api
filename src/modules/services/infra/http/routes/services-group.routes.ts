@@ -14,6 +14,7 @@ servicesGroupRouter.post(
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
+      category_id: Joi.string().uuid().required(),
       description: Joi.string(),
       defaultNanotechPrice: Joi.number(),
       imageUrl: Joi.string(),
@@ -63,6 +64,7 @@ servicesGroupRouter.put(
     [Segments.BODY]: {
       name: Joi.string().required(),
       description: Joi.string(),
+      category_id: Joi.string().uuid().required(),
     },
   }),
   ensureAuthenticated,

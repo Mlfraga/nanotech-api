@@ -1,11 +1,14 @@
 import { Replace } from '@shared/helpers/Replace';
 import { randomUUID } from 'node:crypto';
 import { Service } from './Service';
+import { ServiceGroupCategory } from './ServiceGroupCategory';
 
 export interface ServiceGroupProps {
   name: string;
   description: string | undefined;
   default_nanotech_price?: number;
+  category_id?: string;
+  category?: ServiceGroupCategory;
   image_url: string | undefined;
   enabled: boolean;
   created_at: Date;
@@ -35,6 +38,22 @@ export class ServiceGroup {
 
   public set name(name: string){
     this.props.name = name;
+  }
+
+  public get category_id(): string | undefined{
+    return this.props.category_id;
+  }
+
+  public set category_id(category_id: string | undefined){
+    this.props.category_id = category_id;
+  }
+
+  public get category(): ServiceGroupCategory | undefined{
+    return this.props.category;
+  }
+
+  public set category(category: ServiceGroupCategory | undefined){
+    this.props.category = category;
   }
 
   public get description(): string | undefined{

@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { ServiceGroup } from '../../entities/ServiceGroup';
 import { Service } from '../../entities/Service';
 import { Company } from '@modules/companies/infra/entities/Company';
+import { ServiceGroupCategory } from '../../entities/ServiceGroupCategory';
 
 export type PrismaServiceGroupProvider = Prisma.service_groupGetPayload<{
   include: {
@@ -9,7 +10,8 @@ export type PrismaServiceGroupProvider = Prisma.service_groupGetPayload<{
       include: {
         companies: true
       }
-    }
+    },
+    category: true
   }
 }>;
 
@@ -20,6 +22,7 @@ export class ServiceGroupMapper {
       description: data.description,
       image_url: data.image_url,
       enabled: data.enabled,
+      category_id: data.category_id,
       default_nanotech_price: data.default_nanotech_price,
     }
   }
@@ -33,6 +36,14 @@ export class ServiceGroupMapper {
         created_at: raw.created_at,
         ...(raw.default_nanotech_price && {default_nanotech_price: Number(raw.default_nanotech_price)}),
         updated_at: raw.created_at,
+        category_id: raw.category_id || undefined,
+        ...(raw?.category && {
+          category: new ServiceGroupCategory({
+            name: raw.category.name,
+            created_at: raw.category.created_at,
+            updated_at: raw.category.updated_at,
+          }, raw.category.id)
+        }),
         services: raw.services.map(service => new Service({
           name: service.name,
           enabled: service.enabled,

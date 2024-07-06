@@ -120,15 +120,17 @@ model sales_service_providers {
 }
 
 model service_group {
-  id                     String     @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                   String     @db.VarChar
-  default_nanotech_price Decimal?   @db.Decimal
-  description            String?    @db.VarChar
-  image_url              String?    @db.VarChar
-  enabled                Boolean    @default(true)
-  created_at             DateTime   @default(now()) @db.Timestamp(6)
-  updated_at             DateTime   @default(now()) @db.Timestamp(6)
+  id                     String                    @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                   String                    @db.VarChar
+  default_nanotech_price Decimal?                  @db.Decimal
+  description            String?                   @db.VarChar
+  image_url              String?                   @db.VarChar
+  enabled                Boolean                   @default(true)
+  category_id            String?                   @db.Uuid
+  created_at             DateTime                  @default(now()) @db.Timestamp(6)
+  updated_at             DateTime                  @default(now()) @db.Timestamp(6)
   services               services[]
+  category               service_group_categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "ServiceGroupCategory")
 }
 
 model services {
@@ -199,6 +201,14 @@ model whatsapp_numbers {
   created_at                      DateTime   @default(now()) @db.Timestamp(6)
   updated_at                      DateTime   @default(now()) @db.Timestamp(6)
   companies                       companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyWhatsappNumbers")
+}
+
+model service_group_categories {
+  id            String          @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b4bb3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String          @db.VarChar
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
+  updated_at    DateTime        @default(now()) @db.Timestamp(6)
+  service_group service_group[]
 }
 
 enum sales_production_status_enum {
