@@ -5,6 +5,7 @@ import CreateServiceGroupService from '../services/CreateServiceGroupService';
 import { ServiceGroupViewModel } from '../view-models/service-group-view-model';
 import ListServiceGroupService from '../services/ListServiceGroupService';
 import ToggleServiceGroupStatusService from '../services/ToggleServiceGroupStatusService';
+import UpdateServiceGroupService from '../services/UpdateServiceGroupService';
 
 export default class ServicesGroupController {
  async store(request: Request, response: Response) {
@@ -47,6 +48,17 @@ export default class ServicesGroupController {
    const toggleServiceGroupStatusService = container.resolve(ToggleServiceGroupStatusService);
 
     await toggleServiceGroupStatusService.execute({ id });
+
+    return response.sendStatus(204);
+  }
+
+  async update(request: Request, response: Response) {
+    const { id } = request.params;
+    const { name, description } = request.body;
+
+   const updateServiceGroupService = container.resolve(UpdateServiceGroupService);
+
+    await updateServiceGroupService.execute({ id, name, description });
 
     return response.sendStatus(204);
   }

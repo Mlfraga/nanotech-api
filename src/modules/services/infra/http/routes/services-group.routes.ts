@@ -54,5 +54,20 @@ servicesGroupRouter.patch(
   servicesGroupController.toggleNanotechServiceGroupStatus,
 );
 
+servicesGroupRouter.put(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      description: Joi.string(),
+    },
+  }),
+  ensureAuthenticated,
+  RoleMiddleware.isAdminOrNanotechRepresentative,
+  servicesGroupController.update,
+);
 
 export default servicesGroupRouter;
