@@ -1,0 +1,248 @@
+generator client {
+  previewFeatures = ["postgresqlExtensions"]
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuid_ossp(map: "uuid-ossp")]
+}
+
+model cars {
+  id         String   @id(map: "PK_fc218aa84e79b477d55322271b6") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  brand      String   @db.VarChar
+  model      String   @db.VarChar
+  plate      String   @db.VarChar
+  color      String   @db.VarChar
+  person_id  String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  persons    persons  @relation(fields: [person_id], references: [id], onDelete: Cascade, map: "PersonCar")
+  sales      sales[]
+}
+
+model companies {
+  id                String             @id(map: "PK_d4bc3e82a314fa9e29f652c2c22") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name              String             @db.VarChar
+  cnpj              String             @db.VarChar
+  telephone         String             @db.VarChar
+  client_identifier String             @unique @db.VarChar
+  created_at        DateTime           @default(now()) @db.Timestamp(6)
+  updated_at        DateTime           @default(now()) @db.Timestamp(6)
+  company_prices    company_prices[]
+  profiles          profiles[]
+  services          services[]
+  unities           unities[]
+  whatsapp_numbers  whatsapp_numbers[]
+}
+
+model company_prices {
+  id         String    @id(map: "PK_7cbc4ba57d510b743bd93c57bb5") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  price      Decimal   @db.Decimal
+  company_id String    @db.Uuid
+  service_id String    @db.Uuid
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @db.Timestamp(6)
+  companies  companies @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyPrices")
+  services   services  @relation(fields: [service_id], references: [id], onDelete: Cascade, map: "ServicePrices")
+}
+
+model migrations {
+  id        Int    @id(map: "PK_8c82d7f526340ab734260ea46be") @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar
+}
+
+model persons {
+  id           String   @id(map: "PK_74278d8812a049233ce41440ac7") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  cpf          String?  @db.VarChar
+  phone_number String?  @db.VarChar
+  name         String   @db.VarChar
+  created_at   DateTime @default(now()) @db.Timestamp(6)
+  updated_at   DateTime @default(now()) @db.Timestamp(6)
+  cars         cars[]
+  sales        sales[]
+}
+
+model profiles {
+  id                      String                    @id(map: "PK_8e520eb4da7dc01d0e190447c8e") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                    String                    @db.VarChar
+  company_id              String?                   @db.Uuid
+  unit_id                 String?                   @db.Uuid
+  user_id                 String                    @unique @db.Uuid
+  created_at              DateTime                  @default(now()) @db.Timestamp(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamp(6)
+  companies               companies?                @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyProfile")
+  unities                 unities?                  @relation(fields: [unit_id], references: [id], onDelete: Cascade, map: "UnitProfile")
+  users                   users                     @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "UserProfile")
+  sales                   sales[]
+  sales_service_providers sales_service_providers[]
+  services_sales          services_sales[]
+}
+
+model sales {
+  id                      String                        @id(map: "PK_4f0bc990ae81dba46da680895ea") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  client_identifier       Int                           @default(autoincrement())
+  request_date            DateTime                      @default(now()) @db.Timestamp(6)
+  availability_date       DateTime                      @db.Timestamp(6)
+  delivery_date           DateTime                      @db.Timestamp(6)
+  status                  sales_status_enum
+  company_value           Decimal                       @db.Decimal
+  cost_value              Decimal                       @db.Decimal
+  source                  sales_source_enum
+  comments                String?                       @db.VarChar
+  seller_id               String                        @db.Uuid
+  unit_id                 String                        @db.Uuid
+  person_id               String                        @db.Uuid
+  car_id                  String                        @db.Uuid
+  created_at              DateTime                      @default(now()) @db.Timestamp(6)
+  updated_at              DateTime                      @default(now()) @db.Timestamp(6)
+  finished_at             DateTime?                     @db.Timestamp(6)
+  production_status       sales_production_status_enum?
+  techinical_comments     String?                       @db.VarChar
+  partner_external_id     String?                       @db.VarChar
+  cars                    cars                          @relation(fields: [car_id], references: [id], onDelete: Cascade, map: "CarSale")
+  persons                 persons                       @relation(fields: [person_id], references: [id], onDelete: Cascade, map: "PersonSale")
+  profiles                profiles                      @relation(fields: [seller_id], references: [id], onDelete: Cascade, map: "SellerSale")
+  unities                 unities                       @relation(fields: [unit_id], references: [id], onDelete: Cascade, map: "UnitSale")
+  sales_service_providers sales_service_providers[]
+  services_sales          services_sales[]
+}
+
+model sales_service_providers {
+  id                          String   @id(map: "PK_1ffbe41443e90c36b2ea76ced88") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sale_id                     String   @db.Uuid
+  service_provider_profile_id String   @db.Uuid
+  date_to_be_done             DateTime @default(now()) @db.Timestamp(6)
+  profiles                    profiles @relation(fields: [service_provider_profile_id], references: [id], onDelete: Cascade, map: "ServiceProvider")
+  sales                       sales    @relation(fields: [sale_id], references: [id], onDelete: Cascade, map: "ServiceProviderSale")
+}
+
+model service_group {
+  id                     String                    @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b3b3b3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                   String                    @db.VarChar
+  default_nanotech_price Decimal?                  @db.Decimal
+  description            String?                   @db.VarChar
+  image_url              String?                   @db.VarChar
+  enabled                Boolean                   @default(true)
+  category_id            String?                   @db.Uuid
+  created_at             DateTime                  @default(now()) @db.Timestamp(6)
+  updated_at             DateTime                  @default(now()) @db.Timestamp(6)
+  services               services[]
+  category               service_group_categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "ServiceGroupCategory")
+}
+
+model services {
+  id                String           @id(map: "PK_ba2d347a3168a296416c6c5ccb2") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name              String           @db.VarChar
+  price             Decimal          @db.Decimal
+  enabled           Boolean          @default(true)
+  created_at        DateTime         @default(now()) @db.Timestamp(6)
+  updated_at        DateTime         @default(now()) @db.Timestamp(6)
+  service_group_id  String?          @db.Uuid
+  company_id        String?          @db.Uuid
+  company_price     Decimal?         @db.Decimal
+  commission_amount Decimal?         @db.Decimal
+  company_prices    company_prices[]
+  companies         companies?       @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyServices")
+  service_group     service_group?   @relation(fields: [service_group_id], references: [id], onDelete: Cascade, map: "ServiceGroupServices")
+  services_sales    services_sales[]
+}
+
+model services_sales {
+  id              String    @id(map: "PK_d617fcc5631b91a9f49930582bd") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  company_value   Decimal?  @db.Decimal
+  cost_value      Decimal?  @db.Decimal
+  sale_id         String    @db.Uuid
+  service_id      String    @db.Uuid
+  created_at      DateTime  @default(now()) @db.Timestamp(6)
+  updated_at      DateTime  @default(now()) @db.Timestamp(6)
+  commissioner_id String?   @db.Uuid
+  profiles        profiles? @relation(fields: [commissioner_id], references: [id], onDelete: Cascade, map: "ServiceSaleCommissioner")
+  sale            sales     @relation(fields: [sale_id], references: [id], onDelete: Cascade, map: "ServiceSale")
+  service         services  @relation(fields: [service_id], references: [id], onDelete: Cascade, map: "SaleService")
+}
+
+model unities {
+  id                String     @id(map: "PK_42e005e82cfebf8cedfccd1a8f0") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name              String     @db.VarChar
+  telephone         String     @db.VarChar
+  client_identifier String     @db.VarChar
+  company_id        String     @db.Uuid
+  created_at        DateTime   @default(now()) @db.Timestamp(6)
+  updated_at        DateTime   @default(now()) @db.Timestamp(6)
+  profiles          profiles[]
+  sales             sales[]
+  companies         companies  @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyUnit")
+}
+
+model users {
+  id           String                   @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email        String                   @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  username     String                   @unique(map: "UQ_fe0bb3f6520ee0469504521e710") @db.VarChar
+  telephone    String                   @db.VarChar
+  password     String                   @db.VarChar
+  role         users_role_enum
+  first_login  Boolean                  @default(true)
+  enabled      Boolean                  @default(true)
+  created_at   DateTime                 @default(now()) @db.Timestamp(6)
+  updated_at   DateTime                 @default(now()) @db.Timestamp(6)
+  pix_key_type users_pix_key_type_enum?
+  pix_key      String?                  @db.VarChar
+  profiles     profiles?
+}
+
+model whatsapp_numbers {
+  id                              String     @id(map: "PK_3184795c48abf9c78f9242af057") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  number                          String     @unique(map: "UQ_5a6ebde8aed3a963a5d1ece93a8") @db.VarChar
+  restricted_to_especific_company Boolean
+  company_id                      String?    @db.Uuid
+  created_at                      DateTime   @default(now()) @db.Timestamp(6)
+  updated_at                      DateTime   @default(now()) @db.Timestamp(6)
+  companies                       companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, map: "CompanyWhatsappNumbers")
+}
+
+model service_group_categories {
+  id            String          @id(map: "PK_7b3b3b3b3b3b3b3b3b3b3b3b3b4bb3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String          @db.VarChar
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
+  updated_at    DateTime        @default(now()) @db.Timestamp(6)
+  service_group service_group[]
+}
+
+enum sales_production_status_enum {
+  TO_DO
+  IN_PROGRESS
+  DONE
+  PENDING
+}
+
+enum sales_source_enum {
+  NEW
+  USED
+  WORKSHOP
+}
+
+enum sales_status_enum {
+  PENDING
+  CONFIRMED
+  CANCELED
+  FINISHED
+}
+
+enum users_pix_key_type_enum {
+  CPF
+  PHONE
+  EMAIL
+  RANDOM
+}
+
+enum users_role_enum {
+  ADMIN
+  MANAGER
+  SELLER
+  NANOTECH_REPRESENTATIVE
+  SERVICE_PROVIDER
+  COMMISSIONER
+}

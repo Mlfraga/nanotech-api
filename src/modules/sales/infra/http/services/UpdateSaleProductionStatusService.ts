@@ -10,7 +10,7 @@ import IProfileRepository from '@modules/profiles/repositories/IProfileRepositor
 import IWhatsappNumberRepository from '@modules/whatsapp_numbers/repositories/IWhatsappNumberRepository';
 
 import ISaleRepository from '../../../repositories/ISaleRepository';
-import Sale from '../../typeorm/entities/Sale';
+import { Sale } from '../../entities/Sale';
 
 interface IRequest {
   sale_ids: string[];
@@ -48,10 +48,9 @@ class UpdateSaleProductionStatusService {
         throw new AppError('This sale was not found', 404);
       }
 
-      const updated_sale = await this.saleRepository.save({
-        ...sale,
-        production_status: status,
-      });
+      sale.production_status = status;
+
+      const updated_sale = await this.saleRepository.save(sale);
 
       updated_sales.push(updated_sale);
     }
@@ -79,7 +78,7 @@ class UpdateSaleProductionStatusService {
 
       const formattedMessage = `*Pedido de Venda Atualizado:*
 
-*n°:* ${updated_sale?.seller.company.client_identifier}${
+*n°:* ${updated_sale?.seller?.company?.client_identifier}${
         updated_sale?.unit.client_identifier
       }${updated_sale?.client_identifier}
 
@@ -115,7 +114,7 @@ Você pode encontrar mais detalhes dessa venda em nossa plataforma`;
 
       const companyWhatsapNumbers =
         await this.whatsappNumberRepository.findByCompany(
-          updated_sale.seller.company_id,
+          updated_sale.seller.company_id || '',
         );
       const globalWhatsappRecipients =
         await this.whatsappNumberRepository.findAllGlobalNumbers();

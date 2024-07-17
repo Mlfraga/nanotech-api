@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import ICreateWhatsappNumberDTO from '../../../dtos/ICreateWhatsappNumberDTO';
 import IWhatsappNumberRepository from '../../../repositories/IWhatsappNumberRepository';
-import WhatsappNumber from '../../typeorm/entities/WhatsappNumber';
+import { WhatsappNumber } from '../../entities/WhatsappNumber';
 
 @injectable()
 class StoreWhatsappNumberService {

@@ -14,7 +14,7 @@ interface IRequest {
 }
 
 @injectable()
-class ShowCompanyService {
+class SetCompanyPricesService {
   constructor(
     @inject('CompanyPricesRepository')
     private companyPricesRepository: ICompanyPricesRepository,
@@ -41,10 +41,9 @@ class ShowCompanyService {
         throw new AppError('No service found with this ID.');
       }
 
-      const serviceUpdated = await this.serviceRepository.save({
-        ...serviceById,
-        company_price: service.price,
-      });
+      serviceById.company_price = service.price;
+
+      const serviceUpdated = await this.serviceRepository.save(serviceById);
 
       if (serviceUpdated) {
         companiesUpdated.push(serviceUpdated);
@@ -53,4 +52,4 @@ class ShowCompanyService {
   }
 }
 
-export default ShowCompanyService;
+export default SetCompanyPricesService;

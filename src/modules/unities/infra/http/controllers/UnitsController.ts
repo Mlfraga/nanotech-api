@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateUnitService from '../services/CreateUnitService';
 import UpdateUnitService from '../services/UpdateUnitService';
+import { UnitViewModel } from '../view-models/unities-view-model';
 
 export default class UnitController {
   async update(request: Request, response: Response) {
@@ -18,7 +19,7 @@ export default class UnitController {
       telephone,
     });
 
-    return response.json(unit);
+    return response.json(UnitViewModel.toHttp(unit));
   }
 
   async store(request: Request, response: Response) {

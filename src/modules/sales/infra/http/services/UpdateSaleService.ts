@@ -4,8 +4,9 @@ import AppError from '@shared/errors/AppError';
 
 import ICarRepository from '@modules/cars/repositories/ICarRepository';
 
+import { Car } from '@modules/cars/infra/entities/Car';
 import ISaleRepository from '../../../repositories/ISaleRepository';
-import Sale from '../../typeorm/entities/Sale';
+import { Sale } from '../../entities/Sale';
 
 interface IRequest {
   car: string;
@@ -46,21 +47,22 @@ class UpdateSaleStatusService {
       throw new AppError('This sale was not found', 404);
     }
 
-    await this.carRepository.save({
-      ...sale.car,
+    const carToUpdate = new Car({
+      person_id: sale.car.person_id,
       brand: car,
       plate: carPlate,
       color: carColor,
       model: carModel,
-    });
+    }, sale.car.id)
 
-    await this.saleRepository.save({
-      ...sale,
-      comments,
-      source,
-      delivery_date: deliveryDate,
-      availability_date: availabilityDate,
-    });
+    await this.carRepository.save(carToUpdate);
+
+    sale.comments = comments;
+    sale.source = source;
+    sale.delivery_date = deliveryDate;
+    sale.availability_date = availabilityDate;
+
+    await this.saleRepository.save(sale);
 
     const updatedSale = await this.saleRepository.findById(sale.id);
 

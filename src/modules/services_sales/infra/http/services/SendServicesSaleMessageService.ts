@@ -43,7 +43,7 @@ class SendServicesSaleMessageService {
     });
 
     const createdSaleMessageData = {
-      saleNumber: `${saleById?.seller.company.client_identifier}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
+      saleNumber: `${saleById?.seller.company?.client_identifier || ''}${saleById?.unit.client_identifier}${saleById?.client_identifier}`,
       availabilityDate: format(
         addHours(new Date(String(saleById?.availability_date)), -3),
         "dd'/'MM'/'yyyy '-' HH:mm'h'",
@@ -60,7 +60,7 @@ class SendServicesSaleMessageService {
         { locale: ptBR },
       ),
       seller: saleById?.seller.name,
-      company: saleById?.seller.company.name,
+      company: saleById?.seller.company?.name || '',
       unit: saleById?.unit?.name,
       car: `${saleById?.car.brand} ${saleById?.car.model} ${saleById?.car.color}, placa ${saleById?.car.plate}`,
       comments: saleById?.comments ? saleById?.comments : ' ',

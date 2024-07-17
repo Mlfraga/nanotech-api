@@ -2,7 +2,8 @@ import { injectable, inject } from 'tsyringe';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
 
-import Company from '../../typeorm/entities/Company';
+import { Company } from '../../entities/Company';
+import AppError from '@shared/errors/AppError';
 
 type IListCompaniesResponse = Company;
 
@@ -17,11 +18,11 @@ class FindCompanyById {
     private companyRepository: ICompanyRepository,
   ) {}
 
-  public async execute({ id }: IRequest): Promise<Company | string> {
+  public async execute({ id }: IRequest): Promise<IListCompaniesResponse> {
     const company = await this.companyRepository.findById(id);
 
     if (!company) {
-      return 'company not found';
+      throw new AppError('Company not found');
     }
 
     return company;

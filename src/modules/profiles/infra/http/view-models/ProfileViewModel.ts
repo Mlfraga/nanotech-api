@@ -1,4 +1,4 @@
-import Profile from '../../typeorm/entities/Profile';
+import { Profile } from '../../entities/Profile';
 
 export class ProfileViewModel {
   static toHttp(profile: Profile) {

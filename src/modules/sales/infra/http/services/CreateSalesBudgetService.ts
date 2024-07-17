@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import Service from '@modules/services/infra/typeorm/entities/Service';
+import { Service } from '@modules/services/infra/entities/Service';
 import IServiceRepository from '@modules/services/repositories/IServiceRepository';
 
 interface ICreateSalesBudgetServiceParams {

@@ -34,7 +34,7 @@ class ServiceProviderRepository implements IServiceProviderRepository {
   public async findById(id: string): Promise<SaleServiceProvider | undefined> {
     const saleServiceProvider = await this.ormRepository.findOne(id);
 
-    return saleServiceProvider;
+    return saleServiceProvider || undefined;
   }
 
   public async findByProviderAndSaleId(

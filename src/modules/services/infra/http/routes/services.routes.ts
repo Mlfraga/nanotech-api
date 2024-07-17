@@ -28,9 +28,9 @@ servicesRouter.post(
   celebrate({
     [Segments.BODY]: {
       company_id: Joi.string().uuid().required(),
-      name: Joi.string().required(),
       price: Joi.number().required(),
       commission_amount: Joi.number(),
+      service_group_id: Joi.string().uuid().required(),
     },
   }),
   ensureAuthenticated,

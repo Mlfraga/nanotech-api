@@ -1,5 +1,5 @@
 import { endOfDay, startOfDay } from 'date-fns';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
@@ -14,8 +14,8 @@ interface IFormattedSale {
     id: string;
     name: string;
     company: {
-      name: string;
-      client_identifier: string;
+      name?: string;
+      client_identifier?: string;
     };
   };
   unit: {
@@ -26,7 +26,7 @@ interface IFormattedSale {
   person: {
     name: string;
   };
-  comments: string;
+  comments: string | null;
   car: {
     brand: string;
     model: string;
@@ -95,7 +95,7 @@ class ListSalesService {
   }: IRequest): Promise<IListSalesResponse> {
     const user = await this.userRepository.findById(user_id);
 
-    if (!user) {
+    if (!user || !user.profile) {
       throw new AppError('User not found.', 404);
     }
 
@@ -197,7 +197,7 @@ class ListSalesService {
       );
     } else {
       sales = await this.saleRepository.findByCompanyAndFinishedStatus(
-        user.profile.company_id,
+        user.profile.company_id as string,
         Number(page),
         {
           ...(filters.sellerId && { sellerId: String(filters.sellerId) }),
@@ -251,15 +251,15 @@ class ListSalesService {
             id: sale.seller.id,
             name: sale.seller.name,
             company: {
-              name: sale.seller.company.name,
-              client_identifier: sale.seller.company.client_identifier,
+              name: sale.seller.company?.name,
+              client_identifier: sale.seller.company?.client_identifier,
             },
           },
           unit: {
             client_identifier: sale.unit.client_identifier,
             name: sale.unit.name,
           },
-          client_identifier: sale.client_identifier,
+          client_identifier: Number(sale.client_identifier),
           person: {
             name: sale.person.name,
           },
@@ -271,6 +271,7 @@ class ListSalesService {
             color: sale.car.color,
           },
           hasAlreadyBeenDirected,
+          source: sale.source,
           company_value: sale.company_value,
           cost_value: sale.cost_value,
           availability_date: sale.availability_date,

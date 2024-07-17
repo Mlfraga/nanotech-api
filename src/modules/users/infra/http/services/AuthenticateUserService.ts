@@ -8,7 +8,7 @@ import AppError from '@shared/errors/AppError';
 
 import IHashProvider from '../../../providers/HashProvider/models/IHashProvider';
 import IUserRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '@modules/users/infra/entities/User';
 
 interface IRequest {
   login: string;
@@ -80,7 +80,9 @@ class AuthenticateUserService {
     await this.cacheProvider.save('refresh-tokens', refreshTokens);
 
     if (user.first_login) {
-      await this.usersRepository.save({ ...user, first_login: false });
+      user.first_login = false;
+      await this.usersRepository.save(user);
+      user.first_login = true;
     }
 
     return { user, access_token, refresh_token };

@@ -32,6 +32,6 @@ export default class ProfileController {
 
     const company = await findProfileById.execute({ id });
 
-    return response.json(company);
+    return response.json(ProfileViewModel.toHttp(company));
   }
 }

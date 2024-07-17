@@ -7,6 +7,7 @@ import UpdateSaleService from '@modules/sales/infra/http/services/UpdateSaleServ
 
 import CreateSaleService from '../services/CreateSaleService';
 import DeleteSalesService from '../services/DeleteSaleService';
+import { SaleViewModel } from '../view-models/SaleViewModel';
 
 export default class SalesController {
   async index(request: Request, response: Response) {
@@ -104,7 +105,7 @@ export default class SalesController {
       partner_external_id,
     });
 
-    return response.json(createdSale);
+    return response.json(SaleViewModel.toHttp(createdSale));
   }
 
   async delete(request: Request, response: Response) {
@@ -144,6 +145,8 @@ export default class SalesController {
       availabilityDate,
     });
 
-    return response.status(200).json(updatedSale);
+    const formattedSale = SaleViewModel.toHttp(updatedSale);
+
+    return response.status(200).json(formattedSale);
   }
 }

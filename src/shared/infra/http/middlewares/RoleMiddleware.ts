@@ -5,7 +5,7 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
+import UserRepository from '@modules/users/infra/prisma/repositories/users-repository';
 
 dotenv.config();
 
@@ -31,7 +31,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'ADMIN' && user.role !== 'NANOTECH_REPRESENTATIVE') {
@@ -58,7 +58,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'ADMIN') {
@@ -84,7 +84,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'MANAGER') {
@@ -114,7 +114,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (
@@ -151,7 +151,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'MANAGER' && user.role !== 'SELLER') {
@@ -182,7 +182,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'SERVICE_PROVIDER') {
@@ -213,7 +213,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (user.role !== 'COMMISSIONER') {
@@ -244,7 +244,7 @@ class RoleMiddleware {
 
     request.user = {
       ...request.user,
-      profile_id: user.profile.id,
+      profile_id: user.profile?.id as string,
     };
 
     if (

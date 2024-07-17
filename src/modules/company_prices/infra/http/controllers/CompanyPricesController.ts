@@ -3,8 +3,10 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import ServiceRepository from '../../../../services/infra/typeorm/repositories/ServiceRepository';
-import CompanyPricesRepository from '../../typeorm/repositories/CompanyPricesRepository';
+import ServiceRepository from '../../../../services/infra/prisma/repositories/service-repository';
+import CompanyPricesRepository from '../../prisma/repositories/company-prices-repository';
+import { Service } from '@modules/services/infra/entities/Service';
+import { ServicesViewModel } from '@modules/services/infra/http/view-models/services-view-model';
 
 export default class CompanyPricesController {
   async store(request: Request, response: Response) {
@@ -19,7 +21,7 @@ export default class CompanyPricesController {
       throw new AppError('No company found with this ID.');
     }
 
-    const companiesUpdated = [];
+    const updatedServices: Service[] = [];
 
     for (const service of services) {
       const serviceById = await serviceRepository.findById(service.serviceId);
@@ -28,16 +30,19 @@ export default class CompanyPricesController {
         throw new AppError('No service found with this ID.');
       }
 
-      const serviceUpdated = await serviceRepository.save({
-        ...serviceById,
-        company_price: service.price,
-      });
+      serviceById.company_price = service.price;
+
+      const serviceUpdated = await serviceRepository.save(serviceById);
 
       if (serviceUpdated) {
-        companiesUpdated.push(serviceUpdated);
+        updatedServices.push(serviceUpdated);
       }
     }
 
-    return response.json(companiesUpdated);
+    const formattedServices = updatedServices.map(service => {
+      return ServicesViewModel.toHttp(service);
+    });
+
+    return response.json(formattedServices);
   }
 }

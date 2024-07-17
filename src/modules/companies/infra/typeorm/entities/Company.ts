@@ -3,7 +3,7 @@ import {
   CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm';
 
-import Commissioner from '@modules/commissioners/infra/typeorm/entities/Commissioner';
+import Commissioner from '@modules/_legacy_commissioners/infra/typeorm/entities/Commissioner';
 import CompanyPrices from '@modules/company_prices/infra/typeorm/entities/CompanyPrices';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
 import Service from '@modules/services/infra/typeorm/entities/Service';

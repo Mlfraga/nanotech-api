@@ -3,12 +3,12 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
-import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import { Profile } from '@modules/profiles/infra/entities/Profile';
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 
 import IHashProvider from '../../../providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '@modules/users/infra/entities/User';
 
 interface IRequest {
   username: string;
@@ -28,7 +28,7 @@ interface IResponse {
 }
 
 @injectable()
-class ShowUserService {
+class CreateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -72,15 +72,19 @@ class ShowUserService {
 
     const passwordCrypt = await this.hashProvider.generateHash(password);
 
-    const user = await this.usersRepository.create({
-        username,
-        telephone,
-        email,
-        password: passwordCrypt,
-        pix_key,
-        pix_key_type: pix_key_type as "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined,
-        role: role as "SELLER" | "MANAGER" | "COMMISSIONER" | "ADMIN" | "NANOTECH_REPRESENTATIVE" | "SERVICE_PROVIDER",
-    });
+    const userToCreate = new User({
+      username,
+      telephone,
+      email,
+      password: passwordCrypt,
+      pix_key,
+      pix_key_type: pix_key_type as "CPF" | "PHONE" | "EMAIL" | "RANDOM" | undefined,
+      role: role as "SELLER" | "MANAGER" | "COMMISSIONER" | "ADMIN" | "NANOTECH_REPRESENTATIVE" | "SERVICE_PROVIDER",
+      enabled: true,
+      first_login: true,
+    })
+
+    const user = await this.usersRepository.create(userToCreate);
 
     let profile: Profile | undefined;
 
@@ -101,4 +105,4 @@ class ShowUserService {
   }
 }
 
-export default ShowUserService;
+export default CreateUserService;

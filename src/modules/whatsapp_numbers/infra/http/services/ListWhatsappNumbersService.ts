@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import IWhatsappNumberRepository from '../../../repositories/IWhatsappNumberRepository';
-import WhatsappNumber from '../../typeorm/entities/WhatsappNumber';
+import { WhatsappNumber } from '../../entities/WhatsappNumber';
 
 @injectable()
 class ListWhatsappNumbersService {
@@ -10,7 +10,7 @@ class ListWhatsappNumbersService {
     private whatsappNumberRepository: IWhatsappNumberRepository,
   ) {}
 
-  public async execute(): Promise<WhatsappNumber[] | undefined> {
+  public async execute(): Promise<WhatsappNumber[]> {
     const whatsappNumbers = await this.whatsappNumberRepository.find();
 
     return whatsappNumbers;

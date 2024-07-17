@@ -6,14 +6,18 @@ import FindCompanyById from '../services/FindCompanyById';
 import ListCompaniesService from '../services/ListCompaniesService';
 import ShowCompanyService from '../services/ShowCompanyService';
 import UpdateCompanyService from '../services/UpdateCompanyService';
+import { CompaniesViewModel } from '../view-models/companies-view-model';
 
 export default class CompanyController {
   async index(request: Request, response: Response) {
     const listCompaniesService = container.resolve(ListCompaniesService);
-
     const companies = await listCompaniesService.execute();
 
-    return response.json(companies);
+    const formattedCompanies = companies.map(company => {
+      return CompaniesViewModel.toHttp(company);
+    });
+
+    return response.json(formattedCompanies);
   }
 
   async show(request: Request, response: Response) {
@@ -23,7 +27,9 @@ export default class CompanyController {
 
     const company = await showCompanyService.execute({ id });
 
-    return response.json(company);
+    const formattedCompany = CompaniesViewModel.toHttp(company);
+
+    return response.json(formattedCompany);
   }
 
   async find(request: Request, response: Response) {
@@ -33,7 +39,7 @@ export default class CompanyController {
 
     const company = await findCompanyById.execute({ id });
 
-    return response.json(company);
+    return response.json(CompaniesViewModel.toHttp(company));
   }
 
   async store(request: Request, response: Response) {
@@ -48,7 +54,7 @@ export default class CompanyController {
       client_identifier,
     });
 
-    return response.json(company);
+    return response.json(CompaniesViewModel.toHttp(company));
   }
 
   async update(request: Request, response: Response) {
@@ -65,6 +71,6 @@ export default class CompanyController {
       client_identifier,
     });
 
-    return response.json(updatedCompany);
+    return response.json(CompaniesViewModel.toHttp(updatedCompany));
   }
 }

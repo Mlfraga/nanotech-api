@@ -40,8 +40,7 @@ class DeleteSalesService {
           for (const serviceSale of saleExists.services_sales) {
             await this.serviceSaleRepository.delete(serviceSale.id);
           }
-
-          await this.saleRepository.delete(String(id));
+          await this.saleRepository.delete(String(saleExists.id));
         }
       }
 

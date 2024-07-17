@@ -1,4 +1,4 @@
 export default interface ICreatePersonDTO {
-  cpf: string;
+  cpf: string | null;
   name: string;
 }

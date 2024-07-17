@@ -1,5 +1,4 @@
-import ICreateUserDTO from '../dtos/ICreateUserDTO';
-import User from '../infra/typeorm/entities/User';
+import { User } from '../infra/entities/User';
 
 export interface IUserFilters {
   role?: string;
@@ -20,7 +19,7 @@ export default interface IUserRepository {
   findById(id: string): Promise<User | undefined>;
   findByUsername(username: string): Promise<User | undefined>;
   findByEmail(email: string): Promise<User | undefined>;
-  create(data: ICreateUserDTO): Promise<User>;
+  create(data: User): Promise<User>;
   save(user: User): Promise<User>;
   findByCompany(company_id: string): Promise<User[] | undefined>;
   delete(id: string): Promise<void>;

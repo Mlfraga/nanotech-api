@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import { endOfDay, startOfDay, isAfter } from 'date-fns';
+import { endOfDay, isAfter, startOfDay } from 'date-fns';
 import ExcelJS from 'exceljs';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import getTranslatedSalesStatus from '@shared/utils/GetTranslatedSalesStatus';
@@ -46,7 +46,7 @@ class GenerateExcelReportService {
       status: status && String(status),
       company:
         user?.role === 'MANAGER'
-          ? user.profile.company_id
+          ? user.profile?.company_id
           : company && String(company),
       initialDate: startRangeFinishedDate
         ? startOfDay(new Date(String(startRangeFinishedDate)))
@@ -111,7 +111,7 @@ class GenerateExcelReportService {
         status: getTranslatedSalesStatus(sale.status),
         date: sale.created_at,
         finished_date: sale.finished_at,
-        company: `${sale.unit.company.name} ${sale.unit.name}`,
+        company: `${sale.unit.company?.name} ${sale.unit.name}`,
         services: formattedServices,
       });
     }

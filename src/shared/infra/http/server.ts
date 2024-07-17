@@ -1,8 +1,8 @@
+import { PrismaClient } from '@prisma/client'
 import { errors } from 'celebrate';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import express, { Request, Response, NextFunction } from 'express';
-import '@shared/infra/typeorm';
+import express, { Request, Response, NextFunction, RequestHandler } from 'express';
 import 'reflect-metadata';
 import '@shared/container';
 import 'express-async-errors';
@@ -10,6 +10,7 @@ import 'express-async-errors';
 import AppError from '@shared/errors/AppError';
 
 import routes from './routes';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
@@ -20,8 +21,8 @@ app.use(
     exposedHeaders: ['X-Total-Count'],
   }),
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json() as RequestHandler);
+app.use(bodyParser.urlencoded({ extended: true }) as RequestHandler);
 
 app.use(routes);
 
@@ -45,3 +46,36 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
 app.listen(process.env.PORT || 3333, () => {
   console.log(`🚀 Backend started on ${process.env.PORT || 3333}!`);
 });
+
+const prismaLogsEnabled = process.env.PRISMA_LOGS_ENABLED ? process.env.PRISMA_LOGS_ENABLED === 'true' : false;
+
+let prismaDb = new PrismaClient({
+  ...(prismaLogsEnabled && {
+    log: [
+      {
+        emit: 'stdout',
+        level: 'query',
+      },
+      {
+        emit: 'stdout',
+        level: 'error',
+      },
+      {
+        emit: 'stdout',
+        level: 'info',
+      },
+      {
+        emit: 'stdout',
+        level: 'warn',
+      },
+    ]
+  })
+});
+
+if (prismaLogsEnabled) {
+  prismaDb.$on("query" as never, async (e: any) => {
+      console.log(`${e.query} ${e.params}`)
+  });
+}
+
+export { prismaDb };

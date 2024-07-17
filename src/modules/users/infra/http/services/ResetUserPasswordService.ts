@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import IHashProvider from '../../../providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../../../repositories/IUsersRepository';
-import User from '../../typeorm/entities/User';
+import { User } from '../../entities/User';
 
 interface IRequest {
   user_id: string;
@@ -31,13 +31,12 @@ class ResetUserPasswordService {
 
     const passwordCrypt = await this.hashProvider.generateHash(defaultPassword);
 
-    await this.usersRepository.save({
-      ...userById,
-      password: passwordCrypt,
-      first_login: true,
-    });
+    userById.password = passwordCrypt;
+    userById.first_login = true;
 
-    return { ...userById, password: passwordCrypt };
+    await this.usersRepository.save(userById);
+
+    return userById;
   }
 }
 

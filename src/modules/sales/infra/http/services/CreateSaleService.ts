@@ -8,7 +8,7 @@ import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import IUnitRepository from '@modules/unities/repositories/IUnitRepository';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
 
-import Sale from '../../typeorm/entities/Sale';
+import { Sale } from '../../entities/Sale';
 
 interface ICreateSaleServiceParams {
   user_id: string;
@@ -66,7 +66,7 @@ class CreateSaleService {
   }: ICreateSaleServiceParams): Promise<Sale> {
     const user = await this.userRepository.findById(user_id);
 
-    if (!user) {
+    if (!user || !user.profile) {
       throw new AppError('User not found.', 404);
     }
 

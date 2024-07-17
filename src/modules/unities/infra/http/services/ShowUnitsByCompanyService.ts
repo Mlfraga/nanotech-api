@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import IUnitRepository from '../../../repositories/IUnitRepository';
-import Unit from '../../typeorm/entities/Unit';
+import { Unit } from '../../entities/Unit';
 
 interface IRequest {
   company_id: string;
@@ -14,7 +14,7 @@ class ShowUnitsByCompanyService {
     private unitRepository: IUnitRepository,
   ) {}
 
-  public async execute({ company_id }: IRequest): Promise<Unit[] | undefined> {
+  public async execute({ company_id }: IRequest): Promise<Unit[]> {
     const units = await this.unitRepository.findByCompanyId(company_id);
 
     return units;

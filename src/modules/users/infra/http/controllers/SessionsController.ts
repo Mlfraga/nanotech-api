@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import AuthenticateUserService from '@modules/users/infra/http/services/AuthenticateUserService';
 import LogOutUserService from '@modules/users/infra/http/services/LogOutUserService';
 import RefreshAccessTokenService from '@modules/users/infra/http/services/RefreshAccessTokenService';
+import { UsersViewModel } from '../view-models/users-view-model';
 
 export default class SessionsController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -16,7 +17,12 @@ export default class SessionsController {
       password,
     });
 
-    return response.status(200).json(authenticatedUser);
+    const formattedResponse = {
+      ...authenticatedUser,
+      user: UsersViewModel.toHttp(authenticatedUser.user)
+    };
+
+    return response.status(200).json(formattedResponse);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {

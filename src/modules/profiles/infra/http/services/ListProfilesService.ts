@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import IProfileRepository from '@modules/profiles/repositories/IProfileRepository';
 
-import Profile from '../../typeorm/entities/Profile';
+import {Profile} from '../../entities/Profile';
 
 interface IListProfilesServiceParams {
   user_id: string;

@@ -5,7 +5,7 @@ import CpfCnpjUtils from '@shared/utils/CpfCnpjUtils';
 
 import ICompanyRepository from '@modules/companies/repositories/ICompanyRepository';
 
-import Company from '../../typeorm/entities/Company';
+import { Company } from '../../entities/Company';
 
 type ICreateCompanyServiceResponse = Company;
 

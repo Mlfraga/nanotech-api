@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import ResetUserPasswordService from '@modules/users/infra/http/services/ResetUserPasswordService';
 import UpdateUserPasswordService from '@modules/users/infra/http/services/UpdateUserPasswordService';
+import { UsersViewModel } from '../view-models/users-view-model';
 
 export default class PasswordUserController {
   async update(request: Request, response: Response) {
@@ -18,7 +19,7 @@ export default class PasswordUserController {
       user_id,
     });
 
-    return response.json(updatedUser);
+    return response.json(UsersViewModel.toHttp(updatedUser));
   }
 
   async delete(request: Request, response: Response) {

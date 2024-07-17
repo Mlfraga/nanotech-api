@@ -5,7 +5,7 @@ import AppError from '@shared/errors/AppError';
 import IUserRepository from '@modules/users/repositories/IUsersRepository';
 
 import ISaleRepository from '../../../repositories/ISaleRepository';
-import Sale from '../../typeorm/entities/Sale';
+import { Sale } from '../../entities/Sale';
 
 interface IRequest {
   user_id: string;
@@ -82,7 +82,6 @@ class ListSalesRewardsByCommissionerService {
         page,
       },
     );
-    console.log('user');
 
     return sales;
   }
