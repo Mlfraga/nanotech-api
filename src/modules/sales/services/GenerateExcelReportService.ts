@@ -1,3 +1,4 @@
+import path from 'path';
 import crypto from 'crypto';
 import { endOfDay, startOfDay, isAfter } from 'date-fns';
 import ExcelJS from 'exceljs';
@@ -129,8 +130,9 @@ class GenerateExcelReportService {
     const fileHash = crypto.randomBytes(10).toString('hex');
 
     const excelfile = `tmp/uploads/excel-${fileHash}.xlsx`;
+    const excelPath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'uploads', `excel-${fileHash}.xlsx`)
 
-    await workbook.xlsx.writeFile(excelfile);
+    await workbook.xlsx.writeFile(excelPath);
 
     const destroysIn = 30000;
 
