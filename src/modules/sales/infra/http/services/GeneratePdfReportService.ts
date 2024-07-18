@@ -198,6 +198,7 @@ class GeneratePdfReportService {
         width: '1080px',
         height: '1920px',
         orientation: 'portrait',
+        "phantomPath": "./node_modules/phantomjs/bin/phantomjs",
       })
       .toFile(
         `tmp/uploads/${fileName}.pdf`,
