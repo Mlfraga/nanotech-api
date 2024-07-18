@@ -176,13 +176,13 @@ export default class PrismaSaleRepository implements ISaleRepository {
     company,
     initialDate,
     finalDate,
-  }: IFiltersParams): Promise<Sale[] | undefined>{
+  }: IFiltersParams): Promise<Sale[]>{
     const sales = await prismaDb.sales.findMany({
       where: {
         ...(status && { status: status as sales_status_enum }),
         ...(company && { company_id: company }),
         ...(initialDate && finalDate && {
-          finished_at: {
+          created_at: {
             lte: finalDate,
             gte: initialDate,
           }

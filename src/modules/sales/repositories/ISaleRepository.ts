@@ -51,7 +51,7 @@ export default interface ISaleRepository {
     company,
     initialDate,
     finalDate,
-  }: IFiltersParams): Promise<Sale[] | undefined>;
+  }: IFiltersParams): Promise<Sale[]>;
   findByServiceProvider(providerId: string): Promise<Sale[]>;
   findByCompanyAndFinishedStatus(
     companyId: string,
