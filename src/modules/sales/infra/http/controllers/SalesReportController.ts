@@ -53,11 +53,11 @@ export default class SalesReportController {
     const { fileName } = request.params;
 
     try {
-      if (!fs.existsSync(`tmp/uploads/${fileName}`)) {
+      if (!fs.existsSync(`${__dirname}/tmp/uploads/${fileName}`)) {
         return response.status(400).json('File is no longer available.');
       }
 
-      return response.download(`tmp/uploads/${fileName}`);
+      return response.download(`${__dirname}/tmp/uploads/${fileName}`);
     } catch (error: any) {
       return response.status(400).json(error?.message || 'erro');
     }
