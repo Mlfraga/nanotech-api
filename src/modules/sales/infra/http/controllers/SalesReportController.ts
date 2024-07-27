@@ -52,6 +52,7 @@ export default class SalesReportController {
   async download(request: Request, response: Response) {
     const { fileName } = request.params;
 
+    console.log("🚀 ~ SalesReportController ~ download ~ `${__dirname}/tmp/uploads/${fileName}`:", `${__dirname}/tmp/uploads/${fileName}`)
     try {
       if (!fs.existsSync(`${__dirname}/tmp/uploads/${fileName}`)) {
         return response.status(400).json('File is no longer available.');
